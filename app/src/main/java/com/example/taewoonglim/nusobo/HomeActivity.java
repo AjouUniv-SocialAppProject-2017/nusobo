@@ -55,8 +55,8 @@ public class HomeActivity extends AppCompatActivity
         nameTextView = (TextView)view.findViewById(R.id.header_name_textView);
         emailTextView = (TextView)view.findViewById(R.id.header_email_textView); //이메일이 왜 안나오는지 모르겠음
 
-     //   nameTextView.setText(mAuth.getCurrentUser().getDisplayName());
-      //  emailTextView.setText(mAuth.getCurrentUser().getEmail());
+        nameTextView.setText(mAuth.getCurrentUser().getDisplayName());
+        emailTextView.setText(mAuth.getCurrentUser().getEmail());
     }
 
     @Override

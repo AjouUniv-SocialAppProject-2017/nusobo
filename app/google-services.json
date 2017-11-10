@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "268564628975",
+    "firebase_url": "https://socialapp-nuboso.firebaseio.com",
+    "project_id": "socialapp-nuboso",
+    "storage_bucket": "socialapp-nuboso.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:268564628975:android:9ce27a03ceb8c8f5",
+        "android_client_info": {
+          "package_name": "com.example.taewoonglim.nusobo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "268564628975-gug8h10fla7b4802618fankmouuc285d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.taewoonglim.nusobo",
+            "certificate_hash": "ddb10b0866c7103a070a00c4e461b751c75b5d8e"
+          }
+        },
+        {
+          "client_id": "268564628975-01t0e85lestdcgrqkh5snc26jcvhl070.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5TVmdSozNrHqojibWPO96xXCQtumekLo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "268564628975-01t0e85lestdcgrqkh5snc26jcvhl070.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

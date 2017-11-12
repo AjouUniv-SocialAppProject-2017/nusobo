@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.CursorLoader;
@@ -20,9 +21,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.File;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -31,6 +43,13 @@ public class HomeActivity extends AppCompatActivity
     private TextView nameTextView;
     private TextView emailTextView;
     private FirebaseAuth mAuth;
+    private FirebaseStorage storage;
+    private FirebaseDatabase database;
+    private ImageView imageView;
+    private EditText title;
+    private EditText description;
+    private Button uploadBtn;
+    private String imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +59,15 @@ public class HomeActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         mAuth = FirebaseAuth.getInstance();
+        storage = FirebaseStorage.getInstance();
+        database = FirebaseDatabase.getInstance();
+
+
+        imageView = (ImageView)findViewById(R.id.imageView);
+        title = (EditText)findViewById(R.id.title);
+        description  = (EditText)findViewById(R.id.description);
+        uploadBtn = (Button)findViewById(R.id.uploadBtn);
+
 
 
 
@@ -67,12 +95,30 @@ public class HomeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+
+        //자신의 이름과 이메일을 왼쪽 마이페이지에 표시
         View view = navigationView.getHeaderView(0);
         nameTextView = (TextView)view.findViewById(R.id.header_name_textView);
         emailTextView = (TextView)view.findViewById(R.id.header_email_textView); //이메일이 왜 안나오는지 모르겠음
 
         nameTextView.setText(mAuth.getCurrentUser().getDisplayName());
         emailTextView.setText(mAuth.getCurrentUser().getEmail());
+
+
+        //업로드 버튼
+        uploadBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+
+                upload(imagePath);
+
+            }
+        });
+
+
+
+
     }
 
     @Override
@@ -117,7 +163,9 @@ public class HomeActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
-            Intent intent = new Intent(Intent.ACTION_PICK);
+
+            //사진 가져오는 부분분
+           Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
 
             startActivityForResult(intent, GALLERY_CODE);
@@ -151,6 +199,14 @@ public class HomeActivity extends AppCompatActivity
         if(requestCode == GALLERY_CODE){
 
           //  String path = data.getData(); //데이터 경로를 받아온다.
+
+            //갤러리에서 선택한 이미지 HomeActivity에 올리기
+            imagePath = getPath(data.getData());
+            File f = new File(imagePath);
+            imageView.setImageURI(Uri.fromFile(f));
+
+
+
         }
     }
 
@@ -164,5 +220,40 @@ public class HomeActivity extends AppCompatActivity
         cursor.moveToFirst();
 
         return cursor.getString(index);
+    }
+
+    private void upload(String uri){
+
+        //파일 업로드 후 서버로 이동할 서버 주소
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://socialapp-nuboso.appspot.com");
+
+        Uri file = Uri.fromFile(new File(uri));
+        StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
+        UploadTask uploadTask = riversRef.putFile(file);
+
+    // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                @SuppressWarnings("VisibleForTests")
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                ImageDTO imageDTO = new ImageDTO();
+                imageDTO.imageUrl = downloadUrl.toString();
+                imageDTO.title = title.getText().toString();
+                imageDTO.description = description.getText().toString();
+                imageDTO.uid = mAuth.getCurrentUser().getUid();
+                imageDTO.userId = mAuth.getCurrentUser().getEmail();
+
+
+                database.getReference().child("images").push().setValue(imageDTO);
+            }
+        });
     }
 }

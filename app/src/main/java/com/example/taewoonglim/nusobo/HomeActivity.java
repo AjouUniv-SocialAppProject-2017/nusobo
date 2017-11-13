@@ -159,10 +159,11 @@ public class HomeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_board) {
 
+            startActivity(new Intent(HomeActivity.this, BoardActivity.class));
+
+        } else if (id == R.id.nav_gallery) {
 
             //사진 가져오는 부분분
            Intent intent = new Intent(Intent.ACTION_PICK);

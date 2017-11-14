@@ -1,8 +1,12 @@
 package com.example.taewoonglim.nusobo;
 
+import android.*;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,13 +46,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestSmsPermission();
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
 
         emailText = (EditText)findViewById(R.id.emailText);
         passworkdText = (EditText)findViewById(R.id.passwordText);
-
-
 
         TextView registerButton = (TextView) findViewById(R.id.registerButton);
         registerButton.setOnClickListener(new View.OnClickListener(){
@@ -58,6 +61,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             {
                 Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
                 LoginActivity.this.startActivity(registerIntent);
+
             }
         });
 
@@ -78,6 +82,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             public void onClick(View view) {
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, RC_SIGN_IN);
+
             }
         });
 
@@ -99,7 +104,31 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         };
 
     }
+    private void requestSmsPermission() {
+        String permission = android.Manifest.permission.READ_SMS;
+        int grant = ContextCompat.checkSelfPermission(this, permission);
+        if (grant != PackageManager.PERMISSION_GRANTED) {
+            String[] permission_list = new String[1];
+            permission_list[0] = permission;
+            ActivityCompat.requestPermissions(this, permission_list, 1);
+        }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this,"permission granted@@@@", Toast.LENGTH_SHORT).show();
+
+
+            } else {
+                Toast.makeText(this,"permission not granted@@@@", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
 
     private void loginUser(String email, String password)
     {

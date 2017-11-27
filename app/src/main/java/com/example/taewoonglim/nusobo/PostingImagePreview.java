@@ -27,6 +27,7 @@ public class PostingImagePreview extends AppCompatActivity {
     private ImageView backBtn;
     private ImageView nextBtn;
     private ImageView preView;
+    private String preViewPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,11 @@ public class PostingImagePreview extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(PostingImagePreview.this, "아직 다음 페이지를 만들지 않음", Toast.LENGTH_SHORT).show();
+           //     Intent registerIntent = new Intent(PostingImagePreview.this, HomeActivity.class);
+         //       PostingImagePreview.this.startActivity(registerIntent);
+               // Toast.makeText(PostingImagePreview.this, "아직 다음 페이지를 만들지 않음", Toast.LENGTH_SHORT).show();
+
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class).putExtra("img", preViewPosition));
             }
         });
 
@@ -67,7 +72,8 @@ public class PostingImagePreview extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Uri _uri = Uri.parse(gv_list.get(position).toString());
+                preViewPosition = gv_list.get(position).toString();
+                Uri _uri = Uri.parse(preViewPosition);
                 preView.setImageURI(_uri);
 
              //   startActivity(new Intent(getApplicationContext(), gallery_ImageView.class).putExtra("img", gv_list.get(position).toString()) );

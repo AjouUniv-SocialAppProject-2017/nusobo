@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
@@ -33,6 +34,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -46,8 +48,8 @@ import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 
-public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends AppCompatActivity{
+       // implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final int GALLERY_CODE = 10;
     private TextView nameTextView;
@@ -61,44 +63,59 @@ public class HomeActivity extends AppCompatActivity
     private Button uploadBtn;
     private String imagePath;
 
-
-    private GridView gallery_gridview;
-    private ArrayList<File> gv_list;
+    private ImageView contentBackImageView;
+    private ImageView contentUploadImageView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+       // setSupportActionBar(toolbar);
+
+
+        //이미지뷰 intent로 받아오기
+        String f = getIntent().getStringExtra("img");
+        imagePath = f;
+        imageView = (ImageView)findViewById(R.id.imageView);
+        imageView.setImageURI(Uri.parse(imagePath));
+
 
         mAuth = FirebaseAuth.getInstance();
         storage = FirebaseStorage.getInstance();
         database = FirebaseDatabase.getInstance();
 
 
-        imageView = (ImageView)findViewById(R.id.imageView);
         title = (EditText)findViewById(R.id.title);
         description  = (EditText)findViewById(R.id.description);
-        uploadBtn = (Button)findViewById(R.id.uploadBtn);
 
 
-
-        //갤러리 커스텀 그리드뷰뷰
-        gv_list = imageReader(Environment.getExternalStorageDirectory());
-
-        gallery_gridview = (GridView) findViewById(R.id.gallery_gridview);
-        gallery_gridview.setAdapter(new GridAdapter());
-
-        gallery_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        //뒤로가기 버튼
+        contentBackImageView = (ImageView)findViewById(R.id.contentBack_ImgeView);
+        contentBackImageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                startActivity(new Intent(getApplicationContext(), gallery_ImageView.class).putExtra("img", gv_list.get(position).toString()) );
+            public void onClick(View v) {
+                Intent registerIntent = new Intent(HomeActivity.this, PostingImagePreview.class);
+                HomeActivity.this.startActivity(registerIntent);
             }
-
         });
+
+        //업로드
+        contentUploadImageView = (ImageView)findViewById(R.id.contentUpload_ImageView);
+        contentUploadImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upload(imagePath);
+                Toast.makeText(HomeActivity.this, "업로드 완료", Toast.LENGTH_SHORT).show();
+                Intent registerIntent = new Intent(HomeActivity.this, BoardActivity.class);
+                HomeActivity.this.startActivity(registerIntent);
+
+            }
+        });
+
+
+
 
 
         //권한부여
@@ -116,37 +133,27 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
+        /*
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+     //   ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        //        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+     //   drawer.setDrawerListener(toggle);
+    //    toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+     //   NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+      //  navigationView.setNavigationItemSelectedListener(this);
 
 
 
         //자신의 이름과 이메일을 왼쪽 마이페이지에 표시
-        View view = navigationView.getHeaderView(0);
-        nameTextView = (TextView)view.findViewById(R.id.header_name_textView);
-        emailTextView = (TextView)view.findViewById(R.id.header_email_textView); //이메일이 왜 안나오는지 모르겠음
+     //   View view = navigationView.getHeaderView(0);
+     //   nameTextView = (TextView)view.findViewById(R.id.header_name_textView);
+   //     emailTextView = (TextView)view.findViewById(R.id.header_email_textView); //이메일이 왜 안나오는지 모르겠음
 
         nameTextView.setText(mAuth.getCurrentUser().getDisplayName());
         emailTextView.setText(mAuth.getCurrentUser().getEmail());
 
-
-        //업로드 버튼
-        uploadBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-
-                upload(imagePath);
-
-            }
-        });
-
-
+    */
 
 
     }
@@ -183,6 +190,7 @@ public class HomeActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /*
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -221,9 +229,10 @@ public class HomeActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+*/
 
 
-
+    /*
     @Override  // 클릭을 하면 결과값이 넘어온다
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -239,7 +248,7 @@ public class HomeActivity extends AppCompatActivity
 
 
         }
-    }
+    }*/
 
     public String getPath(Uri uri){
         String []proj = {MediaStore.Images.Media.DATA};
@@ -289,59 +298,5 @@ public class HomeActivity extends AppCompatActivity
     }
 
 
-
-
-    //갤러리 커스텀뷰 이너클래스
-    class GridAdapter extends BaseAdapter{
-
-        @Override
-        public int getCount() {
-            return gv_list.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return gv_list.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            //layout 선택
-            convertView = getLayoutInflater().inflate(R.layout.single_grid, parent,false);
-            ImageView iv = convertView.findViewById(R.id.single_grid_imageView);
-
-            iv.setImageURI(Uri.parse( getItem(position).toString() ));
-
-            return convertView;
-        }
-    }
-
-    ArrayList<File> imageReader(File root){
-        ArrayList<File> a = new ArrayList<>();
-
-        File [] files = root.listFiles();
-        for(int i = 0; i < files.length; i++){
-            if(files[i].isDirectory()){
-                    a.addAll(imageReader(files[i]));
-            }
-            else{
-                if(files[i].getName().endsWith(".jpg")){
-                    a.add(files[i]);
-                }
-            }
-        }
-        /*
-        for(File f : files){
-            f
-         }
-         */
-        return a;
-    }
 
 }

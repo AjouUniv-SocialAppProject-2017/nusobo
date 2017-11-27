@@ -4,9 +4,13 @@ import android.*;
 import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -21,8 +25,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,6 +43,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.net.URI;
+import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -50,6 +60,11 @@ public class HomeActivity extends AppCompatActivity
     private EditText description;
     private Button uploadBtn;
     private String imagePath;
+
+
+    private GridView gallery_gridview;
+    private ArrayList<File> gv_list;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +84,21 @@ public class HomeActivity extends AppCompatActivity
         uploadBtn = (Button)findViewById(R.id.uploadBtn);
 
 
+
+        //갤러리 커스텀 그리드뷰뷰
+        gv_list = imageReader(Environment.getExternalStorageDirectory());
+
+        gallery_gridview = (GridView) findViewById(R.id.gallery_gridview);
+        gallery_gridview.setAdapter(new GridAdapter());
+
+        gallery_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                startActivity(new Intent(getApplicationContext(), gallery_ImageView.class).putExtra("img", gv_list.get(position).toString()) );
+            }
+
+        });
 
 
         //권한부여
@@ -257,4 +287,61 @@ public class HomeActivity extends AppCompatActivity
             }
         });
     }
+
+
+
+
+    //갤러리 커스텀뷰 이너클래스
+    class GridAdapter extends BaseAdapter{
+
+        @Override
+        public int getCount() {
+            return gv_list.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return gv_list.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            //layout 선택
+            convertView = getLayoutInflater().inflate(R.layout.single_grid, parent,false);
+            ImageView iv = convertView.findViewById(R.id.single_grid_imageView);
+
+            iv.setImageURI(Uri.parse( getItem(position).toString() ));
+
+            return convertView;
+        }
+    }
+
+    ArrayList<File> imageReader(File root){
+        ArrayList<File> a = new ArrayList<>();
+
+        File [] files = root.listFiles();
+        for(int i = 0; i < files.length; i++){
+            if(files[i].isDirectory()){
+                    a.addAll(imageReader(files[i]));
+            }
+            else{
+                if(files[i].getName().endsWith(".jpg")){
+                    a.add(files[i]);
+                }
+            }
+        }
+        /*
+        for(File f : files){
+            f
+         }
+         */
+        return a;
+    }
+
 }

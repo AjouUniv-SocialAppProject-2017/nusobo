@@ -23,7 +23,8 @@
             android:name=".HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".BoardActivity"></activity>
+        <activity android:name=".BoardActivity" />
+        <activity android:name=".gallery_ImageView"></activity>
     </application>
 
 </manifest>

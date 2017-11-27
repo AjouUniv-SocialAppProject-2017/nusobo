@@ -68,9 +68,6 @@ public class HomeActivity extends AppCompatActivity
         description  = (EditText)findViewById(R.id.description);
         uploadBtn = (Button)findViewById(R.id.uploadBtn);
 
-
-
-
         //권한부여
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
@@ -115,10 +112,6 @@ public class HomeActivity extends AppCompatActivity
 
             }
         });
-
-
-
-
     }
 
     @Override

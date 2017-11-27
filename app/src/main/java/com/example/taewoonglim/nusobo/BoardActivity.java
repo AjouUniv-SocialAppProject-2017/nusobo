@@ -1,5 +1,6 @@
 package com.example.taewoonglim.nusobo;
 
+import android.content.Intent;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,8 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +36,9 @@ public class BoardActivity extends AppCompatActivity {
     private List<String> uidLists = new ArrayList<>();
     private FirebaseDatabase database;
     private FirebaseAuth auth;
+    private ImageView homeImageViewBtn;
+    private ImageView plusImageViewBtn;
+    private ImageView receiptImageViewBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +50,47 @@ public class BoardActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView)findViewById(R.id.recycleView);
 
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         final BoardRecyclerViewAdapter boardRecyclerViewAdapter = new BoardRecyclerViewAdapter();
         recyclerView.setAdapter(boardRecyclerViewAdapter);
+
+
+
+
+
+        //홈 메뉴버튼
+        homeImageViewBtn = (ImageView)findViewById(R.id.home_imageView);
+        homeImageViewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent registerIntent = new Intent(BoardActivity.this, BoardActivity.class);
+                BoardActivity.this.startActivity(registerIntent);
+            }
+        });
+
+        //게시글작성 메뉴버튼
+        plusImageViewBtn = (ImageView)findViewById(R.id.plus_imageView);
+        plusImageViewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent registerIntent = new Intent(BoardActivity.this, HomeActivity.class);
+                BoardActivity.this.startActivity(registerIntent);
+            }
+        });
+
+
+        //영수증 관리 메뉴버튼
+        receiptImageViewBtn = (ImageView)findViewById(R.id.receipt_imageView);
+        receiptImageViewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Intent registerIntent = new Intent(BoardActivity.this, HomeActivity.class);
+                //BoardActivity.this.startActivity(registerIntent);
+                Toast.makeText(BoardActivity.this, "영수증 관리 페이이 이동", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         //database 읽어오기, 옵저버 패턴 : 관찰 대상이 변하는 순간 이벤트를 처리함
         database.getReference().child("images").addValueEventListener(new ValueEventListener() {

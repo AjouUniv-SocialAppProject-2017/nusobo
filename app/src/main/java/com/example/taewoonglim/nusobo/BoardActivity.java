@@ -74,7 +74,7 @@ public class BoardActivity extends AppCompatActivity {
         plusImageViewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent registerIntent = new Intent(BoardActivity.this, HomeActivity.class);
+                Intent registerIntent = new Intent(BoardActivity.this, PostingImagePreview.class);
                 BoardActivity.this.startActivity(registerIntent);
             }
         });

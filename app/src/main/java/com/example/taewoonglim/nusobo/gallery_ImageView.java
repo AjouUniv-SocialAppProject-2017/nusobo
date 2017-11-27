@@ -7,7 +7,7 @@ import android.widget.ImageView;
 
 public class gallery_ImageView extends AppCompatActivity {
 
-
+    //test
     private ImageView GalleryImageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

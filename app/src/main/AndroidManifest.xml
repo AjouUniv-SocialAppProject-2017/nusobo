@@ -24,7 +24,8 @@
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".BoardActivity" />
-        <activity android:name=".gallery_ImageView"></activity>
+        <activity android:name=".gallery_ImageView" />
+        <activity android:name=".PostingImagePreview"></activity>
     </application>
 
 </manifest>

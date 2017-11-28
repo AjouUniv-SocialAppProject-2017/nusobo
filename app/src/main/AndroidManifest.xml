@@ -23,12 +23,16 @@
             android:name=".HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".BoardActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".gallery_ImageView"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".PostingImagePreview"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".BoardActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".gallery_ImageView"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PostingImagePreview"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".WriteBoardActivity"></activity>
     </application>
 
 </manifest>

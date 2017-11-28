@@ -94,7 +94,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null) {
 
-                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    //로그인이 되어 있으면 여기부터 바로시작
+                    Intent intent = new Intent(LoginActivity.this, BoardActivity.class);
                     startActivity(intent);
                     finish();
                 }else{

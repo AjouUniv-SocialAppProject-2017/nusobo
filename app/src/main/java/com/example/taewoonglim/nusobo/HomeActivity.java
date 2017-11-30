@@ -80,6 +80,7 @@ public class HomeActivity extends AppCompatActivity{
         imageView = (ImageView)findViewById(R.id.imageView);
         imageView.setImageURI(Uri.parse(imagePath));
 
+        Toast.makeText(HomeActivity.this, " "+ f, Toast.LENGTH_LONG).show();
 
         mAuth = FirebaseAuth.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -300,6 +301,7 @@ public class HomeActivity extends AppCompatActivity{
                 imageDTO.userId = mAuth.getCurrentUser().getEmail();
 
 
+                Toast.makeText(HomeActivity.this, "홓몸", Toast.LENGTH_LONG).show();
                 database.getReference().child("images").push().setValue(imageDTO);
             }
         });

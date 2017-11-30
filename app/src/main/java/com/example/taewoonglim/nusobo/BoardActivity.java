@@ -1,13 +1,16 @@
 package com.example.taewoonglim.nusobo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +40,9 @@ public class BoardActivity extends AppCompatActivity {
     private ImageView plusImageViewBtn;
     private ImageView receiptImageViewBtn;
 
+
+    private Button logOutBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,14 +51,27 @@ public class BoardActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
 
-        recyclerView = (RecyclerView)findViewById(R.id.writeBoard_recycleView);
+        recyclerView = (RecyclerView)findViewById(R.id.board_recycleView);
 
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        final BoardRecyclerViewAdapter boardRecyclerViewAdapter = new BoardRecyclerViewAdapter();
+        final BoardRecyclerViewAdapter boardRecyclerViewAdapter = new BoardRecyclerViewAdapter(BoardActivity.this);
         recyclerView.setAdapter(boardRecyclerViewAdapter);
 
 
+        //디버깅을 위한 로그아웃
+        logOutBtn = (Button)findViewById(R.id.logOutBtn);
+        logOutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                auth.signOut();
+                finish();
+                Intent intent = new Intent(BoardActivity.this, LoginActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
 
 
@@ -65,7 +84,6 @@ public class BoardActivity extends AppCompatActivity {
                 BoardActivity.this.startActivity(registerIntent);
             }
         });
-
 
 
         //게시글작성 메뉴버튼
@@ -101,6 +119,7 @@ public class BoardActivity extends AppCompatActivity {
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                             ImageDTO imageDTO = snapshot.getValue(ImageDTO.class);
                             String uidKey = snapshot.getKey(); //images 데이터베이스에 있는 key값을 받아온다
+
                             imageDTOs.add(imageDTO);
                             uidLists.add(uidKey);
                         }
@@ -119,6 +138,19 @@ public class BoardActivity extends AppCompatActivity {
 
     //inner class
     class BoardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+
+        private Context mContext = null;
+
+
+        public BoardRecyclerViewAdapter(){
+
+          //디폴트 생성자
+        }
+
+        public BoardRecyclerViewAdapter(Context _context){
+
+            mContext = _context;
+        }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -142,17 +174,26 @@ public class BoardActivity extends AppCompatActivity {
             });
 
 
-            /*
+
             ((CustomViewHolder)holder).writeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
+                   Toast.makeText(BoardActivity.this, "writeButton", Toast.LENGTH_SHORT).show();
                     String childPosition = uidLists.get(position).toString();
-                    startActivity(new Intent(getApplicationContext(), WriteBoardActivity.class).putExtra("childPosition", childPosition) );
+                    startActivity(new Intent(mContext, WriteBoardActivity.class).putExtra("childPostion", childPosition) );
+// startActivity(new Intent(getApplicationContext(), HomeActivity.class).putExtra("img", preViewPosition));
+
+                   // Intent i = new Intent(mContext, HomeActivity.class);
+                   // mContext.startActivity(registerIntent);
+
+
+                   // Intent i = new Intent(mContext, WriteBoardActivity.class);
+                   // i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
                 }
             });
-*/
+
 
             //imageDTOs안에 있는 것 중에 stars변수를 접근하여 내가 눌렀는지 안눌렀는지에 따른 상태를 표시해준다.
             if(imageDTOs.get(position).stars.containsKey(auth.getCurrentUser().getUid())) {
@@ -217,11 +258,11 @@ public class BoardActivity extends AppCompatActivity {
 
             public CustomViewHolder(View view) {
                 super(view);
-                imageVIew = (ImageView)view.findViewById(R.id.item_imageView);
-                textView = (TextView)view.findViewById(R.id.item_textView);
+                imageVIew = (ImageView)view.findViewById(R.id.item_imageView); //sns 큰 이미지
+                textView = (TextView)view.findViewById(R.id.item_textView);  //
                 textView2 = (TextView)view.findViewById(R.id.item_textView2);
                 starButton = (ImageView)view.findViewById(R.id.item_starButton_imageView);
-                writeButton = (ImageView)view.findViewById(R.id.writeBoard_writeBtn_imageView);
+                writeButton = (ImageView)view.findViewById(R.id.item_writeButton_imageView);
             }
         }
     }

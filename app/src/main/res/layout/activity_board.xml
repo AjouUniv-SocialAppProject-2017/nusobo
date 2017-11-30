@@ -27,6 +27,13 @@
             android:layout_weight="1"
             app:srcCompat="@drawable/back_arrow_circular_symbol" />
 
+        <Button
+            android:id="@+id/logOutBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="LogOut" />
+
         <ImageView
             android:id="@+id/title_imageView"
             android:layout_width="wrap_content"
@@ -37,7 +44,7 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/writeBoard_recycleView"
+        android:id="@+id/board_recycleView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="8dp"

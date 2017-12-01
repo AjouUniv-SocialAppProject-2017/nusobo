@@ -1,37 +1,55 @@
 package com.example.taewoonglim.nusobo;
 
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresPermission;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WriteBoardActivity extends AppCompatActivity {
+
+    private RecyclerView recyclerView;
+
+    private FirebaseDatabase database;
+    private FirebaseAuth auth;
+    private FirebaseStorage storage;
+
 
     private ImageView writeBoard_BackBtnImageView;
     private ImageView writeBoard_WriteBtnImageView;
 
-    private FirebaseDatabase database;
+    private EditText writeBoard_writeEditText;
 
-//writeBoard_writeBtn_imageView
-    private RecyclerView recyclerView;
+    private String nowChildPostion;
+
+
 
 
     @Override
@@ -39,10 +57,19 @@ public class WriteBoardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_board);
         database = FirebaseDatabase.getInstance(); //singleton 패턴
+        auth = FirebaseAuth.getInstance();
+        storage = FirebaseStorage.getInstance();
 
-        //String childPostion = getIntent().getStringExtra("childPostion");
-        //    onStarClicked(database.getReference().child("images").child(uidLists.get(position)));
+        nowChildPostion = getIntent().getStringExtra("childPostion");
 
+        recyclerView = (RecyclerView)findViewById(R.id.writeBoard_recyclerView);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        final WriteBoardRecyclerViewAdapter writeBoardRecyclerViewAdapter = new WriteBoardRecyclerViewAdapter(nowChildPostion);
+        recyclerView.setAdapter(writeBoardRecyclerViewAdapter);
+
+
+        Toast.makeText(WriteBoardActivity.this, " "+ nowChildPostion, Toast.LENGTH_SHORT).show();
 
         //뒤로가기 버튼
         writeBoard_BackBtnImageView = (ImageView)findViewById(R.id.writeBoard_backBtn_imageView);
@@ -56,154 +83,138 @@ public class WriteBoardActivity extends AppCompatActivity {
             }
         });
 
+
         //댓글 작성 버튼
         writeBoard_WriteBtnImageView = (ImageView)findViewById(R.id.writeBoard_writeBtn_imageView);
         writeBoard_WriteBtnImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                upload(nowChildPostion);
                 Toast.makeText(WriteBoardActivity.this, "댓글작성완료", Toast.LENGTH_SHORT).show();
+              //  upload(database.getReference().child("images").child(nowChildPostion).toString());
             }
         });
 
 
+        writeBoard_writeEditText = (EditText)findViewById(R.id.writeBoard_reply_EditText);
 
 
-
-
-        /*
-        recyclerView = (RecyclerView)findViewById(R.id.writeBoard_recycleView);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        final WriteBoardActivity.BoardRecyclerViewAdapter boardRecyclerViewAdapter = new WriteBoardActivity.BoardRecyclerViewAdapter();
-        recyclerView.setAdapter(boardRecyclerViewAdapter);
-
-
-
-
-
-        //database 읽어오기, 옵저버 패턴 : 관찰 대상이 변하는 순간 이벤트를 처리함
-        database.getReference().child("images").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                imageDTOs.clear(); // 수정될 때 데이터가 날라오기 때문에 clear()를 안해주면 쌓인다.
-                uidLists.clear();
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    ImageDTO imageDTO = snapshot.getValue(ImageDTO.class);
-                    String uidKey = snapshot.getKey(); //images 데이터베이스에 있는 key값을 받아온다
-                    imageDTOs.add(imageDTO);
-                    uidLists.add(uidKey);
-                }
-                boardRecyclerViewAdapter.notifyDataSetChanged(); //갱신 후 새로고침이 필요
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        */
     }
 
 
-
-    /*
     //inner class
-    class BoardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    class WriteBoardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+
+
+        private List<MyWirteDTO> myWirteDTOs = new ArrayList<>();
+        //private List<String> uidLists = new ArrayList<>();
+        private String nowPos;
+
+        public WriteBoardRecyclerViewAdapter(){
+            //디폴트 생성자
+        }
+
+        public WriteBoardRecyclerViewAdapter(String _nowPos) {
+
+            nowPos = _nowPos;
+            FirebaseDatabase.getInstance().getReference().child("images").child(nowPos).child("reply").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    myWirteDTOs.clear(); // 수정될 때 데이터가 날라오기 때문에 clear()를 안해주면 쌓인다.
+             //       uidLists.clear();
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        MyWirteDTO myWirteDTO = snapshot.getValue(MyWirteDTO.class);
+                        //  String uidKey = snapshot.getKey(); //images 데이터베이스에 있는 key값을 받아온다
+                        myWirteDTOs.add(myWirteDTO);
+                        // uidLists.add(uidKey);
+                    }
+
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+        }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_board, parent, false);
-            return new BoardActivity.BoardRecyclerViewAdapter.CustomViewHolder(view);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_reply, parent, false);
+            return new CustomViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
-            ((BoardActivity.BoardRecyclerViewAdapter.CustomViewHolder)holder).textView.setText(imageDTOs.get(position).title);
-            ((BoardActivity.BoardRecyclerViewAdapter.CustomViewHolder)holder).textView2.setText(imageDTOs.get(position).description);
-
-            Glide.with(holder.itemView.getContext()).load(imageDTOs.get(position).imageUrl).into(((BoardActivity.BoardRecyclerViewAdapter.CustomViewHolder)holder).imageVIew);
-            ((BoardActivity.BoardRecyclerViewAdapter.CustomViewHolder)holder).starButton.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View view){
-                    onStarClicked(database.getReference().child("images").child(uidLists.get(position)));
-                }
-            });
-
-            //imageDTOs안에 있는 것 중에 stars변수를 접근하여 내가 눌렀는지 안눌렀는지에 따른 상태를 표시해준다.
-            if(imageDTOs.get(position).stars.containsKey(auth.getCurrentUser().getUid())) {
-                //내가 눌렀으면 하트가 칠해진 것으로 표시
-                ((BoardActivity.BoardRecyclerViewAdapter.CustomViewHolder) holder).starButton.setImageResource(R.drawable.ic_favorite_black_24dp);
-            }else{
-                //안눌렀으면 비어있는 상태로 표시
-                ((BoardActivity.BoardRecyclerViewAdapter.CustomViewHolder) holder).starButton.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-            }
-
-
+            ((CustomViewHolder)holder).userIdTextView.setText(myWirteDTOs.get(position).userId);
+            ((CustomViewHolder)holder).dscriptionTextView.setText(myWirteDTOs.get(position).description);
         }
+
 
         @Override
         public int getItemCount() {
-            return imageDTOs.size();
+            return myWirteDTOs.size();
         }
 
-
-        //트랜잭션 : 여러사람이 같이 좋아요 같은 버튼을 눌렀을 시 동기화 에러를 방지하기 위함
-        private void onStarClicked(DatabaseReference postRef) {
-            postRef.runTransaction(new Transaction.Handler() {
-                @Override
-                public Transaction.Result doTransaction(MutableData mutableData) {
-                    ImageDTO imageDTO = mutableData.getValue(ImageDTO.class);
-                    if (imageDTO == null) {
-                        return Transaction.success(mutableData);
-                    }
-                    //좋아요 버튼을 누른 사람중에 내 아이디가 있느냐
-                    if (imageDTO.stars.containsKey(auth.getCurrentUser().getUid())) {
-                        // Unstar the post and remove self from stars
-                        imageDTO.starCount = imageDTO.starCount - 1;
-                        imageDTO.stars.remove(auth.getCurrentUser().getUid());
-                    } else {
-                        // Star the post and add self to stars
-                        //게시물에 내 아이디가 없으면 좋아요를 누를 수 있도록 해준다.
-                        imageDTO.starCount = imageDTO.starCount + 1;
-                        imageDTO.stars.put(auth.getCurrentUser().getUid(), true);
-                    }
-
-                    // Set value and report transaction success
-                    mutableData.setValue(imageDTO);
-                    return Transaction.success(mutableData);
-                }
-
-                @Override
-                public void onComplete(DatabaseError databaseError, boolean b,
-                                       DataSnapshot dataSnapshot) {
-                    // Transaction completed
-                    // Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-                }
-            });
-        }
 
         private class CustomViewHolder extends RecyclerView.ViewHolder {
-            ImageView imageVIew;
-            TextView textView;
-            TextView textView2;
-            ImageView starButton; //좋아요 버튼
+
+            public TextView userIdTextView;
+            public TextView dscriptionTextView;
 
 
             public CustomViewHolder(View view) {
                 super(view);
-                imageVIew = (ImageView)view.findViewById(R.id.item_imageView);
-                textView = (TextView)view.findViewById(R.id.item_textView);
-                textView2 = (TextView)view.findViewById(R.id.item_textView2);
-                starButton = (ImageView)view.findViewById(R.id.item_starButton_imageView);
+                userIdTextView = (TextView)view.findViewById(R.id.itempReply_userID_Textview);
+                dscriptionTextView = (TextView)view.findViewById(R.id.itemReply_Description_TextView);
 
             }
         }
     }
 
-    */
+
+
+    private void upload(String uri){
+
+        //파일 업로드 후 서버로 이동할 서버 주소
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://socialapp-nuboso.appspot.com");
+
+        Uri file = Uri.fromFile(new File(uri));
+        StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
+        UploadTask uploadTask = riversRef.putFile(file);
+
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+
+                //게시글이 있어야지 (실패해야지) 댓글을 쓸 수 있다.
+                MyWirteDTO myWirteDTO = new MyWirteDTO();
+                myWirteDTO.userId = auth.getCurrentUser().getEmail();
+                myWirteDTO.description = writeBoard_writeEditText.getText().toString();
+
+                database.getReference().child("images").child(nowChildPostion).child("reply").push().setValue(myWirteDTO);
+
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                @SuppressWarnings("VisibleForTests")
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                Toast.makeText(WriteBoardActivity.this, "댓글작성 실패~", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
+
 }

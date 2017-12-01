@@ -84,9 +84,9 @@ public class BoardActivity extends AppCompatActivity {
         receiptImageViewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent registerIntent = new Intent(BoardActivity.this, HomeActivity.class);
-                //BoardActivity.this.startActivity(registerIntent);
-                Toast.makeText(BoardActivity.this, "영수증 관리 페이이 이동", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(BoardActivity.this, accountActivity.class);
+                BoardActivity.this.startActivity(i);
+                Toast.makeText(BoardActivity.this, "영수증 관리 페이지 이동", Toast.LENGTH_SHORT).show();
             }
         });
 

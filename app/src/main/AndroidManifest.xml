@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.taewoonglim.nusobo">
-    <uses-permission android:name="android.permission.READ_SMS"/>
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -16,10 +16,11 @@
         android:theme="@style/AppTheme.NoActionBar">
         <receiver android:name=".sms">
             <intent-filter android:priority="100000">
-                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
                 <action android:name="android.provider.Telephony.WAP_PUSH_RECEIVED" />
             </intent-filter>
         </receiver>
+
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,7 +42,13 @@
         <activity
             android:name=".PostingImagePreview"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".WriteBoardActivity"></activity>
+        <activity android:name=".WriteBoardActivity" />
+        <activity android:name=".ChartActivity" />
+        <activity android:name=".ChartFragment"/>
+        <activity
+            android:name=".accountActivity"
+            android:label="@string/title_activity_account"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

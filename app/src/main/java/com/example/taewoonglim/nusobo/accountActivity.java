@@ -1,5 +1,6 @@
 package com.example.taewoonglim.nusobo;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -39,6 +42,7 @@ public class accountActivity extends AppCompatActivity {
      */
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ImageView account_backBtn_imageView;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -50,8 +54,20 @@ public class accountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+       // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
+
+
+        //뒤로가기 버튼
+        account_backBtn_imageView = (ImageView) findViewById(R.id.account_backBtn_imageView);
+        account_backBtn_imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(accountActivity.this, BoardActivity.class);
+                accountActivity.this.startActivity(i);
+            }
+        });
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -63,6 +79,8 @@ public class accountActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +89,9 @@ public class accountActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
+        */
 
     }
 

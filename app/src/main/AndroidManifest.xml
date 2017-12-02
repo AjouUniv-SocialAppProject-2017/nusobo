@@ -43,7 +43,6 @@
             android:name=".PostingImagePreview"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".WriteBoardActivity" />
-        <activity android:name=".ChartActivity" />
         <activity android:name=".ChartFragment"/>
         <activity
             android:name=".accountActivity"

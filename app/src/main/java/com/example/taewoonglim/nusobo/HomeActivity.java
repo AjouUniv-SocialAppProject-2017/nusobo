@@ -303,6 +303,7 @@ public class HomeActivity extends AppCompatActivity{
 
                 Toast.makeText(HomeActivity.this, "홓몸", Toast.LENGTH_LONG).show();
                 database.getReference().child("images").push().setValue(imageDTO);
+
             }
         });
     }

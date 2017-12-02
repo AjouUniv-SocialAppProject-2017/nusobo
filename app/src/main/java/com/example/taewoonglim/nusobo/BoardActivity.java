@@ -27,12 +27,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class BoardActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
 
     private List<ImageDTO> imageDTOs = new ArrayList<>();
+    private Stack<ImageDTO> temp_imageDTOs = new Stack<>();
     private List<String> uidLists = new ArrayList<>();
     private FirebaseDatabase database;
     private FirebaseAuth auth;
@@ -116,13 +118,25 @@ public class BoardActivity extends AppCompatActivity {
 
                         imageDTOs.clear(); // 수정될 때 데이터가 날라오기 때문에 clear()를 안해주면 쌓인다.
                         uidLists.clear();
+                        temp_imageDTOs.clear(); // 혹시 몰라 clear;
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                             ImageDTO imageDTO = snapshot.getValue(ImageDTO.class);
                             String uidKey = snapshot.getKey(); //images 데이터베이스에 있는 key값을 받아온다
 
-                            imageDTOs.add(imageDTO);
+                            temp_imageDTOs.push(imageDTO);
+
                             uidLists.add(uidKey);
                         }
+
+                        //역순으로 뿌려주기
+                        while(!temp_imageDTOs.empty()){
+
+                            ImageDTO temp = temp_imageDTOs.pop();
+                            imageDTOs.add(temp);
+                        }
+
+
+
                         boardRecyclerViewAdapter.notifyDataSetChanged(); //갱신 후 새로고침이 필요
 
             }
@@ -155,23 +169,31 @@ public class BoardActivity extends AppCompatActivity {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_board, parent, false);
+        //    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_board, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notice, parent, false);
+
+
             return new CustomViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
-            ((CustomViewHolder)holder).textView.setText(imageDTOs.get(position).title);
-            ((CustomViewHolder)holder).textView2.setText(imageDTOs.get(position).description);
+            ((CustomViewHolder)holder).title_textView.setText(imageDTOs.get(position).title);
+            ((CustomViewHolder)holder).content_textView.setText(imageDTOs.get(position).description);
+            ((CustomViewHolder)holder).heartCtn_textView.setText(Integer.toString(imageDTOs.get(position).starCount));
+
 
             Glide.with(holder.itemView.getContext()).load(imageDTOs.get(position).imageUrl).into(((CustomViewHolder)holder).imageVIew);
             ((CustomViewHolder)holder).starButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view){
                     onStarClicked(database.getReference().child("images").child(uidLists.get(position)));
+
+
                 }
             });
+
 
 
 
@@ -250,19 +272,32 @@ public class BoardActivity extends AppCompatActivity {
 
         private class CustomViewHolder extends RecyclerView.ViewHolder {
             ImageView imageVIew;
-            TextView textView;
-            TextView textView2;
+            TextView title_textView;
+            TextView content_textView;
             ImageView starButton; //좋아요 버튼
             ImageView writeButton; //게시글 작성 버튼
+            TextView heartCtn_textView; //좋아요 개수
+
 
 
             public CustomViewHolder(View view) {
                 super(view);
+
+                /*
                 imageVIew = (ImageView)view.findViewById(R.id.item_imageView); //sns 큰 이미지
                 textView = (TextView)view.findViewById(R.id.item_textView);  //
                 textView2 = (TextView)view.findViewById(R.id.item_textView2);
                 starButton = (ImageView)view.findViewById(R.id.item_starButton_imageView);
                 writeButton = (ImageView)view.findViewById(R.id.item_writeButton_imageView);
+                */
+
+
+                imageVIew = (ImageView)view.findViewById(R.id.item_notice_Imgae_ImageView); //sns 큰 이미지
+                title_textView = (TextView)view.findViewById(R.id.item_notice_title_TextView);  //
+                content_textView = (TextView)view.findViewById(R.id.item_notice_content_TextView);
+                starButton = (ImageView)view.findViewById(R.id.item_notice_heart_ImageView);
+                writeButton = (ImageView)view.findViewById(R.id.item_notice_reply_ImageView);
+                heartCtn_textView = (TextView)view.findViewById(R.id.item_notice_count_TextView);
             }
         }
     }

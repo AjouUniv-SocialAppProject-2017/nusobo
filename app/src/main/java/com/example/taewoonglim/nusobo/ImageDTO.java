@@ -15,6 +15,8 @@ public class ImageDTO {
     public String uid;
     public String userId;
 
+    public String timeStamp;
+
 
     public int starCount = 0;
     public Map<String, Boolean> stars = new HashMap<>();

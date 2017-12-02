@@ -12,6 +12,7 @@ public class MyWirteDTO {
 
     public String description;
     public String userId;
+    public String timeStamp;
 
 
 }

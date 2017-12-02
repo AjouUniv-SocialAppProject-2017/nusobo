@@ -182,6 +182,8 @@ public class BoardActivity extends AppCompatActivity {
             ((CustomViewHolder)holder).title_textView.setText(imageDTOs.get(position).title);
             ((CustomViewHolder)holder).content_textView.setText(imageDTOs.get(position).description);
             ((CustomViewHolder)holder).heartCtn_textView.setText(Integer.toString(imageDTOs.get(position).starCount));
+            ((CustomViewHolder)holder).timeStamp_textView.setText(imageDTOs.get(position).timeStamp);
+            ((CustomViewHolder)holder).writer_textView.setText(imageDTOs.get(position).userId);
 
 
             Glide.with(holder.itemView.getContext()).load(imageDTOs.get(position).imageUrl).into(((CustomViewHolder)holder).imageVIew);
@@ -277,6 +279,8 @@ public class BoardActivity extends AppCompatActivity {
             ImageView starButton; //좋아요 버튼
             ImageView writeButton; //게시글 작성 버튼
             TextView heartCtn_textView; //좋아요 개수
+            TextView timeStamp_textView; //작성시간
+            TextView writer_textView; //작성자
 
 
 
@@ -298,6 +302,8 @@ public class BoardActivity extends AppCompatActivity {
                 starButton = (ImageView)view.findViewById(R.id.item_notice_heart_ImageView);
                 writeButton = (ImageView)view.findViewById(R.id.item_notice_reply_ImageView);
                 heartCtn_textView = (TextView)view.findViewById(R.id.item_notice_count_TextView);
+                timeStamp_textView = (TextView)view.findViewById(R.id.item_notice_date_TextView); //작성시간
+                writer_textView = (TextView)view.findViewById(R.id.item_notice_writer_TextView); //작성자
             }
         }
     }

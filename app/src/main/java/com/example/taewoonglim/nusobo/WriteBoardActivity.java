@@ -30,8 +30,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class WriteBoardActivity extends AppCompatActivity {
 
@@ -50,6 +53,9 @@ public class WriteBoardActivity extends AppCompatActivity {
     private String nowChildPostion;
 
 
+    //타임스탬프에 적용하기 위해
+    //시간을 받아올 때는 유니스 시간이므로 사람이 알아볼 수 있도록 변환해주어야한다.
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd. hh:mm");
 
 
     @Override
@@ -89,6 +95,7 @@ public class WriteBoardActivity extends AppCompatActivity {
         writeBoard_WriteBtnImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 upload(nowChildPostion);
                 Toast.makeText(WriteBoardActivity.this, "댓글작성완료", Toast.LENGTH_SHORT).show();
               //  upload(database.getReference().child("images").child(nowChildPostion).toString());
@@ -153,6 +160,7 @@ public class WriteBoardActivity extends AppCompatActivity {
 
             ((CustomViewHolder)holder).userIdTextView.setText(myWirteDTOs.get(position).userId);
             ((CustomViewHolder)holder).dscriptionTextView.setText(myWirteDTOs.get(position).description);
+            ((CustomViewHolder)holder).timestampTextView.setText(myWirteDTOs.get(position).timeStamp);
         }
 
 
@@ -166,12 +174,14 @@ public class WriteBoardActivity extends AppCompatActivity {
 
             public TextView userIdTextView;
             public TextView dscriptionTextView;
+            public TextView timestampTextView;
 
 
             public CustomViewHolder(View view) {
                 super(view);
                 userIdTextView = (TextView)view.findViewById(R.id.itempReply_userID_Textview);
                 dscriptionTextView = (TextView)view.findViewById(R.id.itemReply_Description_TextView);
+                timestampTextView = (TextView)view.findViewById(R.id.itemReply_timeStamp_TextView);
 
             }
         }
@@ -194,10 +204,21 @@ public class WriteBoardActivity extends AppCompatActivity {
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
 
+                //타임스탬프
+                long nowUnixtime = System.currentTimeMillis();
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+                Date date = new Date(nowUnixtime);
+
+
+
                 //게시글이 있어야지 (실패해야지) 댓글을 쓸 수 있다.
                 MyWirteDTO myWirteDTO = new MyWirteDTO();
                 myWirteDTO.userId = auth.getCurrentUser().getEmail();
                 myWirteDTO.description = writeBoard_writeEditText.getText().toString();
+                myWirteDTO.timeStamp = simpleDateFormat.format(date);
+
+
+
 
                 database.getReference().child("images").child(nowChildPostion).child("reply").push().setValue(myWirteDTO);
 

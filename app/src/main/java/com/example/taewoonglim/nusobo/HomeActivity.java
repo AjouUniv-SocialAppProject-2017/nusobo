@@ -46,7 +46,10 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class HomeActivity extends AppCompatActivity{
        // implements NavigationView.OnNavigationItemSelectedListener {
@@ -64,6 +67,12 @@ public class HomeActivity extends AppCompatActivity{
 
     private ImageView contentBackImageView;
     private ImageView contentUploadImageView;
+
+
+
+    //타임스탬프에 적용하기 위해
+    //시간을 받아올 때는 유니스 시간이므로 사람이 알아볼 수 있도록 변환해주어야한다.
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd. hh:mm");
 
 
     @Override
@@ -121,143 +130,9 @@ public class HomeActivity extends AppCompatActivity{
         }
 
 
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-     //   ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-        //        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-     //   drawer.setDrawerListener(toggle);
-    //    toggle.syncState();
-
-     //   NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-      //  navigationView.setNavigationItemSelectedListener(this);
-
-
-
-        //자신의 이름과 이메일을 왼쪽 마이페이지에 표시
-     //   View view = navigationView.getHeaderView(0);
-     //   nameTextView = (TextView)view.findViewById(R.id.header_name_textView);
-   //     emailTextView = (TextView)view.findViewById(R.id.header_email_textView); //이메일이 왜 안나오는지 모르겠음
-
-        nameTextView.setText(mAuth.getCurrentUser().getDisplayName());
-        emailTextView.setText(mAuth.getCurrentUser().getEmail());
-
-
-
-        //업로드 버튼
-        uploadBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-
-                upload(imagePath);
-
-            }
-        });
-    */
-
 
     }
-  /*
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_board) {
-
-            startActivity(new Intent(HomeActivity.this, BoardActivity.class));
-
-        } else if (id == R.id.nav_gallery) {
-
-            //사진 가져오는 부분분
-           Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-
-            startActivityForResult(intent, GALLERY_CODE);
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        } else if (id == R.id.nav_logout) {
-            mAuth.signOut();
-            finish();
-            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-            startActivity(intent);
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-*/
-
-
-    /*
-    @Override  // 클릭을 하면 결과값이 넘어온다
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if(requestCode == GALLERY_CODE){
-
-          //  String path = data.getData(); //데이터 경로를 받아온다.
-
-            //갤러리에서 선택한 이미지 HomeActivity에 올리기
-            imagePath = getPath(data.getData());
-            File f = new File(imagePath);
-            imageView.setImageURI(Uri.fromFile(f));
-
-
-
-        }
-    }*/
 
     public String getPath(Uri uri){
         String []proj = {MediaStore.Images.Media.DATA};
@@ -299,6 +174,16 @@ public class HomeActivity extends AppCompatActivity{
                 imageDTO.description = description.getText().toString();
                 imageDTO.uid = mAuth.getCurrentUser().getUid();
                 imageDTO.userId = mAuth.getCurrentUser().getEmail();
+
+
+
+
+
+                //타임스탬프
+                long nowUnixtime = System.currentTimeMillis();
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+                Date date = new Date(nowUnixtime);
+                imageDTO.timeStamp = simpleDateFormat.format(date);
 
 
                 Toast.makeText(HomeActivity.this, "홓몸", Toast.LENGTH_LONG).show();

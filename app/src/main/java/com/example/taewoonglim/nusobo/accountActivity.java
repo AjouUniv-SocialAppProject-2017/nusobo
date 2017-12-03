@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,8 +31,13 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
-public class accountActivity extends AppCompatActivity {
+public class accountActivity extends AppCompatActivity implements incomeDialog.incomeDialogListener {
+    @Override
+    public void applyTexts(String money, String content) {
+        //textViewuserName.setText(userName);
+    }
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -40,7 +47,9 @@ public class accountActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-
+    FloatingActionButton fab_plus,fab_income,fab_expense;
+    Animation FabOpen,FabClose,FabRClockingwise,FabRAnticlockingwise;
+    boolean isOpen=false;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ImageView account_backBtn_imageView;
 
@@ -53,6 +62,50 @@ public class accountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
+        fab_plus=(FloatingActionButton)findViewById(R.id.fab_plus);
+        fab_income=(FloatingActionButton)findViewById(R.id.fab_income);
+        fab_expense=(FloatingActionButton)findViewById(R.id.fab_expense);
+        FabOpen= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
+        FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
+        FabRClockingwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
+        FabRAnticlockingwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise);
+        Calendar cal= Calendar.getInstance();
+        int year= cal.get(Calendar.YEAR);
+        int monty=cal.get(Calendar.MONTH);
+        int dat=cal.get(Calendar.DAY_OF_MONTH);
+        fab_plus.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if(isOpen){
+                    fab_expense.startAnimation(FabClose);
+                    fab_income.startAnimation(FabClose);
+                    fab_plus.startAnimation(FabRAnticlockingwise);
+                    fab_expense.setClickable(false);
+                    fab_income.setClickable(false);
+                    isOpen=false;
+                }
+                else{
+                    fab_expense.startAnimation(FabOpen);
+                    fab_income.startAnimation(FabOpen);
+                    fab_plus.startAnimation(FabRClockingwise);
+                    fab_expense.setClickable(true);
+                    fab_income.setClickable(true);
+                    isOpen=true;
+                }
+            }
+        });
+        fab_expense.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        fab_income.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                openDialog();
+            }
+        });
 
        // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
@@ -116,6 +169,10 @@ public class accountActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public void openDialog(){
+        incomeDialog incomeDialog= new incomeDialog();
+        incomeDialog.show(getSupportFragmentManager(),"example dialog");
     }
 
     /**

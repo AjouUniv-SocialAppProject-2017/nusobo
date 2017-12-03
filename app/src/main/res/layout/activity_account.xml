@@ -8,6 +8,8 @@
     android:fitsSystemWindows="true"
     tools:context="com.example.taewoonglim.nusobo.accountActivity">
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -72,6 +74,41 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </LinearLayout>
-
-
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="62dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="@dimen/fab_margin_right"
+        android:layout_marginBottom="190dp"
+        android:src="@drawable/ic_action_expense"
+        android:elevation="6dp"
+        android:id="@+id/fab_expense"
+        app:pressedTranslationZ="12dp"
+        app:backgroundTint="@color/fab1_color"
+        android:visibility="invisible"
+        />
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="62dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="@dimen/fab_margin_right"
+        android:layout_marginBottom="110dp"
+        android:src="@drawable/ic_action_income"
+        android:elevation="6dp"
+        android:id="@+id/fab_income"
+        app:pressedTranslationZ="12dp"
+        app:backgroundTint="@color/fab2_color"
+        android:visibility="invisible"
+        />
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="62dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="@dimen/fab_margin_right"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/ic_action_plus"
+        android:elevation="6dp"
+        android:id="@+id/fab_plus"
+        app:pressedTranslationZ="12dp"
+        />
 </android.support.design.widget.CoordinatorLayout>

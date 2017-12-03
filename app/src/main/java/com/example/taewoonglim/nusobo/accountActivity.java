@@ -33,9 +33,14 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class accountActivity extends AppCompatActivity implements incomeDialog.incomeDialogListener {
+public class accountActivity extends AppCompatActivity implements incomeDialog.incomeDialogListener,expenseDialog.expenseDialogListener {
     @Override
-    public void applyTexts(String money, String content) {
+    public void applyTextsExpense(String year, String month, String day, String money, String content) {
+
+    }
+
+    @Override
+    public void applyTexts(String year,String month,String day,String money, String content) {
         //textViewuserName.setText(userName);
     }
 
@@ -73,6 +78,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         int year= cal.get(Calendar.YEAR);
         int monty=cal.get(Calendar.MONTH);
         int dat=cal.get(Calendar.DAY_OF_MONTH);
+
         fab_plus.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -97,7 +103,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         fab_expense.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-
+                openExpenseDialog();
             }
         });
         fab_income.setOnClickListener(new View.OnClickListener(){
@@ -172,7 +178,11 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
     }
     public void openDialog(){
         incomeDialog incomeDialog= new incomeDialog();
-        incomeDialog.show(getSupportFragmentManager(),"example dialog");
+        incomeDialog.show(getSupportFragmentManager(),"income dialog");
+    }
+    public void openExpenseDialog(){
+        expenseDialog expenseDialog=new expenseDialog();
+        expenseDialog.show(getSupportFragmentManager(),"expense dialog");
     }
 
     /**

@@ -1,6 +1,13 @@
 package com.example.taewoonglim.nusobo;
 
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.Typeface;
+import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,6 +19,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.BulletSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.ReplacementSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,11 +44,25 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.CalendarMode;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 
 public class accountActivity extends AppCompatActivity implements incomeDialog.incomeDialogListener,expenseDialog.expenseDialogListener {
+
+
+
     @Override
     public void applyTextsExpense(String year, String month, String day, String money, String content) {
 
@@ -74,6 +103,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         FabRClockingwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
         FabRAnticlockingwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise);
+
         Calendar cal= Calendar.getInstance();
         int year= cal.get(Calendar.YEAR);
         int monty=cal.get(Calendar.MONTH);
@@ -184,15 +214,108 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         expenseDialog expenseDialog=new expenseDialog();
         expenseDialog.show(getSupportFragmentManager(),"expense dialog");
     }
+    public void calendarDialog(){
+        calendarDialog calendDialog=new calendarDialog();
+        calendDialog.show(getSupportFragmentManager()," dialog");
+    }
+
 
     /**
      * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
+     */public class OneDayDecorator implements DayViewDecorator {
+
+        private CalendarDay date;
+
+        public OneDayDecorator() {
+            date = CalendarDay.today();
+        }
+
+        @Override
+        public boolean shouldDecorate(CalendarDay day) {
+            return date != null && day.equals(date);
+        }
+
+        @Override
+        public void decorate(DayViewFacade view) {
+            view.addSpan(new StyleSpan(Typeface.BOLD));
+            view.addSpan(new RelativeSizeSpan(1.4f));
+            view.addSpan(new ForegroundColorSpan(Color.GREEN));
+
+        }
+
+        /**
+         * We're changing the internals, so make sure to call {@linkplain MaterialCalendarView#invalidateDecorators()}
+         */
+        public void setDate(Date date) {
+            this.date = CalendarDay.from(date);
+        }
+    }
+    public class RoundedBackgroundSpan extends ReplacementSpan{
+
+        @Override
+        public  void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint)
+        {
+            RectF rect = new RectF(x, top, x + measureText(paint, text, start, end), bottom);
+            paint.setColor(Color.BLUE);
+            canvas.drawRoundRect(rect, 10f, 10f, paint);
+            paint.setColor(Color.WHITE);
+            canvas.drawText(text, start, end, x, y, paint);
+        }
+        @Override
+        public  int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm)
+        {
+            return Math.round(measureText(paint, text, start, end));
+        }
+
+        private float measureText(Paint paint, CharSequence text, int start, int end)
+        {
+            return paint.measureText(text, start, end);
+        }
+
+    }
+    public static class EventDecorator implements DayViewDecorator {
+
+        private final int color;
+        private final HashSet<CalendarDay> dates;
+
+        public EventDecorator(int color, Collection<CalendarDay> dates) {
+            this.color = color;
+            this.dates = new HashSet<>(dates);
+        }
+
+        @Override
+        public boolean shouldDecorate(CalendarDay day) {
+            return dates.contains(day);
+        }
+
+        @Override
+        public void decorate(DayViewFacade view) {
+             //   view.addSpan(new RoundedBackgroundSpan);
+          //  SpannableString styledString = new SpannableString("Hi");
+          //  styledString.setSpan(new StyleSpan(Typeface.BOLD), 0, 2, 0);
+          //  styledString.setSpan(styledString,0,2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+          //  view.addSpan(styledString);
+          view.addSpan(new DotSpan(5, color));
+          //  Spannable s=;
+            //textView.setMovementMethod(Link);
+           // view.addSpan(new BulletSpan());
+       //     TextSpan tx=new TextSapn();
+
+    //        word.setSpan(new ForegroundColorSpan(color),5,5,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+      //      view.addSpan(word);
+        }
+    }
+
+
+    public static class PlaceholderFragment extends Fragment{
         /**
          * The fragment argument representing the section number for this
          * fragment.
          */
+
+
+
+
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
@@ -214,6 +337,8 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         ArrayList<String> BarEntryLabels ;
         BarDataSet Bardataset ;
         BarData BARDATA ;
+
+
         public void AddValuesToBARENTRY(){
 
             BARENTRY.add(new BarEntry(2f, 0));
@@ -235,11 +360,56 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             BarEntryLabels.add("June");
 
         }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+
+            MaterialCalendarView mcv;
+            MaterialCalendarView mcv2;
+
+
             if(getArguments().getInt(ARG_SECTION_NUMBER)==2) {
                 View rootView = inflater.inflate(R.layout.fragment_income, container, false);
+                //@Bind(R.id.calendarView)
+
+                mcv=(MaterialCalendarView) rootView.findViewById(R.id.calendarView);
+                mcv.state().edit()
+                        .setFirstDayOfWeek(Calendar.SUNDAY)
+                        .setMinimumDate(CalendarDay.from(2017, 0, 1))
+                        .setMaximumDate(CalendarDay.from(2030, 11, 31))
+                        .setCalendarDisplayMode(CalendarMode.MONTHS)
+                        .commit();
+                Calendar calendar=Calendar.getInstance();
+
+                int year=2017;
+                int Month=12;
+                int day3= 5;
+                calendar.set(year,Month-1,day3);
+                ArrayList<CalendarDay> dates = new ArrayList<>();
+                CalendarDay day=CalendarDay.from(calendar);
+                dates.add(day);
+//                calendar.add(Calendar.MONTH, -2);
+//                ArrayList<CalendarDay> dates = new ArrayList<>();
+//                for (int i = 0; i < 30; i++) {
+//                    CalendarDay day = CalendarDay.from(calendar);
+//                    dates.add(day);
+//                    calendar.add(Calendar.DATE, 5);
+//                }
+//                       public EventDecorator(int color, Collection<CalendarDay> dates) {
+//                    this.color = color;
+//                    this.dates = new HashSet<>(dates);
+//                }
+                List<CalendarDay> calenderDays=dates;
+                mcv.addDecorator(new EventDecorator(Color.RED,calenderDays));
+
+                mcv.setOnDateChangedListener(new OnDateSelectedListener() {
+                    @Override
+                    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                        calendarDialog calendarDialog=new calendarDialog();
+                        calendarDialog.show(getFragmentManager(),"Calendar Dialog");
+                    }
+                });
 
                 return rootView;
             }
@@ -269,8 +439,19 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             }
             else {
                 View rootView = inflater.inflate(R.layout.fragment_account, container, false);
-                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+                mcv2=(MaterialCalendarView) rootView.findViewById(R.id.calendarView);
+                mcv2.state().edit()
+                        .setFirstDayOfWeek(Calendar.SUNDAY)
+                        .setMinimumDate(CalendarDay.from(2017, 0, 1))
+                        .setMaximumDate(CalendarDay.from(2030, 11, 31))
+                        .setCalendarDisplayMode(CalendarMode.MONTHS)
+                        .commit();
+                    /*    mcv2.setOnDateChangedListener(new OnDateSelectedListener() {
+                    @Override
+                    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                    }
+                }*/
                 return rootView;
             }
         }

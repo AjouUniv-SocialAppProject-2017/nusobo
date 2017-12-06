@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +32,11 @@ import android.view.ViewGroup;
 
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -46,6 +51,7 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -302,6 +308,27 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public static class PlaceholderFragment extends Fragment{
         /**
          * The fragment argument representing the section number for this
@@ -311,10 +338,35 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
 
 
+        //태웅
 
         private RecyclerView recyclerView;
         private AccountRecyclerViewAdapter accountRecyclerViewAdapter;
         private List<AccountDTO> accountDTOs = new ArrayList<>();
+
+        //현재시간
+        private long now = System.currentTimeMillis();
+        private Date date = new Date(now);
+        private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        private String formatDate = simpleDateFormat.format(date);
+
+        //년 월 일로 쪼개기
+        private String [] dateArr = formatDate.split("/");
+
+        private int _year = Integer.parseInt(dateArr[0]);
+        private int _month  = Integer.parseInt(dateArr[1]);
+        private int _day = Integer.parseInt(dateArr[2]);
+
+        private ImageButton accountFragmentRight_ImageButton;
+        private ImageButton accountFragmentLeft_ImageButton;
+
+
+        private TextView accountFragmentMainDate_TextView;
+
+
+        //태웅 끝
+
+
 
 
 
@@ -446,15 +498,92 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                 //태웅 여기서 하면됨 수입 fragment_account
                 View rootView = inflater.inflate(R.layout.fragment_account, container, false);
 
+
+
+                accountFragmentMainDate_TextView = (TextView)rootView.findViewById(R.id.account_date_textview);
+                accountFragmentMainDate_TextView.setText(_year + "." + _month);
+
+
+
+                accountFragmentRight_ImageButton = (ImageButton)rootView.findViewById(R.id.account_right_button);
+                accountFragmentLeft_ImageButton = (ImageButton)rootView.findViewById(R.id.account_left_button);
+
+                accountFragmentRight_ImageButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if(_month == 12){
+                            _month = 1;
+                            _year++;
+                        }else{
+                            _month++;
+                        }
+
+
+                        //갱신
+                        accountFragmentMainDate_TextView.setText(_year + "." + _month);
+                        accountRecyclerViewAdapter.notifyDataSetChanged(); //갱신이 안됨..ㅠㅠ
+
+                    }
+                });
+
+                accountFragmentLeft_ImageButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if(_month == 1){
+                            _month = 12;
+                            _year--;
+                        }else{
+                            _month--;
+                        }
+
+
+                        //갱신
+                        accountFragmentMainDate_TextView.setText(_year + "." + _month);
+                        accountRecyclerViewAdapter.notifyDataSetChanged(); //갱신안됨...ㅠㅠ
+
+                    }
+                });
+
                 //여기서부터 태웅 건들지말 것 !!
 
-                recyclerView = (RecyclerView)rootView.findViewById(R.id.account_recycleView);
-                recyclerView.setHasFixedSize(true);
 
+                Calendar cal = Calendar.getInstance();
+                cal.set(_year, _month-1, _day);
+
+
+
+
+                //혹시 몰라 clear;
+                accountDTOs.clear();
+
+                for(int i = 0; i < cal.getActualMaximum(Calendar.DAY_OF_MONTH); i++){
+
+                    AccountDTO temp_AccountDTO = new AccountDTO();
+
+
+                    //일 수는 2자리로 표현
+                    String temp_day = String.format("%02d", i+1);
+                    //날 2자리로 표현
+                    String temp_month = String.format("%02d", _month);
+
+                    temp_AccountDTO.date = " " +String.valueOf(_year) + "." + temp_month + "." + temp_day + " ";
+                    temp_AccountDTO.money = "0원";
+
+                    accountDTOs.add(temp_AccountDTO);
+                }
+
+
+
+                recyclerView = (RecyclerView)rootView.findViewById(R.id.account_recycleView);
+                //recyclerView.setHasFixedSize(true);
 
                 accountRecyclerViewAdapter = new AccountRecyclerViewAdapter(getActivity(), accountDTOs);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.setAdapter(accountRecyclerViewAdapter);
+
+
 
 
                 //태웅 끝
@@ -466,6 +595,27 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                 return rootView;
             }
         }
+
+
+
+
+
+        /*
+        갱신할 때 필요할 것 같은데 잘 안됨...모르겠음;;
+        @Override
+        public void onResume(){
+            super.onResume();
+
+            if(accountRecyclerViewAdapter == null)
+            {
+                //pass;
+            }else{
+                accountRecyclerViewAdapter.notifyDataSetChanged();
+            }
+
+        }
+        */
+
     }
 
     /**

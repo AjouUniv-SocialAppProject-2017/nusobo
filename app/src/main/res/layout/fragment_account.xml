@@ -30,11 +30,13 @@
         <TextView
             android:id="@+id/account_date_textview"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/rectangle_layout"
             android:text="2017년 10월"
             android:textAlignment="center"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:gravity="center"/>
 
         <ImageButton
             android:id="@+id/account_right_button"

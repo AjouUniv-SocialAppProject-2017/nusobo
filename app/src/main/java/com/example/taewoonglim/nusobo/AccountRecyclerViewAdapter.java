@@ -29,13 +29,10 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public AccountRecyclerViewAdapter(Context _context, List<AccountDTO> _accountDTOs){
 
         mContext = _context;
+
+        maccountDTOs.clear();
         maccountDTOs = _accountDTOs;
-        AccountDTO d = new AccountDTO();
-        d.money = "7000원";
-        d.date = "2017년 11월 23일";
 
-
-        maccountDTOs.add(d);
 
     }
 
@@ -81,16 +78,6 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             date_textView = (TextView)view.findViewById(R.id.item_account_date_textview);
             money_textView = (TextView)view.findViewById(R.id.item_account_money_textview);
-
-          //  date_textView.setText("2017년 10월 31일");
-            //money_textView.setText("7000원");
-                /*
-                imageVIew = (ImageView)view.findViewById(R.id.item_imageView); //sns 큰 이미지
-                textView = (TextView)view.findViewById(R.id.item_textView);  //
-                textView2 = (TextView)view.findViewById(R.id.item_textView2);
-                starButton = (ImageView)view.findViewById(R.id.item_starButton_imageView);
-                writeButton = (ImageView)view.findViewById(R.id.item_writeButton_imageView);
-                */
 
         }
     }

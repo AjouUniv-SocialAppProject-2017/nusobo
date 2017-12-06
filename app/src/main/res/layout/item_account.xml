@@ -2,8 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,20 +18,25 @@
             android:id="@+id/item_account_date_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_weight="0.05"
-            android:text="2017년 10월 03일"
+            android:text="2017년 12월 30일"
             android:textAlignment="center"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:background="@drawable/rectangle_layout"/>
 
         <TextView
             android:id="@+id/item_account_money_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:text="7000원"
             android:textAlignment="viewEnd"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:background="@drawable/rectangle_layout"
+            />
     </LinearLayout>
 </LinearLayout>

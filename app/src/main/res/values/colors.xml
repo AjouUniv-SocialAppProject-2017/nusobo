@@ -3,10 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-<<<<<<< HEAD
     <color name="colorMian">	#DC143C</color>>
-=======
     <color name="fab1_color">#4CAF50</color>
     <color name="fab2_color">#1f96ec</color>
->>>>>>> 6db872dad587a50cf429771babe7f953332d624a
+
 </resources>

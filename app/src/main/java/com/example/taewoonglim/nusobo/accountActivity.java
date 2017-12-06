@@ -1,28 +1,24 @@
 package com.example.taewoonglim.nusobo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.BulletSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.ReplacementSpan;
@@ -35,9 +31,7 @@ import android.view.ViewGroup;
 
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -60,6 +54,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class accountActivity extends AppCompatActivity implements incomeDialog.incomeDialogListener,expenseDialog.expenseDialogListener {
+
 
 
 
@@ -316,6 +311,13 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
 
 
+
+        private RecyclerView recyclerView;
+        private AccountRecyclerViewAdapter accountRecyclerViewAdapter;
+        private List<AccountDTO> accountDTOs = new ArrayList<>();
+
+
+
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
@@ -332,6 +334,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             fragment.setArguments(args);
             return fragment;
         }
+
         BarChart chart ;
         ArrayList<BarEntry> BARENTRY ;
         ArrayList<String> BarEntryLabels ;
@@ -367,6 +370,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
             MaterialCalendarView mcv;
             MaterialCalendarView mcv2;
+
 
 
             if(getArguments().getInt(ARG_SECTION_NUMBER)==2) {
@@ -438,15 +442,22 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                 return rootView;
             }
             else {
+
+                //태웅 여기서 하면됨 수입 fragment_account
                 View rootView = inflater.inflate(R.layout.fragment_account, container, false);
 
-                mcv2=(MaterialCalendarView) rootView.findViewById(R.id.calendarView);
-                mcv2.state().edit()
-                        .setFirstDayOfWeek(Calendar.SUNDAY)
-                        .setMinimumDate(CalendarDay.from(2017, 0, 1))
-                        .setMaximumDate(CalendarDay.from(2030, 11, 31))
-                        .setCalendarDisplayMode(CalendarMode.MONTHS)
-                        .commit();
+                //여기서부터 태웅 건들지말 것 !!
+
+                recyclerView = (RecyclerView)rootView.findViewById(R.id.account_recycleView);
+                recyclerView.setHasFixedSize(true);
+
+
+                accountRecyclerViewAdapter = new AccountRecyclerViewAdapter(getActivity(), accountDTOs);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                recyclerView.setAdapter(accountRecyclerViewAdapter);
+
+
+                //태웅 끝
                     /*    mcv2.setOnDateChangedListener(new OnDateSelectedListener() {
                     @Override
                     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {

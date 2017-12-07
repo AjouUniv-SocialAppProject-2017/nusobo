@@ -24,6 +24,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.ReplacementSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +44,11 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
@@ -56,6 +62,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -343,6 +350,8 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         private RecyclerView recyclerView;
         private AccountRecyclerViewAdapter accountRecyclerViewAdapter;
         private List<AccountDTO> accountDTOs = new ArrayList<>();
+        private HashMap<String, String> map_account = new HashMap<String, String>();
+
 
         //현재시간
         private long now = System.currentTimeMillis();
@@ -362,6 +371,11 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
 
         private TextView accountFragmentMainDate_TextView;
+
+        private FirebaseDatabase mDatabase;
+        private FirebaseAuth mAuth;
+
+        private List<User> userList = new ArrayList<>();
 
 
         //태웅 끝
@@ -422,8 +436,8 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
             MaterialCalendarView mcv;
             MaterialCalendarView mcv2;
-
-
+            mDatabase = FirebaseDatabase.getInstance();
+            mAuth = FirebaseAuth.getInstance();
 
             if(getArguments().getInt(ARG_SECTION_NUMBER)==2) {
                 View rootView = inflater.inflate(R.layout.fragment_income, container, false);
@@ -496,6 +510,8 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             else {
 
                 //태웅 여기서 하면됨 수입 fragment_account
+                //여기서부터 태웅 건들지말 것 !!
+
                 View rootView = inflater.inflate(R.layout.fragment_account, container, false);
 
 
@@ -507,6 +523,9 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
                 accountFragmentRight_ImageButton = (ImageButton)rootView.findViewById(R.id.account_right_button);
                 accountFragmentLeft_ImageButton = (ImageButton)rootView.findViewById(R.id.account_left_button);
+
+
+
 
                 accountFragmentRight_ImageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -521,7 +540,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
 
                         //갱신
-                        accountFragmentMainDate_TextView.setText(_year + "." + _month);
+                        accountFragmentMainDate_TextView.setText(_year + "." + String.format("%02d",_month));
                         accountRecyclerViewAdapter.notifyDataSetChanged(); //갱신이 안됨..ㅠㅠ
 
                     }
@@ -538,21 +557,56 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                             _month--;
                         }
 
-
                         //갱신
-                        accountFragmentMainDate_TextView.setText(_year + "." + _month);
+                        accountFragmentMainDate_TextView.setText(_year + "." + String.format("%02d",_month));
                         accountRecyclerViewAdapter.notifyDataSetChanged(); //갱신안됨...ㅠㅠ
 
                     }
                 });
 
-                //여기서부터 태웅 건들지말 것 !!
+
+
+
+
+                String myEmail = mAuth.getCurrentUser().getEmail();
+
+                //firebase "@" "," <- 특정문자 못읽음 ㅡㅡ
+                myEmail = myEmail.replace("@", "");
+                myEmail = myEmail.replace(".", "");
+
+
+                //database 읽어오기, 옵저버 패턴 : 관찰 대상이 변하는 순간 이벤트를 처리함
+                mDatabase.getReference().child("users").child(myEmail).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        userList.clear();// 수정될 때 데이터가 날라오기 때문에 clear()를 안해주면 쌓인다.
+                        map_account.clear();
+                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                           // User tempUser= snapshot.getValue(User.class);
+                            String uidKeyDate = snapshot.getKey(); // 데이터베이스에 있는 key( 날짜형식 ex) 2017_12_31 )값을 받아온다
+                            String tempMoney = snapshot.getValue(String.class);
+
+                            Log.i("abacd : ", uidKeyDate+" , "+tempMoney);
+                            map_account.put(uidKeyDate, tempMoney);
+                        }
+
+
+
+                        accountRecyclerViewAdapter.notifyDataSetChanged(); //갱신 후 새로고침이 필요
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
 
 
                 Calendar cal = Calendar.getInstance();
                 cal.set(_year, _month-1, _day);
-
-
 
 
                 //혹시 몰라 clear;
@@ -567,9 +621,20 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                     String temp_day = String.format("%02d", i+1);
                     //날 2자리로 표현
                     String temp_month = String.format("%02d", _month);
-
                     temp_AccountDTO.date = " " +String.valueOf(_year) + "." + temp_month + "." + temp_day + " ";
-                    temp_AccountDTO.money = "0원";
+
+
+                    String myKeyDate = _year + "_" + temp_month + "_" + temp_day;
+                    if(map_account.containsKey(myKeyDate)){
+
+                        temp_AccountDTO.money = map_account.get(myKeyDate) + "원";
+
+                    }else{
+
+                        temp_AccountDTO.money = "0원";
+                    }
+
+
 
                     accountDTOs.add(temp_AccountDTO);
                 }
@@ -585,7 +650,6 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
 
 
-
                 //태웅 끝
                     /*    mcv2.setOnDateChangedListener(new OnDateSelectedListener() {
                     @Override
@@ -595,8 +659,6 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                 return rootView;
             }
         }
-
-
 
 
 

@@ -8,6 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +25,9 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private Context mContext = null;
     private List<AccountDTO> maccountDTOs = new ArrayList<>();
+    private String userId;
+    private FirebaseDatabase mDatabase;
+
 
 
     public AccountRecyclerViewAdapter(){
@@ -29,9 +38,9 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public AccountRecyclerViewAdapter(Context _context, List<AccountDTO> _accountDTOs){
 
         mContext = _context;
-
         maccountDTOs.clear();
         maccountDTOs = _accountDTOs;
+        mDatabase = FirebaseDatabase.getInstance();
 
 
     }

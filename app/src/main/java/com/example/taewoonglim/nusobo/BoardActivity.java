@@ -136,7 +136,6 @@ public class BoardActivity extends AppCompatActivity {
                         }
 
 
-
                         boardRecyclerViewAdapter.notifyDataSetChanged(); //갱신 후 새로고침이 필요
 
             }

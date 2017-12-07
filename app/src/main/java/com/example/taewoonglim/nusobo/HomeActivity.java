@@ -178,7 +178,6 @@ public class HomeActivity extends AppCompatActivity{
 
 
 
-
                 //타임스탬프
                 long nowUnixtime = System.currentTimeMillis();
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));

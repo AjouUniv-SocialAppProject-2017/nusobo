@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -67,8 +68,6 @@ import java.util.HashSet;
 import java.util.List;
 
 public class accountActivity extends AppCompatActivity implements incomeDialog.incomeDialogListener,expenseDialog.expenseDialogListener {
-
-
 
 
     @Override
@@ -317,25 +316,6 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public static class PlaceholderFragment extends Fragment{
         /**
          * The fragment argument representing the section number for this
@@ -343,12 +323,12 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
          */
 
 
-
-
         //태웅
 
         private RecyclerView recyclerView;
         private AccountRecyclerViewAdapter accountRecyclerViewAdapter;
+
+
         private List<AccountDTO> accountDTOs = new ArrayList<>();
         private HashMap<String, String> map_account = new HashMap<String, String>();
 
@@ -431,7 +411,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+        public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                                  Bundle savedInstanceState) {
 
             MaterialCalendarView mcv;
@@ -514,6 +494,21 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
                 View rootView = inflater.inflate(R.layout.fragment_account, container, false);
 
+                Calendar cal = Calendar.getInstance();
+                cal.set(_year, _month-1, _day);
+
+
+
+                recyclerView = (RecyclerView)rootView.findViewById(R.id.account_recycleView);
+                //recyclerView.setHasFixedSize(true);
+
+//                accountRecyclerViewAdapter = new AccountRecyclerViewAdapter(getActivity(), accountDTOs);
+
+                accountRecyclerViewAdapter = new AccountRecyclerViewAdapter(getActivity(), cal, _year, _month, _day);
+
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                recyclerView.setAdapter(accountRecyclerViewAdapter);
+
 
 
                 accountFragmentMainDate_TextView = (TextView)rootView.findViewById(R.id.account_date_textview);
@@ -541,7 +536,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
                         //갱신
                         accountFragmentMainDate_TextView.setText(_year + "." + String.format("%02d",_month));
-                        accountRecyclerViewAdapter.notifyDataSetChanged(); //갱신이 안됨..ㅠㅠ
+                        //accountRecyclerViewAdapter.notifyDataSetChanged(); //갱신이 안됨..ㅠㅠ
 
                     }
                 });
@@ -559,7 +554,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
                         //갱신
                         accountFragmentMainDate_TextView.setText(_year + "." + String.format("%02d",_month));
-                        accountRecyclerViewAdapter.notifyDataSetChanged(); //갱신안됨...ㅠㅠ
+                       // accountRecyclerViewAdapter.notifyDataSetChanged(); //갱신안됨...ㅠㅠ
 
                     }
                 });
@@ -567,48 +562,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
 
 
-
-                String myEmail = mAuth.getCurrentUser().getEmail();
-
-                //firebase "@" "," <- 특정문자 못읽음 ㅡㅡ
-                myEmail = myEmail.replace("@", "");
-                myEmail = myEmail.replace(".", "");
-
-
-                //database 읽어오기, 옵저버 패턴 : 관찰 대상이 변하는 순간 이벤트를 처리함
-                mDatabase.getReference().child("users").child(myEmail).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        userList.clear();// 수정될 때 데이터가 날라오기 때문에 clear()를 안해주면 쌓인다.
-                        map_account.clear();
-                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                           // User tempUser= snapshot.getValue(User.class);
-                            String uidKeyDate = snapshot.getKey(); // 데이터베이스에 있는 key( 날짜형식 ex) 2017_12_31 )값을 받아온다
-                            String tempMoney = snapshot.getValue(String.class);
-
-                            Log.i("abacd : ", uidKeyDate+" , "+tempMoney);
-                            map_account.put(uidKeyDate, tempMoney);
-                        }
-
-
-
-                        accountRecyclerViewAdapter.notifyDataSetChanged(); //갱신 후 새로고침이 필요
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-
-
-                Calendar cal = Calendar.getInstance();
-                cal.set(_year, _month-1, _day);
-
-
+                /*
                 //혹시 몰라 clear;
                 accountDTOs.clear();
 
@@ -640,15 +594,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                 }
 
 
-
-                recyclerView = (RecyclerView)rootView.findViewById(R.id.account_recycleView);
-                //recyclerView.setHasFixedSize(true);
-
-                accountRecyclerViewAdapter = new AccountRecyclerViewAdapter(getActivity(), accountDTOs);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                recyclerView.setAdapter(accountRecyclerViewAdapter);
-
-
+                */
 
                 //태웅 끝
                     /*    mcv2.setOnDateChangedListener(new OnDateSelectedListener() {
@@ -698,6 +644,12 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         }
 
         @Override
+        public int getItemPosition(Object item)
+        {
+            return POSITION_NONE;
+        }
+
+        @Override
         public int getCount() {
             // Show 3 total pages.
             return 3;
@@ -715,5 +667,21 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             }
             return null;
         }
+
+
+
     }
+
+
+    /*
+    @Override
+    protected  void onResume(){
+        super.onResume();
+        if(PlaceholderFragment.accountRecyclerViewAdapter == null){
+
+        }else {
+            PlaceholderFragment.accountRecyclerViewAdapter.notifyDataSetChanged();
+        }
+    }
+*/
 }

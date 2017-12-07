@@ -35,7 +35,11 @@ public class BoardActivity extends AppCompatActivity {
 
     private List<ImageDTO> imageDTOs = new ArrayList<>();
     private Stack<ImageDTO> temp_imageDTOs = new Stack<>();
+
     private List<String> uidLists = new ArrayList<>();
+    private Stack<String> temp_uidLists = new Stack<>();
+
+
     private FirebaseDatabase database;
     private FirebaseAuth auth;
     private ImageView homeImageViewBtn;
@@ -119,13 +123,16 @@ public class BoardActivity extends AppCompatActivity {
                         imageDTOs.clear(); // 수정될 때 데이터가 날라오기 때문에 clear()를 안해주면 쌓인다.
                         uidLists.clear();
                         temp_imageDTOs.clear(); // 혹시 몰라 clear;
+                        temp_uidLists.clear(); //혹시 몰라
+
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                             ImageDTO imageDTO = snapshot.getValue(ImageDTO.class);
                             String uidKey = snapshot.getKey(); //images 데이터베이스에 있는 key값을 받아온다
 
                             temp_imageDTOs.push(imageDTO);
+                            temp_uidLists.push(uidKey);
 
-                            uidLists.add(uidKey);
+
                         }
 
                         //역순으로 뿌려주기
@@ -135,6 +142,10 @@ public class BoardActivity extends AppCompatActivity {
                             imageDTOs.add(temp);
                         }
 
+                        while(!temp_uidLists.empty()){
+                            String temp = temp_uidLists.pop();
+                            uidLists.add(temp);
+                        }
 
                         boardRecyclerViewAdapter.notifyDataSetChanged(); //갱신 후 새로고침이 필요
 

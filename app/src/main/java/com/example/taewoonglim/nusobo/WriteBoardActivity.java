@@ -222,6 +222,7 @@ public class WriteBoardActivity extends AppCompatActivity {
 
                 database.getReference().child("images").child(nowChildPostion).child("reply").push().setValue(myWirteDTO);
 
+
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override

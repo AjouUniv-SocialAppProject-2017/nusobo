@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
@@ -100,6 +101,9 @@ public class expenseDialog extends AppCompatDialogFragment {
         myEmail = myEmail.replace(".", "");
 
         mDatabase.getReference().child("users").child(myEmail).child(user.date).setValue(user.money);
+
+
+
 
         //
 //        database.getReference().child("images").child(nowChildPostion).child("reply").push().setValue(myWirteDTO);

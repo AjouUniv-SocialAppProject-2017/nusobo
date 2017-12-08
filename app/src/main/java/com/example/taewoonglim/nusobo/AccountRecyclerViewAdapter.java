@@ -121,7 +121,7 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     //날 2자리로 표현
                     String temp_month = String.format("%02d", _month);
 
-                    temp_AccountDTO.date = " " +String.valueOf(_year) + "." + temp_month + "." + temp_day + " ";
+                    temp_AccountDTO.date = String.valueOf(_year) + "." + temp_month + "." + temp_day;
 
 
                     String myKeyDate = _year + "_" + temp_month + "_" + temp_day;
@@ -206,6 +206,11 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             money_textView = (TextView)view.findViewById(R.id.item_account_money_textview);
 
         }
+    }
+
+    //   private List<AccountDTO> maccountDTOs = new ArrayList<>();
+    public List<AccountDTO> getMaccountDTOs(){
+        return maccountDTOs;
     }
 
 }

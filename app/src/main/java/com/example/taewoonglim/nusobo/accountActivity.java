@@ -331,6 +331,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
         private List<AccountDTO> accountDTOs = new ArrayList<>();
         private HashMap<String, String> map_account = new HashMap<String, String>();
+   //     private List<AccountDTO> bar_accountDTOs
 
 
         //현재시간
@@ -346,6 +347,9 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         private int _month  = Integer.parseInt(dateArr[1]);
         private int _day = Integer.parseInt(dateArr[2]);
 
+        Calendar ___cal = Calendar.getInstance();
+
+
         private ImageButton accountFragmentRight_ImageButton;
         private ImageButton accountFragmentLeft_ImageButton;
 
@@ -359,10 +363,6 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
 
         //태웅 끝
-
-
-
-
 
         private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -382,7 +382,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         }
 
         BarChart chart ;
-        ArrayList<BarEntry> BARENTRY ;
+        ArrayList<BarEntry> BARENTRY = new ArrayList<>();
         ArrayList<String> BarEntryLabels ;
         BarDataSet Bardataset ;
         BarData BARDATA ;
@@ -390,24 +390,24 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
         public void AddValuesToBARENTRY(){
 
-            BARENTRY.add(new BarEntry(2f, 0));
-            BARENTRY.add(new BarEntry(4f, 1));
-            BARENTRY.add(new BarEntry(6f, 2));
-            BARENTRY.add(new BarEntry(8f, 3));
-            BARENTRY.add(new BarEntry(7f, 4));
-            BARENTRY.add(new BarEntry(3f, 5));
+
+           //final List<AccountDTO>[] aaatemp_accountDTOs = new List<AccountDTO>;
+
+            Log.i("asdljf;lkasdjf2", accountDTOs.size()+"");
+
 
         }
 
         public void AddValuesToBarEntryLabels(){
 
+            /*
             BarEntryLabels.add("January");
             BarEntryLabels.add("February");
             BarEntryLabels.add("March");
             BarEntryLabels.add("April");
             BarEntryLabels.add("May");
             BarEntryLabels.add("June");
-
+*/
         }
 
         @Override
@@ -418,6 +418,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             MaterialCalendarView mcv2;
             mDatabase = FirebaseDatabase.getInstance();
             mAuth = FirebaseAuth.getInstance();
+
 
             if(getArguments().getInt(ARG_SECTION_NUMBER)==2) {
                 View rootView = inflater.inflate(R.layout.fragment_income, container, false);
@@ -465,25 +466,85 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             }
             else if(getArguments().getInt(ARG_SECTION_NUMBER)==3) {
                 View rootView = inflater.inflate(R.layout.fragment_chart, container, false);
+                chart = (BarChart) rootView.findViewById(R.id.fragment_chart_barChart);
+                ___cal.set(_year, _month, _day);
+                String myEmail = mAuth.getCurrentUser().getEmail();
+                //firebase "@" "," <- 특정문자 못읽음 ㅡㅡ
+                myEmail = myEmail.replace("@", "");
+                myEmail = myEmail.replace(".", "");
 
-                chart = (BarChart) rootView.findViewById(R.id.chart1);
+                //database 읽어오기, 옵저버 패턴 : 관찰 대상이 변하는 순간 이벤트를 처리함
+                mDatabase.getReference().child("users").child(myEmail).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
 
-                BARENTRY = new ArrayList<>();
+                        //    userList.clear();// 수정될 때 데이터가 날라오기 때문에 clear()를 안해주면 쌓인다.
+                        BARENTRY.clear();
+                        map_account.clear();
+                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            // User tempUser= snapshot.getValue(User.class);
+                            String uidKeyDate = snapshot.getKey(); // 데이터베이스에 있는 key( 날짜형식 ex) 2017_12_31 )값을 받아온다
+                            String tempMoney = snapshot.getValue(String.class);
 
-                BarEntryLabels = new ArrayList<String>();
+                            //  Log.i("abacd : ", uidKeyDate+" , "+tempMoney);
+                            map_account.put(uidKeyDate, tempMoney);
+                        }
 
-                AddValuesToBARENTRY();
 
-                AddValuesToBarEntryLabels();
+                        accountDTOs.clear();
 
-                Bardataset = new BarDataSet(BARENTRY, "Projects");
-                BARDATA = new BarData(Bardataset);
+                        for(int i = 0; i < ___cal.getActualMaximum(Calendar.DAY_OF_MONTH); i++){
 
-                Bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
+                            AccountDTO temp_AccountDTO = new AccountDTO();
 
-                chart.setData(BARDATA);
+                            //일 수는 2자리로 표현
+                            String temp_day = String.format("%02d", i+1);
+                            //날 2자리로 표현
+                            String temp_month = String.format("%02d", _month);
 
-                chart.animateY(3000);
+                            temp_AccountDTO.date = String.valueOf(_year) + "." + temp_month + "." + temp_day;
+
+
+                            String myKeyDate = _year + "_" + temp_month + "_" + temp_day;
+                            if(map_account.containsKey(myKeyDate)){
+
+                                temp_AccountDTO.money = map_account.get(myKeyDate);
+
+                            }else{
+
+                                temp_AccountDTO.money = "0";
+                            }
+                            accountDTOs.add(temp_AccountDTO);
+                        }
+
+                       //차트에 데이터 넣기
+                        for(int i = 0; i < accountDTOs.size(); i++){
+
+                            //String temp_date[] = accountDTOs.get(i).date.split(".");
+                            //int __day = Integer.parseInt(temp_date[2]);
+                            int __money = Integer.parseInt(accountDTOs.get(i).money);
+                            BARENTRY.add(new BarEntry(i+1, __money));
+
+                        }
+
+                        BarEntryLabels = new ArrayList<String>();
+                        AddValuesToBARENTRY();
+                        AddValuesToBarEntryLabels();
+                        Bardataset = new BarDataSet(BARENTRY, "Projects");
+                        BARDATA = new BarData(Bardataset);
+                        Bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
+                        chart.setData(BARDATA);
+                        chart.animateY(3000);
+
+                        //차트에 데이터 넣기 끝
+
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
 
                 return rootView;
             }

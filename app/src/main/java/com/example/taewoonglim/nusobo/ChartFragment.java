@@ -16,11 +16,9 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 public class ChartFragment extends AppCompatActivity {
-    BarChart chart ;
-    ArrayList<BarEntry> BARENTRY ;
-    ArrayList<String> BarEntryLabels ;
-    BarDataSet Bardataset ;
-    BarData BARDATA ;
+
+
+    private BarChart barChart;
     // final String[] quaters=new String[]{"Jan","Feb","Mar","April","May","June"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,62 +26,25 @@ public class ChartFragment extends AppCompatActivity {
         setContentView(R.layout.fragment_chart);
 
 
-   /*
-        chart = (BarChart) findViewById(R.id.chart1);
-
-        BARENTRY = new ArrayList<>();
-
-        BarEntryLabels = new ArrayList<String>();
-
-        AddValuesToBARENTRY();
-
-        AddValuesToBarEntryLabels();
-
-        Bardataset = new BarDataSet(BARENTRY, "Projects");
-
-/*
-        IAxisValueFormatter formatter=new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return quaters[(int) value];
-            }
-        };
-        XAxis xAxis= chart.getXAxis();
-
-        xAxis.setValueFormatter(formatter);*/
+        barChart = (BarChart)findViewById(R.id.fragment_chart_barChart);
 
 
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
 
-/* FFF
-        BARDATA = new BarData(Bardataset);
+        barEntries.add(new BarEntry(44.f, 0));
+        barEntries.add(new BarEntry(88.f, 1));
+        barEntries.add(new BarEntry(66.f, 2));
+        barEntries.add(new BarEntry(33.f, 3));
+        barEntries.add(new BarEntry(12.f, 4));
+        barEntries.add(new BarEntry(91.f, 5));
 
-        Bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
-
-        chart.setData(BARDATA);
-
-        chart.animateY(3000);
-
-*/
     }
     public void AddValuesToBARENTRY(){
 
-        BARENTRY.add(new BarEntry(2f, 0));
-        BARENTRY.add(new BarEntry(4f, 1));
-        BARENTRY.add(new BarEntry(6f, 2));
-        BARENTRY.add(new BarEntry(8f, 3));
-        BARENTRY.add(new BarEntry(7f, 4));
-        BARENTRY.add(new BarEntry(3f, 5));
 
     }
 
     public void AddValuesToBarEntryLabels(){
-
-        BarEntryLabels.add("January");
-        BarEntryLabels.add("February");
-        BarEntryLabels.add("March");
-        BarEntryLabels.add("April");
-        BarEntryLabels.add("May");
-        BarEntryLabels.add("June");
 
     }
 

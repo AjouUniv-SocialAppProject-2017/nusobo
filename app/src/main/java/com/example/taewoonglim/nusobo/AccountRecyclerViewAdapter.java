@@ -97,7 +97,7 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             //    userList.clear();// 수정될 때 데이터가 날라오기 때문에 clear()를 안해주면 쌓인다.
                 map_account.clear();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    // User tempUser= snapshot.getValue(User.class);
+                    //  User tempUser= snapshot.getValue(User.class);
                     String uidKeyDate = snapshot.getKey(); // 데이터베이스에 있는 key( 날짜형식 ex) 2017_12_31 )값을 받아온다
                     String tempMoney = snapshot.getValue(String.class);
 

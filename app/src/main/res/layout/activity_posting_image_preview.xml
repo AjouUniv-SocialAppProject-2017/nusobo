@@ -9,14 +9,10 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
+        android:layout_width="0dp"
         android:layout_height="30dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/posting_preView_ImageView"
         app:layout_constraintHorizontal_bias="1.0"
@@ -30,14 +26,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            app:srcCompat="@drawable/back_arrow_circular_symbol" />
+            app:srcCompat="@drawable/back" />
 
         <ImageView
             android:id="@+id/posting_nextBtn_imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            app:srcCompat="@drawable/right_arrow_circular_button" />
+            app:srcCompat="@drawable/redo" />
     </LinearLayout>
 
     <ImageView
@@ -52,8 +48,7 @@
         app:layout_constraintBottom_toTopOf="@+id/gallery_gridview"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@mipmap/ic_launcher"
-        tools:layout_editor_absoluteY="87dp" />
+        app:srcCompat="@mipmap/ic_launcher" />
 
     <GridView
         android:id="@+id/gallery_gridview"

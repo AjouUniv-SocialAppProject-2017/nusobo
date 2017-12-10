@@ -110,6 +110,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         String permission2 =android.Manifest.permission.INTERNET;
         String permission3= android.Manifest.permission.READ_EXTERNAL_STORAGE;
         String permission4=android.Manifest.permission.GET_ACCOUNTS;
+
         //String permission5=android.Manifest.permission.
         int grant = ContextCompat.checkSelfPermission(this, permission);
         if (grant != PackageManager.PERMISSION_GRANTED) {

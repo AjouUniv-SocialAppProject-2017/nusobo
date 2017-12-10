@@ -35,6 +35,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -362,6 +363,22 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         private List<User> userList = new ArrayList<>();
 
 
+
+        private GridView mGridView;
+        private DateAdapter adapter;
+        private ArrayList arrData;
+        private Calendar mCal;
+
+        private GridView day_GirdView;
+        private DateDayOfWeekAdapter day_adapter;
+        private Calendar mCalToday; //오늘 요일을 받아온다.
+
+        private Button preBtn;
+        private Button nextBtn;
+        private TextView mainText;
+        private int thisYear;
+        private int thisMonth;
+
         //태웅 끝
 
         private static final String ARG_SECTION_NUMBER = "section_number";
@@ -410,6 +427,35 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 */
         }
 
+
+        public void setCalendarDate(int month, View view){
+            arrData = new ArrayList(); // 요일은 +1해야 되기때문에 달력에 요일을 세팅할때에는 -1 해준다.
+            mCal.set(Calendar.MONTH, month-1);
+
+
+            //오늘 요일을 받아온다.
+            mCalToday = Calendar.getInstance();
+            mCalToday.set(mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), 1);
+            int startday = mCalToday.get(Calendar.DAY_OF_WEEK);
+            if(startday != 1)
+            {
+                for(int i=0; i<startday-1; i++)
+                {
+                    arrData.add("");
+                }
+            }
+
+
+            for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
+                arrData.add(i+1);
+            }
+
+            adapter = new DateAdapter(getActivity(), arrData);
+            mGridView = (GridView)view.findViewById(R.id.calGrid);
+            mGridView.setAdapter(adapter);
+
+        }
+
         @Override
         public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                                  Bundle savedInstanceState) {
@@ -421,9 +467,73 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
 
             if(getArguments().getInt(ARG_SECTION_NUMBER)==2) {
-                View rootView = inflater.inflate(R.layout.fragment_income, container, false);
+               // View rootView = inflater.inflate(R.layout.fragment_income, container, false);
+
+                //태웅 custom calendar
+                 final View rootView = inflater.inflate(R.layout.fragment_custom_calendarview, container, false);
+
+                //
+                ///Calendar 객체 생성
+                mCal = Calendar.getInstance();
+                //  thisYear = mCal.get(Calendar.YEAR);
+                thisMonth = mCal.get(Calendar.MONTH)-1;
+                // 달력 세팅
+                //  setCalendarDate(mCal.get(Calendar.MONTH)-1);
+                setCalendarDate(thisMonth, rootView);
+
+                preBtn = (Button)rootView.findViewById(R.id.preBtn);
+                nextBtn = (Button)rootView.findViewById(R.id.nextBtn);
+                mainText = (TextView)rootView.findViewById(R.id.date_title);
+
+                preBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(thisMonth > 1){
+                            thisMonth--;
+                            mainText.setText(""+thisMonth);
+                            setCalendarDate(thisMonth, rootView);
+
+                        }
+                        else{
+                            thisYear--;
+                            thisMonth = 12;
+                            mainText.setText(""+thisMonth);
+                            setCalendarDate(thisMonth, rootView);
+                        }
+                    }
+                });
+
+                nextBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(thisMonth < 12) {
+                            thisMonth++;
+                            mainText.setText(""+thisMonth);
+                            setCalendarDate(thisMonth, rootView);
+                        } else {
+                            thisYear++;
+                            thisMonth = 1;
+                            mainText.setText(""+thisMonth);
+                            setCalendarDate(thisMonth, rootView);
+                        }
+
+                    }
+                });
+
+                day_GirdView =(GridView)rootView.findViewById(R.id.title_gridview);
+                day_adapter = new DateDayOfWeekAdapter(getActivity());
+                day_GirdView.setAdapter(day_adapter);
+
+
+                //태웅 custom caledar 끝
+
+
+
+
                 //@Bind(R.id.calendarView)
 
+
+                /*
                 mcv=(MaterialCalendarView) rootView.findViewById(R.id.calendarView);
                 mcv.state().edit()
                         .setFirstDayOfWeek(Calendar.SUNDAY)
@@ -433,9 +543,14 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                         .commit();
                 Calendar calendar=Calendar.getInstance();
 
-                int year=2017;
-                int Month=12;
-                int day3= 5;
+             //   int year=2017;
+              //  int Month=12;
+               // int day3= 5;
+
+                int year = _year;
+                int Month = _month;
+                int day3 = _day;
+
                 calendar.set(year,Month-1,day3);
                 ArrayList<CalendarDay> dates = new ArrayList<>();
                 CalendarDay day=CalendarDay.from(calendar);
@@ -453,6 +568,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 //                }
                 List<CalendarDay> calenderDays=dates;
                 mcv.addDecorator(new EventDecorator(Color.RED,calenderDays));
+                //mcv.addDecorator(new EventDecorator("FF"));
 
                 mcv.setOnDateChangedListener(new OnDateSelectedListener() {
                     @Override
@@ -461,13 +577,14 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                         calendarDialog.show(getFragmentManager(),"Calendar Dialog");
                     }
                 });
+                */
 
                 return rootView;
             }
             else if(getArguments().getInt(ARG_SECTION_NUMBER)==3) {
                 View rootView = inflater.inflate(R.layout.fragment_chart, container, false);
                 chart = (BarChart) rootView.findViewById(R.id.fragment_chart_barChart);
-                ___cal.set(_year, _month, _day);
+                ___cal.set(_year, _month-1, _day);
                 String myEmail = mAuth.getCurrentUser().getEmail();
                 //firebase "@" "," <- 특정문자 못읽음 ㅡㅡ
                 myEmail = myEmail.replace("@", "");
@@ -554,10 +671,8 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                 //여기서부터 태웅 건들지말 것 !!
 
                 View rootView = inflater.inflate(R.layout.fragment_account, container, false);
-
                 Calendar cal = Calendar.getInstance();
                 cal.set(_year, _month-1, _day);
-
 
 
                 recyclerView = (RecyclerView)rootView.findViewById(R.id.account_recycleView);

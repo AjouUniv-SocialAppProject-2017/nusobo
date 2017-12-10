@@ -366,7 +366,8 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
         private GridView mGridView;
         private DateAdapter adapter;
-        private ArrayList arrData;
+        private ArrayList arrData = new ArrayList();
+
         private Calendar mCal;
 
         private GridView day_GirdView;
@@ -378,6 +379,10 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         private TextView mainText;
         private int thisYear;
         private int thisMonth;
+
+        private List<AccountDTO> cal_accountDTOs = new ArrayList<>();
+        private HashMap<String, String> cal_map_account = new HashMap<String, String>();
+
 
         //태웅 끝
 
@@ -428,31 +433,87 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         }
 
 
-        public void setCalendarDate(int month, View view){
-            arrData = new ArrayList(); // 요일은 +1해야 되기때문에 달력에 요일을 세팅할때에는 -1 해준다.
-            mCal.set(Calendar.MONTH, month-1);
+        public void setCalendarDate(int month, final View view){
 
+            // 요일은 +1해야 되기때문에 달력에 요일을 세팅할때에는 -1 해준다.
+            mCal.set(Calendar.MONTH, month-1);
+            Log.i("sajd;fkljas;ldkfj;11", mCal.get(Calendar.MONTH)+"");
+            cal_accountDTOs.clear();
+            arrData.clear();
 
             //오늘 요일을 받아온다.
-            mCalToday = Calendar.getInstance();
-            mCalToday.set(mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), 1);
-            int startday = mCalToday.get(Calendar.DAY_OF_WEEK);
-            if(startday != 1)
-            {
-                for(int i=0; i<startday-1; i++)
-                {
-                    arrData.add("");
+                    mCalToday = Calendar.getInstance();
+                    mCalToday.set(mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), 1);
+                    int startday = mCalToday.get(Calendar.DAY_OF_WEEK);
+                    if(startday != 1)
+                    {
+                        AccountDTO temp_AccountDTO = new AccountDTO();
+                        temp_AccountDTO.date = "";
+                        temp_AccountDTO.money = "";
+                        for(int i=0; i<startday-1; i++)
+                        {
+                            arrData.add("");
+                            cal_accountDTOs.add(temp_AccountDTO);
+                        }
+                    }
+
+            String myEmail = mAuth.getCurrentUser().getEmail();
+            //firebase "@" "," <- 특정문자 못읽음 ㅡㅡ
+            myEmail = myEmail.replace("@", "");
+            myEmail = myEmail.replace(".", "");
+
+            mDatabase.getReference().child("users").child(myEmail).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    cal_map_account.clear();
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+
+                        String uidKeyDate = snapshot.getKey();
+                        String tempMoney = snapshot.getValue(String.class);
+                        cal_map_account.put(uidKeyDate, tempMoney);
+                    }
+
+                    for(int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++){
+                        AccountDTO temp_AccountDTO = new AccountDTO();
+
+                        //일 수는 2자리로 표현
+                        String temp_day = String.format("%02d", i+1);
+                        //날 2자리로 표현
+                        String temp_month = String.format("%02d", thisMonth);
+                        temp_AccountDTO.date = String.valueOf(thisYear) + "." + temp_month + "." + temp_day;
+
+                        String myKeyDate = thisYear + "_" + temp_month + "_" + temp_day;
+                        if(cal_map_account.containsKey(myKeyDate)){
+
+                            temp_AccountDTO.money = cal_map_account.get(myKeyDate) + "원";
+
+                        }else{
+
+                            temp_AccountDTO.money = "0원";
+                        }
+
+                        cal_accountDTOs.add(temp_AccountDTO);
+                    }
+
+
+                    for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
+                        arrData.add(i+1);
+                    }
+
+                    adapter = new DateAdapter(getActivity(), arrData, cal_accountDTOs);
+                    mGridView = (GridView)view.findViewById(R.id.calGrid);
+                    mGridView.setAdapter(adapter);
                 }
-            }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
 
 
-            for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
-                arrData.add(i+1);
-            }
 
-            adapter = new DateAdapter(getActivity(), arrData);
-            mGridView = (GridView)view.findViewById(R.id.calGrid);
-            mGridView.setAdapter(adapter);
 
         }
 
@@ -472,11 +533,14 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                 //태웅 custom calendar
                  final View rootView = inflater.inflate(R.layout.fragment_custom_calendarview, container, false);
 
-                //
                 ///Calendar 객체 생성
                 mCal = Calendar.getInstance();
-                //  thisYear = mCal.get(Calendar.YEAR);
-                thisMonth = mCal.get(Calendar.MONTH)-1;
+               // thisYear = mCal.get(Calendar.YEAR);
+               // thisMonth = mCal.get(Calendar.MONTH) + 1;
+
+                thisYear = _year;
+                thisMonth = _month;
+
                 // 달력 세팅
                 //  setCalendarDate(mCal.get(Calendar.MONTH)-1);
                 setCalendarDate(thisMonth, rootView);

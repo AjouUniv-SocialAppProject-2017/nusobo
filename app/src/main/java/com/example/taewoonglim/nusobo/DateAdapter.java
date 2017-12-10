@@ -8,7 +8,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by taewoong Lim on 2017-12-10.
@@ -19,11 +25,13 @@ public class DateAdapter extends BaseAdapter{
     private Context context;
     private ArrayList arrData;
     private LayoutInflater inflater;
+    private List<AccountDTO> mCal_accountDTOs;
 
-    public DateAdapter(Context c, ArrayList arr) {
+    public DateAdapter(Context c, ArrayList arr,  List<AccountDTO> _cal_accountDTOs) {
         this.context = c;
         this.arrData = arr;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.mCal_accountDTOs = _cal_accountDTOs;
     }
 
     @Override
@@ -47,6 +55,12 @@ public class DateAdapter extends BaseAdapter{
         TextView ViewText = (TextView)convertView.findViewById(R.id.item_TextView);
         ViewText.setText(arrData.get(position)+"");
         ViewText.setTextColor(Color.BLACK);
+
+        TextView ViewTextMoney = (TextView)convertView.findViewById(R.id.item_money_textView1);
+        ViewTextMoney.setText(mCal_accountDTOs.get(position).money);
+
+
+
 
         return convertView;
     }

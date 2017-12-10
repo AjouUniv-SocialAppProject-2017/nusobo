@@ -175,9 +175,6 @@ public class HomeActivity extends AppCompatActivity{
                 imageDTO.uid = mAuth.getCurrentUser().getUid();
                 imageDTO.userId = mAuth.getCurrentUser().getEmail();
 
-
-
-
                 //타임스탬프
                 long nowUnixtime = System.currentTimeMillis();
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));

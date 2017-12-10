@@ -105,10 +105,6 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     map_account.put(uidKeyDate, tempMoney);
                 }
 
-
-
-
-
                 accountDTOs.clear();
 
                 for(int i = 0; i < cal.getActualMaximum(Calendar.DAY_OF_MONTH); i++){

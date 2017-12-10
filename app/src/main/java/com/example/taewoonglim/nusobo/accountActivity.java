@@ -434,7 +434,6 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
 
         public void setCalendarDate(int month, final View view){
-
             // 요일은 +1해야 되기때문에 달력에 요일을 세팅할때에는 -1 해준다.
             mCal.set(Calendar.MONTH, month-1);
             Log.i("sajd;fkljas;ldkfj;11", mCal.get(Calendar.MONTH)+"");
@@ -465,7 +464,6 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             mDatabase.getReference().child("users").child(myEmail).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-
                     cal_map_account.clear();
                     for(DataSnapshot snapshot : dataSnapshot.getChildren()){
 
@@ -496,7 +494,6 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                         cal_accountDTOs.add(temp_AccountDTO);
                     }
 
-
                     for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
                         arrData.add(i+1);
                     }
@@ -511,10 +508,6 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
                 }
             });
-
-
-
-
         }
 
         @Override
@@ -526,24 +519,41 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             mDatabase = FirebaseDatabase.getInstance();
             mAuth = FirebaseAuth.getInstance();
 
-
             if(getArguments().getInt(ARG_SECTION_NUMBER)==2) {
                // View rootView = inflater.inflate(R.layout.fragment_income, container, false);
 
+                final View rootView = inflater.inflate(R.layout.fragment_custom_calendarview, container, false);
                 //태웅 custom calendar
-                 final View rootView = inflater.inflate(R.layout.fragment_custom_calendarview, container, false);
 
                 ///Calendar 객체 생성
                 mCal = Calendar.getInstance();
                // thisYear = mCal.get(Calendar.YEAR);
                // thisMonth = mCal.get(Calendar.MONTH) + 1;
 
-                thisYear = _year;
-                thisMonth = _month;
 
-                // 달력 세팅
-                //  setCalendarDate(mCal.get(Calendar.MONTH)-1);
-                setCalendarDate(thisMonth, rootView);
+                String myEmail = mAuth.getCurrentUser().getEmail();
+                //firebase "@" "," <- 특정문자 못읽음 ㅡㅡ
+                myEmail = myEmail.replace("@", "");
+                myEmail = myEmail.replace(".", "");
+
+                //갱신을 위해 ..but 에러가 많을 것 같음.... 무서움 ㅋㅋㅋㅋ
+                mDatabase.getReference().child("users").child(myEmail).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        thisYear = _year;
+                        thisMonth = _month;
+
+                        // 달력 세팅
+                        //  setCalendarDate(mCal.get(Calendar.MONTH)-1);
+                        setCalendarDate(thisMonth, rootView);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
 
                 preBtn = (Button)rootView.findViewById(R.id.preBtn);
                 nextBtn = (Button)rootView.findViewById(R.id.nextBtn);
@@ -734,22 +744,19 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                 //태웅 여기서 하면됨 수입 fragment_account
                 //여기서부터 태웅 건들지말 것 !!
 
-                View rootView = inflater.inflate(R.layout.fragment_account, container, false);
-                Calendar cal = Calendar.getInstance();
-                cal.set(_year, _month-1, _day);
-
+                final View rootView = inflater.inflate(R.layout.fragment_account, container, false);
+                 Calendar cal = Calendar.getInstance();
+                 cal.set(_year, _month-1, _day);
 
                 recyclerView = (RecyclerView)rootView.findViewById(R.id.account_recycleView);
-                //recyclerView.setHasFixedSize(true);
 
-//                accountRecyclerViewAdapter = new AccountRecyclerViewAdapter(getActivity(), accountDTOs);
-
+             /*
                 accountRecyclerViewAdapter = new AccountRecyclerViewAdapter(getActivity(), cal, _year, _month, _day);
 
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.setAdapter(accountRecyclerViewAdapter);
-
-
+*/
+                setExpenseMoney(rootView);
 
                 accountFragmentMainDate_TextView = (TextView)rootView.findViewById(R.id.account_date_textview);
                 accountFragmentMainDate_TextView.setText(_year + "." + _month);
@@ -758,7 +765,6 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
                 accountFragmentRight_ImageButton = (ImageButton)rootView.findViewById(R.id.account_right_button);
                 accountFragmentLeft_ImageButton = (ImageButton)rootView.findViewById(R.id.account_left_button);
-
 
 
 
@@ -773,9 +779,9 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                             _month++;
                         }
 
-
                         //갱신
                         accountFragmentMainDate_TextView.setText(_year + "." + String.format("%02d",_month));
+                        setExpenseMoney(rootView);
                         //accountRecyclerViewAdapter.notifyDataSetChanged(); //갱신이 안됨..ㅠㅠ
 
                     }
@@ -794,6 +800,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
                         //갱신
                         accountFragmentMainDate_TextView.setText(_year + "." + String.format("%02d",_month));
+                       setExpenseMoney(rootView);
                        // accountRecyclerViewAdapter.notifyDataSetChanged(); //갱신안됨...ㅠㅠ
 
                     }
@@ -846,6 +853,16 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             }
         }
 
+        public void setExpenseMoney(final View view){
+
+            Calendar mmCal = Calendar.getInstance();
+            mmCal.set(_year, _month-1, _day);
+            int _maxDayOfEnd = mmCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+            accountRecyclerViewAdapter = new AccountRecyclerViewAdapter(getActivity(), _maxDayOfEnd, _year, _month, _day);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setAdapter(accountRecyclerViewAdapter);
+        }
 
 
         /*

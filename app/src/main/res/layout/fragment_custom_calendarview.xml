@@ -53,7 +53,8 @@
         android:layout_marginStart="8dp"
         android:layout_weight="10"
         android:background="#ffffff"
-        android:numColumns="7"/>
+        android:numColumns="7"
+        android:gravity="center"/>
 
 
 </LinearLayout>

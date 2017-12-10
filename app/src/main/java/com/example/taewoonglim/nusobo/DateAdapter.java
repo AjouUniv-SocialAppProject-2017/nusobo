@@ -59,6 +59,8 @@ public class DateAdapter extends BaseAdapter{
         TextView ViewTextMoney = (TextView)convertView.findViewById(R.id.item_money_textView1);
         ViewTextMoney.setText(mCal_accountDTOs.get(position).money);
 
+        TextView ViewTextMoney2 = (TextView)convertView.findViewById(R.id.item_money_textView2);
+        ViewTextMoney2.setText("");
 
 
 

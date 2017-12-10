@@ -37,10 +37,11 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     //test 변수
     private List<AccountDTO> accountDTOs = new ArrayList<>();
     private HashMap<String, String> map_account = new HashMap<String, String>();
-    private Calendar cal;
+    Calendar cal = Calendar.getInstance();
     private int _month;
     private int _year;
     private int _day;
+    public int maxDayOfEnd;
 
 
 
@@ -62,7 +63,7 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
 
-    public AccountRecyclerViewAdapter(Context _context, Calendar _cal, int y, int m, int d){
+    public AccountRecyclerViewAdapter(Context _context, int _maxDayOfEnd, int y, int m, int d){
 
         mContext = _context;
         maccountDTOs.clear();
@@ -71,16 +72,18 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         mAuth = FirebaseAuth.getInstance();
 
 
-        this.cal = _cal;
+      //  this.cal = _cal;
 
         this._year = y;
         this._month = m;
         this._day = d;
 
+       // cal.set(Cal, this._month);
+
+        this.maxDayOfEnd = _maxDayOfEnd;
 
 
-
-
+        Log.i("asdl;kfj;lasjdf;laks", _maxDayOfEnd + " : " + this._month + " : " + this._year);
         String myEmail = mAuth.getCurrentUser().getEmail();
 
         //firebase "@" "," <- 특정문자 못읽음 ㅡㅡ
@@ -94,20 +97,20 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-            //    userList.clear();// 수정될 때 데이터가 날라오기 때문에 clear()를 안해주면 쌓인다.
+                //    userList.clear();// 수정될 때 데이터가 날라오기 때문에 clear()를 안해주면 쌓인다.
                 map_account.clear();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     //  User tempUser= snapshot.getValue(User.class);
                     String uidKeyDate = snapshot.getKey(); // 데이터베이스에 있는 key( 날짜형식 ex) 2017_12_31 )값을 받아온다
                     String tempMoney = snapshot.getValue(String.class);
 
-                  //  Log.i("abacd : ", uidKeyDate+" , "+tempMoney);
+                    //  Log.i("abacd : ", uidKeyDate+" , "+tempMoney);
                     map_account.put(uidKeyDate, tempMoney);
                 }
 
                 accountDTOs.clear();
 
-                for(int i = 0; i < cal.getActualMaximum(Calendar.DAY_OF_MONTH); i++){
+                for(int i = 0; i < maxDayOfEnd; i++){
 
                     AccountDTO temp_AccountDTO = new AccountDTO();
 

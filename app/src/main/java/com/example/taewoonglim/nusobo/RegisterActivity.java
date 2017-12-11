@@ -27,8 +27,8 @@ import android.widget.Spinner;
 public class RegisterActivity extends AppCompatActivity {
 
 
-    private ArrayAdapter adapter;
-    private Spinner spinner;
+   // private ArrayAdapter adapter;
+   // private Spinner spinner;
 
     private EditText emailText;
     private EditText emailPassword;
@@ -42,9 +42,9 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        spinner = (Spinner)findViewById(R.id.majorSpinner);
-        adapter = ArrayAdapter.createFromResource(this, R.array.major, R.layout.support_simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+    //    spinner = (Spinner)findViewById(R.id.majorSpinner);
+     //   adapter = ArrayAdapter.createFromResource(this, R.array.major, R.layout.support_simple_spinner_dropdown_item);
+     //   spinner.setAdapter(adapter);
 
 
         emailText = (EditText)findViewById(R.id.emailText);

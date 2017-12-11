@@ -61,7 +61,6 @@ public class expenseDialog extends AppCompatDialogFragment {
 
                 //데이터베이스에 올리기
                 uploadFireBase(year, month, day, money);
-
                 listener.applyTextsExpense(year,month,day,money,content);
 
 
@@ -93,17 +92,12 @@ public class expenseDialog extends AppCompatDialogFragment {
     public void uploadFireBase(String _year, String _month, String _day, String _money){
 
         User user = new User(_year, _month, _day, _money);
-
         String myEmail = mAuth.getCurrentUser().getEmail();
 
         //firebase "@" "," <- 특정문자 못읽음 ㅡㅡ
         myEmail = myEmail.replace("@", "");
         myEmail = myEmail.replace(".", "");
-
         mDatabase.getReference().child("users").child(myEmail).child(user.date).setValue(user.money);
-
-
-
 
         //
 //        database.getReference().child("images").child(nowChildPostion).child("reply").push().setValue(myWirteDTO);

@@ -1,0 +1,280 @@
+[33mcommit e99cd6b2fa24e6bb11c6b453d6dab3a7bcc802c5[m[33m ([m[1;36mHEAD -> [m[1;32mtaewoongC7[m[33m, [m[1;32mmaster[m[33m)[m
+Merge: 4bed4f6 81b5d1a
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Sun Dec 10 13:55:53 2017 +0900
+
+    Merge branch 'master' of https://github.com/AjouUniv-SocialAppProject-2017/nusobo
+
+[33mcommit 4bed4f61664caa66f1d117645369e27960f4b7ee[m[33m ([m[1;32mtaewoongC6[m[33m)[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Sun Dec 10 13:55:08 2017 +0900
+
+    우진이가 만든 ui 머지를 위함
+
+[33mcommit 81b5d1a60feceb2b30e9c63312f1784be2188c8f[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: parkwj93 <parkwj93@ajou.ac.kr>
+Date:   Sat Dec 9 17:27:51 2017 +0900
+
+    전체적인 UI 통일 수정
+
+[33mcommit aa312f8dc6e66659ed4f82e419efaa99dd9ebbe3[m
+Author: parkwj93 <parkwj93@ajou.ac.kr>
+Date:   Fri Dec 8 17:58:18 2017 +0900
+
+    f sms/permission 수정
+
+[33mcommit e86701e96c83a9f27f16b9ced32741baecf5248b[m
+Author: parkwj93 <parkwj93@ajou.ac.kr>
+Date:   Fri Dec 8 17:56:10 2017 +0900
+
+    sms/ pemission설정
+
+[33mcommit d2ae74581046b6b6b81943621034a068b5c23889[m[33m ([m[1;32mtaewoongC5[m[33m)[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Fri Dec 8 15:43:21 2017 +0900
+
+    차트에 테이터 넣기 완료
+
+[33mcommit fa44f721cb41cf6831ebd6ba19436cc0f5ad3b78[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Fri Dec 8 01:06:12 2017 +0900
+
+    계좌 지출 데이터 넣고 받는거 다됨 푸하하하하
+
+[33mcommit 864b1801efc7b085471a666ddd1e18b4b94a1aa4[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Thu Dec 7 21:55:47 2017 +0900
+
+    지출 프래그래먼트 데이터베이스 연동 ok but, fragment 갱신 안됨 ㅠㅠ
+
+[33mcommit 8313aa60ff4fbe0fc28d54a556ed4c553fdd9e6b[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Thu Dec 7 03:29:21 2017 +0900
+
+    accountActivity 지줄부분 하고 있는데 갱신이 안됨 ㅠㅠ
+
+[33mcommit 63b5e02feb73089776861296dddd7ca3f2da8245[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Wed Dec 6 21:44:10 2017 +0900
+
+    accountFragment recyclerview 데이터 기초 완성
+
+[33mcommit beb5bd5dcf326e63b46eed349eca4680992934ec[m
+Merge: 6f2cecc 6db872d
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Wed Dec 6 19:40:44 2017 +0900
+
+    우진이와 합침
+
+[33mcommit 6f2cecc10eea80a8042d628a525db2092b7094be[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Wed Dec 6 19:39:55 2017 +0900
+
+    layout 살짝 바꿈
+
+[33mcommit 6db872dad587a50cf429771babe7f953332d624a[m
+Author: parkwj93 <parkwj93@ajou.ac.kr>
+Date:   Tue Dec 5 20:37:50 2017 +0900
+
+    달력 프레그먼트
+
+[33mcommit 687eafbf37812b6e17e9ba676b27ea9e4503ea34[m
+Author: parkwj93 <parkwj93@ajou.ac.kr>
+Date:   Mon Dec 4 00:20:17 2017 +0900
+
+    지출 작성 UI완성
+    dialog로 입력받기
+
+[33mcommit 01f709860a09d9b056d1135ae669efa1c1dd613c[m
+Author: parkwj93 <parkwj93@ajou.ac.kr>
+Date:   Sun Dec 3 23:28:25 2017 +0900
+
+    Fab material design 완성
+    수입 작성 가계부 UI 완성
+
+[33mcommit c9219c10511af37b198f55ed18e678056146fefb[m[33m ([m[1;32mtaewoongC4[m[33m)[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Sat Dec 2 14:46:00 2017 +0900
+
+    timestamp기능 추가
+
+[33mcommit bf4631e50ee10b739b61dbc6258d0509c17fb278[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Sat Dec 2 13:48:10 2017 +0900
+
+    BoardActivity 레이아웃 및 좋아요 개수 추가 && 최근 작성글 순으로 뿌려주기 완료
+
+[33mcommit ac4fef71859d629f75ab3ca58a743e7b67d26e9d[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Sat Dec 2 10:40:10 2017 +0900
+
+    accountActivity 레이아웃 다시 잡음 : linearLayout을 통해 계층구조를 나눔
+
+[33mcommit 4f81098b34708939d51d7666c27875f114fe7a72[m[33m ([m[1;32mtaewoongC3[m[33m)[m
+Author: parkwj93 <parkwj93@ajou.ac.kr>
+Date:   Fri Dec 1 11:41:22 2017 +0900
+
+    merge 후 테스트 ok
+
+[33mcommit f9cd405d4f0f45118d1f6502eab54606039da8e9[m
+Merge: 77a958f dd232b6
+Author: parkwj93 <parkwj93@ajou.ac.kr>
+Date:   Fri Dec 1 11:35:44 2017 +0900
+
+    Merge branch 'master' of https://github.com/AjouUniv-SocialAppProject-2017/nusobo
+    
+    merge 차트 but, 작성엑티비티 조심 자꾸 에러남
+
+[33mcommit 77a958f0f1594a6552a1cbc2fa6747aff5cb28ec[m
+Author: parkwj93 <parkwj93@ajou.ac.kr>
+Date:   Fri Dec 1 11:35:10 2017 +0900
+
+    영수증 관리페이지 about 차트, 등등등등 but, 작성페이지가 안됨
+
+[33mcommit dd232b6af4c3e24f0493c511089f1f8cd55cfdad[m[33m ([m[1;32mtaewoongC2[m[33m)[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Thu Nov 30 17:45:56 2017 +0900
+
+    댓글기능 완성
+
+[33mcommit 240147611ece8883ef28f6c48150b245ce6161d4[m
+Merge: aa2f53d 5650431
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Tue Nov 28 14:55:57 2017 +0900
+
+    taewoongC와 master merge 후 commit
+
+[33mcommit 565043194ebf3dfe417774e02455642823433481[m[33m ([m[1;32mtaewoongC[m[33m)[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Tue Nov 28 14:13:44 2017 +0900
+
+    게시글 작성 하는 중 다른 팀원과 공동작업으로 인해 commit 및 push
+
+[33mcommit 93c92167ec59ae6919314fe93b719e8d119e69d8[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Tue Nov 28 00:54:08 2017 +0900
+
+    댓글, 가계부 빼고 전부 완료
+
+[33mcommit 5aa094e5dc03b9e77d470ed53493c87a029e9a0c[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Mon Nov 27 23:06:32 2017 +0900
+
+    preview 기능 완성
+
+[33mcommit 17274f13bd912e100004be8a161086ede25ff77a[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Mon Nov 27 22:36:44 2017 +0900
+
+    커스텀 갤러리뷰 추가
+
+[33mcommit 13396c3a9e61410733d2d536f7fcb6849c4bf524[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Mon Nov 27 18:14:03 2017 +0900
+
+    boardActivity에 메뉴버튼 3개(홈, 게시, 영수증 관리) 추가
+
+[33mcommit a65d02e005af397afe05092f795137628fb6b095[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Mon Nov 27 17:27:08 2017 +0900
+
+    초기화면 게시판화면으로 설정
+
+[33mcommit aa2f53dc45147777b8fd987c08abdbd36f156e10[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Mon Nov 27 16:26:46 2017 +0900
+
+    3.0 에서 2.3.3으로 다운 시켰는데도 안됨
+
+[33mcommit 4878c31595e43bf89104993a45f4ad32f5364c13[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Tue Nov 21 11:57:05 2017 +0900
+
+    add to resources which are home.png, person.png, plus.png, receipt.png and reply.png
+
+[33mcommit 1395657b4357334efa9a76a58c9334a32a3c6742[m
+Author: parkwj93 <parkwj93@ajou.ac.kr>
+Date:   Tue Nov 14 11:46:20 2017 +0900
+
+    문자sms 수신 구현
+    
+    어려웠던 점: 검색을 통하여 broadcastreceived를 구현하는데 어려움이 있었습니다.
+    검색코드는 api 19버젼의 코드가 대부분이었지만 저희는 api25최신 버젼을 사용하기
+    떄문에 새로 구현해야 했습니다.
+
+[33mcommit e97a71952d1f264fd539e3a316d7db475ef6ba53[m
+Author: parkwj93 <parkwj93@ajou.ac.kr>
+Date:   Tue Nov 14 11:38:59 2017 +0900
+
+    문자sms 수신 구현
+    
+    어려웠던 점: 검색을 통하여 broadcastreceived를 구현하는데 어려움이 있었습니다.
+    검색코드는 api 19버젼의 코드가 대부분이었지만 저희는 api25최신 버젼을 사용하기
+    떄문에 새로 구현해야 했습니다.
+
+[33mcommit 9fba563afcc63c0a933a63a68439cd75302f503e[m[33m ([m[1;32mtestgradle[m[33m, [m[1;32mtaewoongCommit[m[33m)[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Mon Nov 13 21:18:56 2017 +0900
+
+    add to starButton based on the tarnsaction
+
+[33mcommit 4ce19bfbf426486ba4779859a7a31f7186c908f9[m[33m ([m[1;32mtCommit[m[33m)[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Mon Nov 13 11:23:49 2017 +0900
+
+    add to import my data in boardActivity
+
+[33mcommit 16739451205e092670b108950dc99d8bdd5cc4a7[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Mon Nov 13 00:20:16 2017 +0900
+
+    add to database file upload about image, title and description
+
+[33mcommit 2d2cdc2ea9e26e7e3dbc8cb0d7f6b7b1eed495f4[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Sun Nov 12 21:50:52 2017 +0900
+
+    origin gradle
+
+[33mcommit 1e96aa2b8a668fdfe281244593cf19cee4ce4042[m
+Merge: 076c947 a49ace2
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Fri Nov 10 15:57:16 2017 +0900
+
+    Merge branch 'master' of https://github.com/AjouUniv-SocialAppProject-2017/nusobo1
+
+[33mcommit 076c94703168383d85593b1ca71221d09914b47f[m[33m ([m[1;32mtest2[m[33m)[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Fri Nov 10 15:54:15 2017 +0900
+
+    add to testfile2
+
+[33mcommit bf635785f7762da06920f08fe007561343ccd571[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Fri Nov 10 15:52:14 2017 +0900
+
+    add to testfile
+
+[33mcommit 5e517eb9d39d52bc1a6edf2caf78f09d0e04b4e9[m[33m ([m[1;31morigin/test1[m[33m, [m[1;32mtest1[m[33m)[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Fri Nov 10 15:33:24 2017 +0900
+
+    test1
+
+[33mcommit 66df2ae81e7788f9125b1d697555b6e76c7091ac[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Fri Nov 10 15:24:23 2017 +0900
+
+    login and logout
+
+[33mcommit a49ace2de0622e4207d7ef99421506e96d4f2e12[m
+Author: taewoongLim <woong061140@gmail.com>
+Date:   Fri Nov 10 15:18:47 2017 +0900
+
+    Create README.md
+
+[33mcommit b268494aa507f445f9a5dcd89ded16edffd734e9[m
+Author: taewoong Lim <woong061140@gmail.com>
+Date:   Fri Nov 10 14:42:30 2017 +0900
+
+    add to login and logout

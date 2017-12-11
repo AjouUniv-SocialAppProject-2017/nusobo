@@ -37,9 +37,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private GoogleApiClient mGoogleApiClient;
 
     private FirebaseAuth mAuth;
-
     private EditText emailText;
     private EditText passworkdText;
+    private Button loginButton;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -105,6 +105,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         };
 
+        loginButton = (Button)findViewById(R.id.login_Button);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginUser(emailText.getText().toString(), passworkdText.getText().toString());
+            }
+        });
+
+
+
     }
     private void requestSmsPermission() {
         String permission = android.Manifest.permission.READ_SMS;
@@ -145,18 +155,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            //Log.d(TAG, "signInWithEmail:success");
-                            //FirebaseUser user = mAuth.getCurrentUser();
-                           // updateUI(user);
-                            Toast.makeText(LoginActivity.this, "로그인 성공", Toast.LENGTH_SHORT).show();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                           // Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            //Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-                             //       Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
+                        Log.i("asdasdf", "signInWithEmail:onComplete:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w("asdasdf", "signInWithEmail:failed", task.getException());
+                            Toast.makeText(LoginActivity.this, "로그인~",
+                                    Toast.LENGTH_SHORT).show();
                         }
 
                         // ...

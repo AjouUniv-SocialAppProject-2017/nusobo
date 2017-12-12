@@ -127,8 +127,10 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     if(map_content_account.containsKey(temp_date)){
                         //기존 값이 있으면
                         AccountContentDescriptionDTO __temp = new AccountContentDescriptionDTO();
-                        __temp.money = tempAccountContent.money;
+                        __temp.timeStamp = tempAccountContent.timeStamp;
                         __temp.store = tempAccountContent.store;
+                        __temp.money = tempAccountContent.money;
+
                         map_content_account.get(temp_date).add(__temp);
 
                     }else{
@@ -136,8 +138,9 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         List<AccountContentDescriptionDTO> tempContent = new ArrayList<AccountContentDescriptionDTO>();
                         AccountContentDescriptionDTO _temp = new AccountContentDescriptionDTO();
 
-                        _temp.money = tempAccountContent.money;
+                        _temp.timeStamp = tempAccountContent.timeStamp;
                         _temp.store = tempAccountContent.store;
+                        _temp.money = tempAccountContent.money;
                         tempContent.add(_temp);
 
                         map_content_account.put(temp_date, tempContent);

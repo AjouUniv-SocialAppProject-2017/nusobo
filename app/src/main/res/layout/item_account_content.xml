@@ -6,17 +6,27 @@
 
 
     <TextView
-        android:id="@+id/text1"
+        android:id="@+id/item_account_content_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="01:35"
+        android:layout_weight="1"/>
+
+
+    <TextView
+        android:id="@+id/item_account_content_store"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="장소 : "
+        android:layout_weight="1"
         />
 
     <TextView
-        android:id="@+id/text2"
+        android:id="@+id/item_account_content_money"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="가격"
+        android:layout_weight="1"
         />
 
 </LinearLayout>

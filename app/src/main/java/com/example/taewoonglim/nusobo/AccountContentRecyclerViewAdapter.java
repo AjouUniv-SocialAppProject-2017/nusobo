@@ -18,8 +18,7 @@ public class AccountContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
 
     private Context mContext = null;
-    private List<AccountContentDescriptionDTO> head_data;
-    private HashMap<String, AccountContentDescriptionDTO> content_data;
+    private List<AccountContentDescriptionDTO> content_Data;
 
     public AccountContentRecyclerViewAdapter(){
         //디폴트 생성자
@@ -28,17 +27,10 @@ public class AccountContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
     public AccountContentRecyclerViewAdapter(Context _context, List<AccountContentDescriptionDTO> _d){
 
         mContext = _context;
-        head_data = _d;
+        content_Data = _d;
 
     }
 
-    public AccountContentRecyclerViewAdapter(Context _context, List<AccountContentDescriptionDTO> _d , HashMap<String, AccountContentDescriptionDTO> __dd){
-
-        mContext = _context;
-        head_data = _d;
-        content_data = __dd;
-
-    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -50,28 +42,33 @@ public class AccountContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        ((CustomViewHolder)holder).myStore.setText(head_data.get(position).store);
-        ((CustomViewHolder)holder).myConsume.setText(head_data.get(position).money);
+        ((CustomViewHolder)holder).myTimeStamp.setText(content_Data.get(position).timeStamp);
+        ((CustomViewHolder)holder).myStore.setText(content_Data.get(position).store);
+        ((CustomViewHolder)holder).myConsume.setText(content_Data.get(position).money);
+
+
 
     }
 
     @Override
     public int getItemCount() {
-        return head_data.size();
+        return content_Data.size();
     }
 
 
     private class CustomViewHolder extends RecyclerView.ViewHolder{
 
+        TextView myTimeStamp;
         TextView myStore;
         TextView myConsume;
+
 
         public CustomViewHolder(View itemView) {
             super(itemView);
 
-
-            myStore = (TextView)itemView.findViewById(R.id.text1);
-            myConsume = (TextView)itemView.findViewById(R.id.text2);
+            myTimeStamp = (TextView)itemView.findViewById(R.id.item_account_content_time);
+            myStore = (TextView)itemView.findViewById(R.id.item_account_content_store);
+            myConsume = (TextView)itemView.findViewById(R.id.item_account_content_money);
 
         }
     }

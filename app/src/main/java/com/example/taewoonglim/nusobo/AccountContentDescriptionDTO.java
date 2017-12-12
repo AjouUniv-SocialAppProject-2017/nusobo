@@ -9,6 +9,7 @@ public class AccountContentDescriptionDTO {
     public String store;
     public String money;
     public String date;
+    public String timeStamp;
 
     /*
     public AccountContentDescriptionDTO(String s, String m){

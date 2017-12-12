@@ -95,25 +95,29 @@ public class sms extends BroadcastReceiver {
                 Toast.makeText(context, "day" + day, Toast.LENGTH_SHORT).show();
                 Toast.makeText(context, "전화번호 ㅇㅋ", Toast.LENGTH_SHORT).show();
 
-                uploadFireBase("2017", month, day, amount);
+                uploadFireBase("2017", month, day, amount, store2);
 
 
             }}
     }
 
-    public void uploadFireBase(String _year, String _month, String _day, String _money){
-
-        /*
+    public void uploadFireBase(String _year, String _month, String _day, String _money, String _content){
+        
+        AccountContentDescriptionDTO temp_accountContentDescriptionDTO = new AccountContentDescriptionDTO();
         User user = new User(_year, _month, _day, _money);
-        String myEmail = mAuth.getCurrentUser().getEmail();
 
+        temp_accountContentDescriptionDTO.money = _money;
+        temp_accountContentDescriptionDTO.store = _content;
+        temp_accountContentDescriptionDTO.date = user.date;
+
+
+
+        String myEmail = mAuth.getCurrentUser().getEmail();
         //firebase "@" "," <- 특정문자 못읽음 ㅡㅡ
         myEmail = myEmail.replace("@", "");
         myEmail = myEmail.replace(".", "");
-        mDatabase.getReference().child("users").child(myEmail).child(user.date).setValue(user.money);
-*/
-        //
-//        database.getReference().child("images").child(nowChildPostion).child("reply").push().setValue(myWirteDTO);
+        mDatabase.getReference().child("users").child(myEmail).push().setValue(temp_accountContentDescriptionDTO);
+
 
 
 

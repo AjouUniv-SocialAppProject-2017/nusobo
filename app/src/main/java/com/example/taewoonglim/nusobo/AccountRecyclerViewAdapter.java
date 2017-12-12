@@ -83,16 +83,6 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         mAuth = FirebaseAuth.getInstance();
 
 
-        ///
-
-        //accountContentDescriptionDTOs = new ArrayList<AccountContentDescriptionDTO>();
-        //accountContentDescriptionDTOs.add(new AccountContentDescriptionDTO("단대", "1000"));
-        //accountContentDescriptionDTOs.add(new AccountContentDescriptionDTO("성남", "2000"));
-        //accountContentDescriptionDTOs.add(new AccountContentDescriptionDTO("수지", "3000"));
-       // accountContentDescriptionDTOs.add(new AccountContentDescriptionDTO("산성", "4000"));
-       // accountContentDescriptionDTOs.add(new AccountContentDescriptionDTO("남한", "5000"));
-
-        ///
       //  this.cal = _cal;
 
         this._year = y;
@@ -124,7 +114,7 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 mAccountContentDescriptionDTOs.clear();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
 
-                     String uidKeyDate = snapshot.getKey(); // 데이터베이스에 있는 key( 날짜형식 ex) 2017_12_31 )값을 받아온다
+                    String uidKeyDate = snapshot.getKey(); // 데이터베이스에 있는 key( 날짜형식 ex) 2017_12_31 )값을 받아온다
                     AccountContentDescriptionDTO tempAccountContent = snapshot.getValue(AccountContentDescriptionDTO.class);
                     //total_money += Integer.valueOf(tempAccountContent.money);
                     mAccountContentDescriptionDTOs.add(tempAccountContent);
@@ -230,7 +220,7 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         ((CustomViewHolder)holder).date_textView.setText(maccountDTOs.get(position).date);
         ((CustomViewHolder)holder).total_money_textView.setText(maccountDTOs.get(position).money);
 
-        
+
 
         //각각 head값에 대미하여 값 투입
         if(map_content_account.containsKey(maccountDTOs.get(position).date)){

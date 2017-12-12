@@ -104,11 +104,8 @@ public class expenseDialog extends AppCompatDialogFragment {
         //firebase "@" "," <- 특정문자 못읽음 ㅡㅡ
         myEmail = myEmail.replace("@", "");
         myEmail = myEmail.replace(".", "");
-        //mDatabase.getReference().child("users").child(myEmail).child(user.date).setValue(user.total_Money);
         mDatabase.getReference().child("users").child(myEmail).push().setValue(temp_accountContentDescriptionDTO);
 
-        //
-//        database.getReference().child("images").child(nowChildPostion).child("reply").push().setValue(myWirteDTO);
 
 
 

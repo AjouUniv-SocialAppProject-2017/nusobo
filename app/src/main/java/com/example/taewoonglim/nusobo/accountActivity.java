@@ -331,7 +331,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
 
         private List<AccountDTO> accountDTOs = new ArrayList<>();
-        private HashMap<String, String> map_account = new HashMap<String, String>();
+        private HashMap<String, Integer> map_account = new HashMap<String, Integer>();
    //     private List<AccountDTO> bar_accountDTOs
 
 
@@ -381,7 +381,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         private int thisMonth;
 
         private List<AccountDTO> cal_accountDTOs = new ArrayList<>();
-        private HashMap<String, String> cal_map_account = new HashMap<String, String>();
+        private HashMap<String, Integer> cal_map_account = new HashMap<String, Integer>();
 
 
 
@@ -442,7 +442,6 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         public void setCalendarDate(int month, final View view){
             // 요일은 +1해야 되기때문에 달력에 요일을 세팅할때에는 -1 해준다.
             mCal.set(Calendar.MONTH, month-1);
-            Log.i("sajd;fkljas;ldkfj;11", mCal.get(Calendar.MONTH)+"");
             cal_accountDTOs.clear();
             arrData.clear();
 
@@ -473,9 +472,20 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                     cal_map_account.clear();
                     for(DataSnapshot snapshot : dataSnapshot.getChildren()){
 
-                        String uidKeyDate = snapshot.getKey();
-                        String tempMoney = snapshot.getValue(String.class);
-                        cal_map_account.put(uidKeyDate, tempMoney);
+                        AccountContentDescriptionDTO tempAccountContent = snapshot.getValue(AccountContentDescriptionDTO.class);
+
+
+                        if(cal_map_account.containsKey(tempAccountContent.date)){
+                            //기존에 있으면 값을 빼서 더한다.
+                            int temp = cal_map_account.get(tempAccountContent.date);
+                            cal_map_account.put(tempAccountContent.date, temp + Integer.valueOf(tempAccountContent.money));
+
+                        }else{
+                            //값이 없으면 대입.
+                            cal_map_account.put(tempAccountContent.date, Integer.valueOf(tempAccountContent.money));
+
+                        }
+
                     }
 
                     for(int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++){
@@ -531,7 +541,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                 final View rootView = inflater.inflate(R.layout.fragment_custom_calendarview, container, false);
                 //태웅 custom calendar
 
-                /*
+
                 ///Calendar 객체 생성
                 mCal = Calendar.getInstance();
                // thisYear = mCal.get(Calendar.YEAR);
@@ -608,66 +618,12 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
                 //태웅 custom caledar 끝
 
-
-
-
-                //@Bind(R.id.calendarView)
-
-
-                /*
-                mcv=(MaterialCalendarView) rootView.findViewById(R.id.calendarView);
-                mcv.state().edit()
-                        .setFirstDayOfWeek(Calendar.SUNDAY)
-                        .setMinimumDate(CalendarDay.from(2017, 0, 1))
-                        .setMaximumDate(CalendarDay.from(2030, 11, 31))
-                        .setCalendarDisplayMode(CalendarMode.MONTHS)
-                        .commit();
-                Calendar calendar=Calendar.getInstance();
-
-             //   int year=2017;
-              //  int Month=12;
-               // int day3= 5;
-
-                int year = _year;
-                int Month = _month;
-                int day3 = _day;
-
-                calendar.set(year,Month-1,day3);
-                ArrayList<CalendarDay> dates = new ArrayList<>();
-                CalendarDay day=CalendarDay.from(calendar);
-                dates.add(day);
-//                calendar.add(Calendar.MONTH, -2);
-//                ArrayList<CalendarDay> dates = new ArrayList<>();
-//                for (int i = 0; i < 30; i++) {
-//                    CalendarDay day = CalendarDay.from(calendar);
-//                    dates.add(day);
-//                    calendar.add(Calendar.DATE, 5);
-//                }
-//                       public EventDecorator(int color, Collection<CalendarDay> dates) {
-//                    this.color = color;
-//                    this.dates = new HashSet<>(dates);
-//                }
-                List<CalendarDay> calenderDays=dates;
-                mcv.addDecorator(new EventDecorator(Color.RED,calenderDays));
-                //mcv.addDecorator(new EventDecorator("FF"));
-
-                mcv.setOnDateChangedListener(new OnDateSelectedListener() {
-                    @Override
-                    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                        calendarDialog calendarDialog=new calendarDialog();
-                        calendarDialog.show(getFragmentManager(),"Calendar Dialog");
-                    }
-                });
-                */
-
-
-
                 return rootView;
             }
             else if(getArguments().getInt(ARG_SECTION_NUMBER)==3) {
                 View rootView = inflater.inflate(R.layout.fragment_chart, container, false);
 
-                /*
+
                 chart = (BarChart) rootView.findViewById(R.id.fragment_chart_barChart);
                 ___cal.set(_year, _month-1, _day);
                 String myEmail = mAuth.getCurrentUser().getEmail();
@@ -684,14 +640,20 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                         BARENTRY.clear();
                         map_account.clear();
                         for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                            // User tempUser= snapshot.getValue(User.class);
-                            String uidKeyDate = snapshot.getKey(); // 데이터베이스에 있는 key( 날짜형식 ex) 2017_12_31 )값을 받아온다
-                            String tempMoney = snapshot.getValue(String.class);
 
-                            //  Log.i("abacd : ", uidKeyDate+" , "+tempMoney);
-                            map_account.put(uidKeyDate, tempMoney);
+                            AccountContentDescriptionDTO tempAccountContent = snapshot.getValue(AccountContentDescriptionDTO.class);
+                            if(map_account.containsKey(tempAccountContent.date)){
+                                //기존에 있으면 값을 빼서 더한다.
+                                int temp = map_account.get(tempAccountContent.date);
+                                map_account.put(tempAccountContent.date, temp + Integer.valueOf(tempAccountContent.money));
+
+                            }else{
+                                //값이 없으면 대입.
+                                map_account.put(tempAccountContent.date, Integer.valueOf(tempAccountContent.money));
+
+                            }
+
                         }
-
 
                         accountDTOs.clear();
 
@@ -710,7 +672,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                             String myKeyDate = _year + "_" + temp_month + "_" + temp_day;
                             if(map_account.containsKey(myKeyDate)){
 
-                                temp_AccountDTO.money = map_account.get(myKeyDate);
+                                temp_AccountDTO.money = map_account.get(myKeyDate) +"";
 
                             }else{
 
@@ -719,7 +681,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                             accountDTOs.add(temp_AccountDTO);
                         }
 
-                       //차트에 데이터 넣기
+                        //차트에 데이터 넣기
                         for(int i = 0; i < accountDTOs.size(); i++){
 
                             //String temp_date[] = accountDTOs.get(i).date.split(".");
@@ -746,7 +708,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
                     }
                 });
-*/
+
 
                 return rootView;
             }

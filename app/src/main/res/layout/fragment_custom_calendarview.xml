@@ -35,16 +35,17 @@
 
     <GridView
         android:id="@+id/title_gridview"
-        android:layout_width="367dp"
+        android:layout_width="match_parent"
         android:layout_height="73dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:numColumns="7" />
+        android:numColumns="7"
+        android:layout_gravity="center"/>
 
     <GridView
         android:id="@+id/calGrid"
-        android:layout_width="381dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="-7dp"
         android:layout_marginEnd="8dp"
@@ -54,7 +55,7 @@
         android:layout_weight="10"
         android:background="#ffffff"
         android:numColumns="7"
-        android:gravity="center"/>
+        android:layout_gravity="center" />
 
 
 </LinearLayout>

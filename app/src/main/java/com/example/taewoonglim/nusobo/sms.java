@@ -103,6 +103,7 @@ public class sms extends BroadcastReceiver {
 
     public void uploadFireBase(String _year, String _month, String _day, String _money){
 
+        /*
         User user = new User(_year, _month, _day, _money);
         String myEmail = mAuth.getCurrentUser().getEmail();
 
@@ -110,7 +111,7 @@ public class sms extends BroadcastReceiver {
         myEmail = myEmail.replace("@", "");
         myEmail = myEmail.replace(".", "");
         mDatabase.getReference().child("users").child(myEmail).child(user.date).setValue(user.money);
-
+*/
         //
 //        database.getReference().child("images").child(nowChildPostion).child("reply").push().setValue(myWirteDTO);
 

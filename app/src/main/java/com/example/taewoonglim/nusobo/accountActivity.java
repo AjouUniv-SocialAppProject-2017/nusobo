@@ -384,6 +384,12 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         private HashMap<String, String> cal_map_account = new HashMap<String, String>();
 
 
+
+
+        RecyclerView __recyclerView;
+        AccountContentRecyclerViewAdapter contentRecyclerViewAdapter;
+        List<AccountContentDescriptionDTO> a = new ArrayList<AccountContentDescriptionDTO>();
+
         //태웅 끝
 
         private static final String ARG_SECTION_NUMBER = "section_number";
@@ -525,6 +531,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                 final View rootView = inflater.inflate(R.layout.fragment_custom_calendarview, container, false);
                 //태웅 custom calendar
 
+                /*
                 ///Calendar 객체 생성
                 mCal = Calendar.getInstance();
                // thisYear = mCal.get(Calendar.YEAR);
@@ -653,10 +660,14 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                 });
                 */
 
+
+
                 return rootView;
             }
             else if(getArguments().getInt(ARG_SECTION_NUMBER)==3) {
                 View rootView = inflater.inflate(R.layout.fragment_chart, container, false);
+
+                /*
                 chart = (BarChart) rootView.findViewById(R.id.fragment_chart_barChart);
                 ___cal.set(_year, _month-1, _day);
                 String myEmail = mAuth.getCurrentUser().getEmail();
@@ -735,7 +746,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
                     }
                 });
-
+*/
 
                 return rootView;
             }
@@ -750,23 +761,15 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
                 recyclerView = (RecyclerView)rootView.findViewById(R.id.account_recycleView);
 
-             /*
-                accountRecyclerViewAdapter = new AccountRecyclerViewAdapter(getActivity(), cal, _year, _month, _day);
 
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                recyclerView.setAdapter(accountRecyclerViewAdapter);
-*/
+
+
                 setExpenseMoney(rootView);
-
                 accountFragmentMainDate_TextView = (TextView)rootView.findViewById(R.id.account_date_textview);
                 accountFragmentMainDate_TextView.setText(_year + "." + _month);
 
-
-
                 accountFragmentRight_ImageButton = (ImageButton)rootView.findViewById(R.id.account_right_button);
                 accountFragmentLeft_ImageButton = (ImageButton)rootView.findViewById(R.id.account_left_button);
-
-
 
                 accountFragmentRight_ImageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -806,49 +809,6 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                     }
                 });
 
-
-
-
-                /*
-                //혹시 몰라 clear;
-                accountDTOs.clear();
-
-                for(int i = 0; i < cal.getActualMaximum(Calendar.DAY_OF_MONTH); i++){
-
-                    AccountDTO temp_AccountDTO = new AccountDTO();
-
-
-                    //일 수는 2자리로 표현
-                    String temp_day = String.format("%02d", i+1);
-                    //날 2자리로 표현
-                    String temp_month = String.format("%02d", _month);
-                    temp_AccountDTO.date = " " +String.valueOf(_year) + "." + temp_month + "." + temp_day + " ";
-
-
-                    String myKeyDate = _year + "_" + temp_month + "_" + temp_day;
-                    if(map_account.containsKey(myKeyDate)){
-
-                        temp_AccountDTO.money = map_account.get(myKeyDate) + "원";
-
-                    }else{
-
-                        temp_AccountDTO.money = "0원";
-                    }
-
-
-
-                    accountDTOs.add(temp_AccountDTO);
-                }
-
-
-                */
-
-                //태웅 끝
-                    /*    mcv2.setOnDateChangedListener(new OnDateSelectedListener() {
-                    @Override
-                    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                    }
-                }*/
                 return rootView;
             }
         }
@@ -863,23 +823,6 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(accountRecyclerViewAdapter);
         }
-
-
-        /*
-        갱신할 때 필요할 것 같은데 잘 안됨...모르겠음;;
-        @Override
-        public void onResume(){
-            super.onResume();
-
-            if(accountRecyclerViewAdapter == null)
-            {
-                //pass;
-            }else{
-                accountRecyclerViewAdapter.notifyDataSetChanged();
-            }
-
-        }
-        */
 
     }
 
@@ -924,8 +867,6 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             }
             return null;
         }
-
-
 
     }
 

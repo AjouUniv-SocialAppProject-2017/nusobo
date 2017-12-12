@@ -1,6 +1,8 @@
 package com.example.taewoonglim.nusobo;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +30,9 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private Context mContext = null;
     private List<AccountDTO> maccountDTOs = new ArrayList<>();
+    private List<AccountContentDescriptionDTO> mAccountContentDescriptionDTOs = new ArrayList<>();
+    private int total_money = 0;
+
     private String userId;
     private FirebaseDatabase mDatabase;
     private FirebaseAuth mAuth;
@@ -36,13 +41,19 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     //test 변수
     private List<AccountDTO> accountDTOs = new ArrayList<>();
-    private HashMap<String, String> map_account = new HashMap<String, String>();
+    private HashMap<String, Integer> map_head_account = new HashMap<String, Integer>();
+    private HashMap<String, List<AccountContentDescriptionDTO> > map_content_account = new HashMap<>();
+
+
     Calendar cal = Calendar.getInstance();
     private int _month;
     private int _year;
     private int _day;
     public int maxDayOfEnd;
 
+
+
+    //private List<AccountContentDescriptionDTO> accountContentDescriptionDTOs;
 
 
 
@@ -72,6 +83,16 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         mAuth = FirebaseAuth.getInstance();
 
 
+        ///
+
+        //accountContentDescriptionDTOs = new ArrayList<AccountContentDescriptionDTO>();
+        //accountContentDescriptionDTOs.add(new AccountContentDescriptionDTO("단대", "1000"));
+        //accountContentDescriptionDTOs.add(new AccountContentDescriptionDTO("성남", "2000"));
+        //accountContentDescriptionDTOs.add(new AccountContentDescriptionDTO("수지", "3000"));
+       // accountContentDescriptionDTOs.add(new AccountContentDescriptionDTO("산성", "4000"));
+       // accountContentDescriptionDTOs.add(new AccountContentDescriptionDTO("남한", "5000"));
+
+        ///
       //  this.cal = _cal;
 
         this._year = y;
@@ -82,65 +103,96 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         this.maxDayOfEnd = _maxDayOfEnd;
 
-
-        Log.i("asdl;kfj;lasjdf;laks", _maxDayOfEnd + " : " + this._month + " : " + this._year);
         String myEmail = mAuth.getCurrentUser().getEmail();
 
         //firebase "@" "," <- 특정문자 못읽음 ㅡㅡ
         myEmail = myEmail.replace("@", "");
         myEmail = myEmail.replace(".", "");
 
-
-
+        final String temp_myEmail = myEmail;
         //database 읽어오기, 옵저버 패턴 : 관찰 대상이 변하는 순간 이벤트를 처리함
         mDatabase.getReference().child("users").child(myEmail).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 //    userList.clear();// 수정될 때 데이터가 날라오기 때문에 clear()를 안해주면 쌓인다.
-                map_account.clear();
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    //  User tempUser= snapshot.getValue(User.class);
-                    String uidKeyDate = snapshot.getKey(); // 데이터베이스에 있는 key( 날짜형식 ex) 2017_12_31 )값을 받아온다
-                    String tempMoney = snapshot.getValue(String.class);
+                //map_account.clear();
 
-                    //  Log.i("abacd : ", uidKeyDate+" , "+tempMoney);
-                    map_account.put(uidKeyDate, tempMoney);
+
+                map_content_account.clear(); //recyclerview-account_content 내용을 담는다
+                map_head_account.clear();
+                mAccountContentDescriptionDTOs.clear();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+
+                     String uidKeyDate = snapshot.getKey(); // 데이터베이스에 있는 key( 날짜형식 ex) 2017_12_31 )값을 받아온다
+                    AccountContentDescriptionDTO tempAccountContent = snapshot.getValue(AccountContentDescriptionDTO.class);
+                    //total_money += Integer.valueOf(tempAccountContent.money);
+                    mAccountContentDescriptionDTOs.add(tempAccountContent);
+
+
+                    String temp_split_date[] = tempAccountContent.date.split("_");
+                    String temp_date = temp_split_date[0] + "." + temp_split_date[1] + "." + temp_split_date[2];
+
+                    Log.i("vnjipwnprg", temp_date+"");
+                    if(map_content_account.containsKey(temp_date)){
+                        //기존 값이 있으면
+                        AccountContentDescriptionDTO __temp = new AccountContentDescriptionDTO();
+                        __temp.money = tempAccountContent.money;
+                        __temp.store = tempAccountContent.store;
+                        map_content_account.get(temp_date).add(__temp);
+
+                    }else{
+
+                        List<AccountContentDescriptionDTO> tempContent = new ArrayList<AccountContentDescriptionDTO>();
+                        AccountContentDescriptionDTO _temp = new AccountContentDescriptionDTO();
+
+                        _temp.money = tempAccountContent.money;
+                        _temp.store = tempAccountContent.store;
+                        tempContent.add(_temp);
+
+                        map_content_account.put(temp_date, tempContent);
+                    }
+
+
+
+
+                    if(map_head_account.containsKey(tempAccountContent.date)){
+                        //기존에 있으면 값을 빼서 더한다.
+                        int temp = map_head_account.get(tempAccountContent.date);
+                        map_head_account.put(tempAccountContent.date, temp + Integer.valueOf(tempAccountContent.money));
+
+                    }else{
+                        //값이 없으면 대입.
+                        map_head_account.put(tempAccountContent.date, Integer.valueOf(tempAccountContent.money));
+
+                    }
+
+                 //   map_head_account.put(uidKeyDate, String.valuetotal_money));
+                   // Log.i("alsdjf;lkasjd;lf2", total_money + " : ");
+
                 }
 
+
                 accountDTOs.clear();
-
                 for(int i = 0; i < maxDayOfEnd; i++){
-
                     AccountDTO temp_AccountDTO = new AccountDTO();
-
-
                     //일 수는 2자리로 표현
                     String temp_day = String.format("%02d", i+1);
                     //날 2자리로 표현
                     String temp_month = String.format("%02d", _month);
-
                     temp_AccountDTO.date = String.valueOf(_year) + "." + temp_month + "." + temp_day;
-
-
                     String myKeyDate = _year + "_" + temp_month + "_" + temp_day;
-                    if(map_account.containsKey(myKeyDate)){
-
-                        temp_AccountDTO.money = map_account.get(myKeyDate) + "원";
+                    if(map_head_account.containsKey(myKeyDate)){
+                        temp_AccountDTO.money = map_head_account.get(myKeyDate) + "원";
 
                     }else{
 
                         temp_AccountDTO.money = "0원";
                     }
-
-
-
                     accountDTOs.add(temp_AccountDTO);
+
                 }
-
-
                 maccountDTOs = accountDTOs;
-
                 notifyDataSetChanged(); //갱신 후 새로고침이 필요
 
             }
@@ -156,9 +208,6 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
 
 
-
-
-
     }
 
 
@@ -166,7 +215,8 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_account, parent, false);
+       // View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_account, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_content_head_contents, parent, false);
 
 
         return new CustomViewHolder(view);
@@ -175,12 +225,22 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
+
+        //recyclerview_account_header
         ((CustomViewHolder)holder).date_textView.setText(maccountDTOs.get(position).date);
-        ((CustomViewHolder)holder).money_textView.setText(maccountDTOs.get(position).money);
+        ((CustomViewHolder)holder).total_money_textView.setText(maccountDTOs.get(position).money);
 
+        
 
-       // ((CustomViewHolder)holder).date_textView.setText("2017년 10월 31일");
-       // ((CustomViewHolder)holder).money_textView.setText("7000원");
+        //각각 head값에 대미하여 값 투입
+        if(map_content_account.containsKey(maccountDTOs.get(position).date)){
+
+           ((CustomViewHolder)holder).accountContentRecyclerViewAdapter = new AccountContentRecyclerViewAdapter(mContext, map_content_account.get(maccountDTOs.get(position).date));
+            ((CustomViewHolder)holder).contents_recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+            ((CustomViewHolder)holder).contents_recyclerView.setAdapter( ((CustomViewHolder)holder).accountContentRecyclerViewAdapter);
+
+        }
+
     }
 
 
@@ -193,16 +253,17 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private class CustomViewHolder extends RecyclerView.ViewHolder {
 
         TextView date_textView;
-        TextView money_textView;
+        TextView total_money_textView;
 
-
+        RecyclerView contents_recyclerView;
+        AccountContentRecyclerViewAdapter accountContentRecyclerViewAdapter;
 
         public CustomViewHolder(View view) {
             super(view);
 
-
+            contents_recyclerView = (RecyclerView)view.findViewById(R.id.recyclerview_accont_conview_content_recyclerView);
             date_textView = (TextView)view.findViewById(R.id.item_account_date_textview);
-            money_textView = (TextView)view.findViewById(R.id.item_account_money_textview);
+            total_money_textView = (TextView)view.findViewById(R.id.item_account_totalmoney_textview);
 
         }
     }

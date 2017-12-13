@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,8 +13,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.UploadTask;
 
 public class MyAccountManager extends AppCompatActivity {
 
@@ -22,8 +27,8 @@ public class MyAccountManager extends AppCompatActivity {
 
     private ImageView preImageViewBtn;
     private ImageView newMyImage;
-    private EditText myNick;
-    private EditText myPassword;
+    private EditText myNewNick;
+    private EditText myNewPassword;
     private Button modifyMyPorfileBtn;
 
 
@@ -41,8 +46,8 @@ public class MyAccountManager extends AppCompatActivity {
 
         preImageViewBtn = (ImageView)findViewById(R.id.my_account_manager_contentBack_ImgeView);
         newMyImage = (ImageView)findViewById(R.id.my_account_manager_myImage_ImageView);
-        myNick = (EditText)findViewById(R.id.my_account_manager_userName);
-        myPassword = (EditText)findViewById(R.id.my_account_manager_passwordText);
+        myNewNick = (EditText)findViewById(R.id.my_account_manager_userName);
+        myNewPassword = (EditText)findViewById(R.id.my_account_manager_passwordText);
         modifyMyPorfileBtn = (Button)findViewById(R.id.my_account_manager_registerButton);
 
 
@@ -71,11 +76,56 @@ public class MyAccountManager extends AppCompatActivity {
         });
 
 
+        modifyMyPorfileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                modifyUserProfile(myNewNick.getText().toString(), myNewPassword.getText().toString());
+            }
+        });
 
     }
 
-    private void modifyUserProfile(Uri _myImageUri, String _nick, String _password){
+    private void modifyUserProfile(final String _nick, String _password){
       //  mAuth.
+
+
+        mStroage.getReference().child("authusers").child(mAuth.getCurrentUser().getUid())
+                .putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
+                @SuppressWarnings("VisibleForTests")
+                String imageUrl = task.getResult().getDownloadUrl().toString();
+
+                UserModelAuth usermodelauth = new UserModelAuth();
+                usermodelauth.userName = _nick;
+                usermodelauth.profileImageUrl = imageUrl;
+
+                FirebaseDatabase.getInstance().getReference().child("authusers").child(mAuth.getCurrentUser().getUid()).setValue(usermodelauth);
+            }
+        });
+
+        /*
+        final String uid =task.getResult().getUser().getUid();
+        FirebaseStorage.getInstance().getReference().child("authusers").child(uid)
+                .putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                @SuppressWarnings("VisibleForTests")
+                String imageUrl = task.getResult().getDownloadUrl().toString();
+
+                UserModelAuth usermodelauth = new UserModelAuth();
+                usermodelauth.userName = userName.getText().toString();
+                usermodelauth.profileImageUrl = imageUrl;
+
+
+                FirebaseDatabase.getInstance().getReference().child("authusers").child(uid).setValue(usermodelauth);
+
+            }
+        });
+*/
+
+
 
     }
 

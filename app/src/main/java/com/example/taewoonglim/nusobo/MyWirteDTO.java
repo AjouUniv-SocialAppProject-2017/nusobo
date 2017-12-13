@@ -11,8 +11,10 @@ public class MyWirteDTO {
 
 
     public String description;
-    public String userId;
+    public String userNick;
+    public String myprofile_imageUrl;
     public String timeStamp;
+    public String uid;
 
 
 }

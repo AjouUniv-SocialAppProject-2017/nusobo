@@ -10,8 +10,10 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
+import java.util.TimeZone;
 
 /**
  * Created by woojin on 2017-11-10.
@@ -106,9 +108,20 @@ public class sms extends BroadcastReceiver {
         AccountContentDescriptionDTO temp_accountContentDescriptionDTO = new AccountContentDescriptionDTO();
         User user = new User(_year, _month, _day, _money);
 
+
+        //타임스탬프에 적용하기 위해
+        //시간을 받아올 때는 유니스 시간이므로 사람이 알아볼 수 있도록 변환해주어야한다.
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm");
+
+        //타임스탬프
+        long nowUnixtime = System.currentTimeMillis();
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+        Date date = new Date(nowUnixtime);
+
         temp_accountContentDescriptionDTO.money = _money;
         temp_accountContentDescriptionDTO.store = _content;
         temp_accountContentDescriptionDTO.date = user.date;
+        temp_accountContentDescriptionDTO.timeStamp = simpleDateFormat.format(date);
 
 
 

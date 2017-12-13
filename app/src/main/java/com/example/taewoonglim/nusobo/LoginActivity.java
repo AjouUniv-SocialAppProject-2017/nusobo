@@ -232,6 +232,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onStart(){
         super.onStart();
+
+        Log.i("asjdfkl;ajsldf", "짜잔");
         mAuth.addAuthStateListener(mAuthListener);
 
     }

@@ -50,8 +50,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
 
-        emailText = (EditText)findViewById(R.id.emailText);
-        passworkdText = (EditText)findViewById(R.id.passwordText);
+        emailText = (EditText)findViewById(R.id.login_email_editText);
+        passworkdText = (EditText)findViewById(R.id.login_passwordText_editText);
 
         TextView registerButton = (TextView) findViewById(R.id.registerButton);
         registerButton.setOnClickListener(new View.OnClickListener(){
@@ -117,6 +117,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     }
+
+
+
     private void requestSmsPermission() {
         String permission = android.Manifest.permission.READ_SMS;
         String permission2 =android.Manifest.permission.INTERNET;

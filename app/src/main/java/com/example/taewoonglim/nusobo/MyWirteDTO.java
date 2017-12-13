@@ -16,5 +16,19 @@ public class MyWirteDTO {
     public String timeStamp;
     public String uid;
 
+    public MyWirteDTO(){
+        //디폴트
 
+    }
+
+
+    public MyWirteDTO(String _d, String _uN, String _myp, String _ts, String _uid){
+
+
+        this.description = _d;
+        this.userNick = _uN;
+        this.myprofile_imageUrl = _myp;
+        this.timeStamp = _ts;
+        this.uid = _uid;
+    }
 }

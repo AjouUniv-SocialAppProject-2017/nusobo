@@ -1,24 +1,36 @@
 package com.example.taewoonglim.nusobo;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.UploadTask;
+
+import java.net.URL;
 
 public class MyAccountManager extends AppCompatActivity {
 
@@ -34,6 +46,7 @@ public class MyAccountManager extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseStorage mStroage;
+    private DatabaseReference mDatabase;
     private Uri imageUri;
 
     @Override
@@ -43,6 +56,8 @@ public class MyAccountManager extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mStroage = FirebaseStorage.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
 
         preImageViewBtn = (ImageView)findViewById(R.id.my_account_manager_contentBack_ImgeView);
         newMyImage = (ImageView)findViewById(R.id.my_account_manager_myImage_ImageView);
@@ -52,7 +67,52 @@ public class MyAccountManager extends AppCompatActivity {
 
 
 
+        FirebaseDatabase.getInstance().getReference().child("authusers").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
+
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+
+                    String myUid = snapshot.getKey();
+                    UserModelAuth tempUser = snapshot.getValue(UserModelAuth.class);
+
+                    if(myUid.equals(mAuth.getCurrentUser().getUid())){
+
+                        Glide.with(getApplicationContext()).load(tempUser.profileImageUrl).apply(new RequestOptions().circleCrop()).into(newMyImage);
+                        myNewNick.setHint(tempUser.userName);
+                        break;
+
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        /*
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                Post post = dataSnapshot.getValue(Post.class);
+                // ...
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                //Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        mDatabase.addValueEventListener(postListener);
+*/
 
         preImageViewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +140,8 @@ public class MyAccountManager extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 modifyUserProfile(myNewNick.getText().toString(), myNewPassword.getText().toString());
+                modifyPassword(myNewPassword.getText().toString());
+
             }
         });
 
@@ -134,6 +196,24 @@ public class MyAccountManager extends AppCompatActivity {
 //        mStroage.getReference().child("")
     }
 
+    private void modifyPassword(String _newPassword){
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String newPassword = _newPassword;
+
+        user.updatePassword(newPassword)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(MyAccountManager.this, "비밀번호 변경 성공", Toast.LENGTH_SHORT).show();
+                          //  Log.d(TAG, "User password updated.");
+                        }
+                    }
+                });
+
+
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

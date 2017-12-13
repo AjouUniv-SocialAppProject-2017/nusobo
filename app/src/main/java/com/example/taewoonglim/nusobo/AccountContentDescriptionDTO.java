@@ -11,10 +11,17 @@ public class AccountContentDescriptionDTO {
     public String date;
     public String timeStamp;
 
-    /*
-    public AccountContentDescriptionDTO(String s, String m){
-        store = s;
-        money = m;
+
+    public AccountContentDescriptionDTO(){
+
+        //디폴트
+
     }
-    */
+
+    public AccountContentDescriptionDTO(String s, String m){
+
+        this.store = s;
+        this.money = m;
+    }
+
 }

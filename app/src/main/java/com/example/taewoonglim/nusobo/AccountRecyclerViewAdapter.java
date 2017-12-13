@@ -111,19 +111,21 @@ public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                 map_content_account.clear(); //recyclerview-account_content 내용을 담는다
                 map_head_account.clear();
-                mAccountContentDescriptionDTOs.clear();
+                //mAccountContentDescriptionDTOs.clear();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
 
                     String uidKeyDate = snapshot.getKey(); // 데이터베이스에 있는 key( 날짜형식 ex) 2017_12_31 )값을 받아온다
                     AccountContentDescriptionDTO tempAccountContent = snapshot.getValue(AccountContentDescriptionDTO.class);
                     //total_money += Integer.valueOf(tempAccountContent.money);
-                    mAccountContentDescriptionDTOs.add(tempAccountContent);
+                    //mAccountContentDescriptionDTOs.add(tempAccountContent);
 
 
                     String temp_split_date[] = tempAccountContent.date.split("_");
                     String temp_date = temp_split_date[0] + "." + temp_split_date[1] + "." + temp_split_date[2];
 
-                    Log.i("vnjipwnprg", temp_date+"");
+
+
+                   // Log.i("vnjipwnprg", temp_date+"");
                     if(map_content_account.containsKey(temp_date)){
                         //기존 값이 있으면
                         AccountContentDescriptionDTO __temp = new AccountContentDescriptionDTO();

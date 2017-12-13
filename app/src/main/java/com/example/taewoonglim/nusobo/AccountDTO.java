@@ -9,4 +9,16 @@ public class AccountDTO {
     public String date;
     public String money;
 
+    public AccountDTO(){
+        //디폴트
+    }
+
+    public AccountDTO(String _d, String _m){
+
+        this.date = _d;
+        this.money = _m;
+
+    }
+
+
 }

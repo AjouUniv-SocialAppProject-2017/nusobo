@@ -141,7 +141,6 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         if(requestCode == PICK_FROM_ALBUM && resultCode == RESULT_OK){
-
             profile.setImageURI(data.getData()); // 가운데 뷰를 바꿈
             imageUri = data.getData();// 이미지 경로 원본
 

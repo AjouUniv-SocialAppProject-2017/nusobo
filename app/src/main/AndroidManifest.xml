@@ -47,11 +47,12 @@
             android:name=".PostingImagePreview"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".WriteBoardActivity" />
-        <activity android:name=".ChartFragment"/>
+        <activity android:name=".ChartFragment" />
         <activity
             android:name=".accountActivity"
             android:label="@string/title_activity_account"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MyAccountManager"></activity>
     </application>
 
 </manifest>

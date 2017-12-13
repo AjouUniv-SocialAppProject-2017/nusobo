@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +27,7 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
@@ -34,6 +36,7 @@ public class BoardActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
 
     private List<ImageDTO> imageDTOs = new ArrayList<>();
+    HashMap<String, UserModelAuth> usermodelauth = new HashMap<String, UserModelAuth>();
     private Stack<ImageDTO> temp_imageDTOs = new Stack<>();
 
     private List<String> uidLists = new ArrayList<>();
@@ -45,6 +48,7 @@ public class BoardActivity extends AppCompatActivity {
     private ImageView homeImageViewBtn;
     private ImageView plusImageViewBtn;
     private ImageView receiptImageViewBtn;
+    private ImageView boardAccountImageBtn;
 
 
     private Button logOutBtn;
@@ -114,41 +118,33 @@ public class BoardActivity extends AppCompatActivity {
             }
         });
 
+        //개인정보관리
+        boardAccountImageBtn = (ImageView)findViewById(R.id.board_account_imageView);
+        boardAccountImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        //database 읽어오기, 옵저버 패턴 : 관찰 대상이 변하는 순간 이벤트를 처리함
-                database.getReference().child("images").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                Intent i = new Intent(BoardActivity.this, MyAccountManager.class);
+                BoardActivity.this.startActivity(i);
+                Toast.makeText(BoardActivity.this, "정보 관리 페이지 이동", Toast.LENGTH_SHORT).show();
 
-                        imageDTOs.clear(); // 수정될 때 데이터가 날라오기 때문에 clear()를 안해주면 쌓인다.
-                        uidLists.clear();
-                        temp_imageDTOs.clear(); // 혹시 몰라 clear;
-                        temp_uidLists.clear(); //혹시 몰라
-
-                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                            ImageDTO imageDTO = snapshot.getValue(ImageDTO.class);
-                            String uidKey = snapshot.getKey(); //images 데이터베이스에 있는 key값을 받아온다
-
-                            temp_imageDTOs.push(imageDTO);
-                            temp_uidLists.push(uidKey);
+            }
+        });
 
 
-                        }
+        FirebaseDatabase.getInstance().getReference().child("authusers").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        //역순으로 뿌려주기
-                        while(!temp_imageDTOs.empty()){
+                usermodelauth.clear();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
 
-                            ImageDTO temp = temp_imageDTOs.pop();
-                            imageDTOs.add(temp);
-                        }
+                    String userKeyUid = snapshot.getKey();
+                    UserModelAuth temp = snapshot.getValue(UserModelAuth.class);
+                    usermodelauth.put(userKeyUid, temp);
 
-                        while(!temp_uidLists.empty()){
-                            String temp = temp_uidLists.pop();
-                            uidLists.add(temp);
-                        }
-
-                        boardRecyclerViewAdapter.notifyDataSetChanged(); //갱신 후 새로고침이 필요
-
+                }
+                boardRecyclerViewAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -156,6 +152,10 @@ public class BoardActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+
 
     }
 
@@ -174,12 +174,55 @@ public class BoardActivity extends AppCompatActivity {
         public BoardRecyclerViewAdapter(Context _context){
 
             mContext = _context;
+            //database 읽어오기, 옵저버 패턴 : 관찰 대상이 변하는 순간 이벤트를 처리함
+            database.getReference().child("images").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    imageDTOs.clear(); // 수정될 때 데이터가 날라오기 때문에 clear()를 안해주면 쌓인다.
+                    uidLists.clear();
+                    temp_imageDTOs.clear(); // 혹시 몰라 clear;
+                    temp_uidLists.clear(); //혹시 몰라
+
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        ImageDTO imageDTO = snapshot.getValue(ImageDTO.class);
+                        String uidKey = snapshot.getKey(); //images 데이터베이스에 있는 key값을 받아온다
+
+                        temp_imageDTOs.push(imageDTO);
+                        temp_uidLists.push(uidKey);
+
+
+                    }
+
+                    //역순으로 뿌려주기
+                    while(!temp_imageDTOs.empty()){
+
+                        ImageDTO temp = temp_imageDTOs.pop();
+                        imageDTOs.add(temp);
+                    }
+
+                    while(!temp_uidLists.empty()){
+                        String temp = temp_uidLists.pop();
+                        uidLists.add(temp);
+                    }
+
+                    notifyDataSetChanged(); //갱신 후 새로고침이 필요
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
         }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        //    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_board, parent, false);
+
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notice, parent, false);
 
 
@@ -193,7 +236,7 @@ public class BoardActivity extends AppCompatActivity {
             ((CustomViewHolder)holder).content_textView.setText(imageDTOs.get(position).description);
             ((CustomViewHolder)holder).heartCtn_textView.setText(Integer.toString(imageDTOs.get(position).starCount));
             ((CustomViewHolder)holder).timeStamp_textView.setText(imageDTOs.get(position).timeStamp);
-            ((CustomViewHolder)holder).writer_textView.setText(imageDTOs.get(position).userId);
+            //((CustomViewHolder)holder).writer_textView.setText(imageDTOs.get(position).userId);
 
 
             Glide.with(holder.itemView.getContext()).load(imageDTOs.get(position).imageUrl).into(((CustomViewHolder)holder).imageVIew);
@@ -205,6 +248,23 @@ public class BoardActivity extends AppCompatActivity {
 
                 }
             });
+
+
+            if(usermodelauth.containsKey(imageDTOs.get(position).uid)){
+                String tempUrl = usermodelauth.get(imageDTOs.get(position).uid).profileImageUrl;
+                Glide.with(holder.itemView.getContext()).load(tempUrl)
+                .apply(new RequestOptions().circleCrop()).into(((CustomViewHolder)holder).myProfileImageView);
+
+
+                String tempMyNick = usermodelauth.get(imageDTOs.get(position).uid).userName;
+                ((CustomViewHolder)holder).writer_textView.setText(tempMyNick);
+
+            }else{
+
+                //닉네임이 없으면 그냥 이메일 주소 받아온다.
+                ((CustomViewHolder)holder).writer_textView.setText(imageDTOs.get(position).userId);
+
+            }
 
 
 
@@ -292,6 +352,8 @@ public class BoardActivity extends AppCompatActivity {
             TextView timeStamp_textView; //작성시간
             TextView writer_textView; //작성자
 
+            ImageView myProfileImageView; //내 이미지
+
 
 
             public CustomViewHolder(View view) {
@@ -314,6 +376,7 @@ public class BoardActivity extends AppCompatActivity {
                 heartCtn_textView = (TextView)view.findViewById(R.id.item_notice_count_TextView);
                 timeStamp_textView = (TextView)view.findViewById(R.id.item_notice_date_TextView); //작성시간
                 writer_textView = (TextView)view.findViewById(R.id.item_notice_writer_TextView); //작성자
+                myProfileImageView = (ImageView)view.findViewById(R.id.item_notice_myProfile_imageView);
             }
         }
     }

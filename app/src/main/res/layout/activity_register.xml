@@ -37,15 +37,26 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+
+            <ImageView
+                android:id="@+id/register_myImage_ImageView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/ic_person_black_24dp"
+                android:background="@color/colorPrimary"
+                />
+
             <EditText
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
-                android:hint="아이디"
+                android:hint="이름"
                 android:layout_gravity="center"
                 android:padding="10dp"
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff"
-                android:id="@+id/idText"
+                android:id="@+id/register_userName"
                 android:drawableStart="@drawable/ic_person_black_24dp"
                 android:drawableLeft="@drawable/ic_person_black_24dp"
                 android:layout_marginTop="50dp"

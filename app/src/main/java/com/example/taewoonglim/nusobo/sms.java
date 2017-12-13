@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Date;
 import java.util.StringTokenizer;
 
@@ -16,13 +19,24 @@ import java.util.StringTokenizer;
 
 public class sms extends BroadcastReceiver {
 
+    private boolean flag;
+    private FirebaseAuth mAuth;
+    private FirebaseDatabase mDatabase;
+
+
+
     public void onReceive(Context context, Intent intent) {
+
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance();
+
         Bundle bundle = intent.getExtras();
         SmsMessage[] msgs = null;
         String body="";
         String sender;
         Date curDate;
-        boolean flag=false;
+        flag = false;
+
         if (bundle != null) {
             Object[] smsExtra = (Object[]) bundle.get("pdus");
             msgs = new SmsMessage[smsExtra.length];
@@ -33,7 +47,11 @@ public class sms extends BroadcastReceiver {
                 sender = sms.getOriginatingAddress().toString();
                 curDate =new Date(sms.getTimestampMillis());
                 Toast.makeText(context, "From123 :" + sender + "\n" + "body:" + body, Toast.LENGTH_LONG).show();
-                if(sender.equals("01076255866")){flag=true;}
+                if(sender.equals("01076255866")){
+                    flag = true;
+                }else if(sender.equals("01099760781")){
+                    flag = true;
+                }
                 //String year2=Integer.toString(curDate.getYear());
                 //Toast.makeText(context, "year    " + year2, Toast.LENGTH_SHORT).show();
             }
@@ -62,10 +80,47 @@ public class sms extends BroadcastReceiver {
                 //아래꺼가 돈어디서 썻는지
 
                 String store2 = tokenizer2.nextToken();
+
+
+
+                /*
+                [Web발신]
+                KB국민체크(0*3*)
+                박*진님
+                11/11 13:20
+                4,600원
+                투썸플레이스 이 사용
+                 */
                 Toast.makeText(context, "store" + store2, Toast.LENGTH_SHORT).show();
                 Toast.makeText(context, "month" + month, Toast.LENGTH_SHORT).show();
                 Toast.makeText(context, "day" + day, Toast.LENGTH_SHORT).show();
                 Toast.makeText(context, "전화번호 ㅇㅋ", Toast.LENGTH_SHORT).show();
+
+                uploadFireBase("2017", month, day, amount, store2);
+
+
             }}
+    }
+
+    public void uploadFireBase(String _year, String _month, String _day, String _money, String _content){
+
+        AccountContentDescriptionDTO temp_accountContentDescriptionDTO = new AccountContentDescriptionDTO();
+        User user = new User(_year, _month, _day, _money);
+
+        temp_accountContentDescriptionDTO.money = _money;
+        temp_accountContentDescriptionDTO.store = _content;
+        temp_accountContentDescriptionDTO.date = user.date;
+
+
+
+        String myEmail = mAuth.getCurrentUser().getEmail();
+        //firebase "@" "," <- 특정문자 못읽음 ㅡㅡ
+        myEmail = myEmail.replace("@", "");
+        myEmail = myEmail.replace(".", "");
+        mDatabase.getReference().child("users").child(myEmail).push().setValue(temp_accountContentDescriptionDTO);
+
+
+
+
     }
 }

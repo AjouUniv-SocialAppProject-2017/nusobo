@@ -42,27 +42,32 @@
         android:id="@+id/title_gridview"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:padding="5dp"
-        android:layout_marginLeft="15dp"
+
+        android:layout_marginLeft="20dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:numColumns="7" />
+        android:numColumns="7"
+        android:layout_gravity="center"/>
 
     <GridView
         android:id="@+id/calGrid"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:paddingLeft="16dp"
 
+        android:layout_width="wrap_content"
+
+        android:layout_height="match_parent"
+        android:paddingLeft="20dp"
+        android:paddingRight="0dp"
         android:layout_marginBottom="-7dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="0dp"
         android:layout_marginStart="8dp"
         android:layout_weight="5"
         android:background="#ffffff"
         android:gravity="center"
         android:numColumns="7" />
+
+
 
 
 </LinearLayout>

@@ -122,7 +122,8 @@ public class MyAccountManager extends AppCompatActivity {
 
                 Intent i = new Intent(MyAccountManager.this, BoardActivity.class);
                 MyAccountManager.this.startActivity(i);
-                Toast.makeText(MyAccountManager.this, "BoardActivity로 이동", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(MyAccountManager.this, "BoardActivity로 이동", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 
@@ -143,6 +144,8 @@ public class MyAccountManager extends AppCompatActivity {
             public void onClick(View v) {
                 modifyUserProfile(myNewNick.getText().toString(), myNewPassword.getText().toString());
                 modifyPassword(myNewPassword.getText().toString());
+
+
 
             }
         });
@@ -166,6 +169,15 @@ public class MyAccountManager extends AppCompatActivity {
                 usermodelauth.profileImageUrl = imageUrl;
 
                 FirebaseDatabase.getInstance().getReference().child("authusers").child(mAuth.getCurrentUser().getUid()).setValue(usermodelauth);
+
+
+                Toast.makeText(MyAccountManager.this, "수정완료", Toast.LENGTH_SHORT).show();
+                //수정 후 로그아웃
+               // FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(MyAccountManager.this, BoardActivity.class);
+                startActivity(intent);
+                finish();
+
             }
         });
 
@@ -208,12 +220,11 @@ public class MyAccountManager extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(MyAccountManager.this, "비밀번호 변경 성공", Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(MyAccountManager.this, "비밀번호 변경 성공", Toast.LENGTH_SHORT).show();
                           //  Log.d(TAG, "User password updated.");
                         }
                     }
                 });
-
 
     }
 

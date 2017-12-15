@@ -64,6 +64,7 @@ public class PostingImagePreview extends AppCompatActivity {
             public void onClick(View v) {
                 Intent registerIntent = new Intent(PostingImagePreview.this, BoardActivity.class);
                 PostingImagePreview.this.startActivity(registerIntent);
+                finish();
             }
         });
 
@@ -78,6 +79,7 @@ public class PostingImagePreview extends AppCompatActivity {
                // Toast.makeText(PostingImagePreview.this, "아직 다음 페이지를 만들지 않음", Toast.LENGTH_SHORT).show();
 
                 startActivity(new Intent(getApplicationContext(), HomeActivity.class).putExtra("img", preViewPosition));
+                finish();
             }
         });
 
@@ -122,7 +124,9 @@ public class PostingImagePreview extends AppCompatActivity {
         Log.i("sdfjalskdjflkasjdf", Environment.getExternalStorageDirectory()+ " : " + temp_myCaptures);
 
 
-
+        preViewPosition = gv_list.get(0).toString();
+        Uri _uri = Uri.parse(preViewPosition);
+        preView.setImageURI(_uri);
 
         //갤러리 커스텀 그리드뷰뷰
         gallery_gridview = (GridView) findViewById(R.id.gallery_gridview);

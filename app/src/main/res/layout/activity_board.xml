@@ -81,7 +81,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/back" />
+            app:srcCompat="@drawable/leftbtn" />
 
 
         <Button

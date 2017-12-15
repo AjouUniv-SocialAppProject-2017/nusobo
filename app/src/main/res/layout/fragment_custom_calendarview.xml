@@ -14,7 +14,6 @@
             android:id="@+id/preBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:background="#00000000"
             android:layout_weight="0.2"
 
@@ -41,8 +40,7 @@
     <GridView
         android:id="@+id/title_gridview"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-
+        android:layout_height="30dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
@@ -51,9 +49,7 @@
 
     <GridView
         android:id="@+id/calGrid"
-
         android:layout_width="wrap_content"
-
         android:layout_height="match_parent"
         android:paddingLeft="20dp"
         android:paddingRight="0dp"

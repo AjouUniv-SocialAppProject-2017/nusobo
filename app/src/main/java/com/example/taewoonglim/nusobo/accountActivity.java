@@ -609,13 +609,13 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                     public void onClick(View v) {
                         if (thisMonth > 1) {
                             thisMonth--;
-                            mainText.setText("" + thisMonth);
+                            mainText.setText(thisYear +" / " + thisMonth);
                             setCalendarDate(thisMonth, rootView);
 
                         } else {
                             thisYear--;
                             thisMonth = 12;
-                            mainText.setText("" + thisMonth);
+                            mainText.setText(thisYear + " / " + thisMonth);
                             setCalendarDate(thisMonth, rootView);
                         }
                     }
@@ -626,12 +626,12 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                     public void onClick(View v) {
                         if (thisMonth < 12) {
                             thisMonth++;
-                            mainText.setText("" + thisMonth);
+                            mainText.setText(thisYear +" / " + thisMonth);
                             setCalendarDate(thisMonth, rootView);
                         } else {
                             thisYear++;
                             thisMonth = 1;
-                            mainText.setText("" + thisMonth);
+                            mainText.setText(thisYear+ " / " + thisMonth);
                             setCalendarDate(thisMonth, rootView);
                         }
 
@@ -711,8 +711,8 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                         }
 
                         Description description = new Description();
-                        description.setText("파이 차트(단위 : 원)"); //라벨
-                        description.setPosition(rootView.getWidth() / 2, 100);
+                        description.setText("(단위 : 원)"); //라벨
+                        description.setPosition(rootView.getWidth() - 40, 100);
                         description.setTextSize(15);
                         pieChart.setDescription(description);
 
@@ -816,7 +816,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                         BarEntryLabels = new ArrayList<String>();
                         AddValuesToBARENTRY();
                         AddValuesToBarEntryLabels();
-                        Bardataset = new BarDataSet(BARENTRY, "Projects");
+                        Bardataset = new BarDataSet(BARENTRY, "월별");
                         BARDATA = new BarData(Bardataset);
                         Bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
                         chart.setData(BARDATA);

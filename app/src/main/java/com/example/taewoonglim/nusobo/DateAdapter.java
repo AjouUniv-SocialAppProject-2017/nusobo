@@ -112,7 +112,7 @@ public class DateAdapter extends BaseAdapter{
       //  dialog = new CustomDialog(this.context, "주의", "태웅이의 커스텀", leftListener);
 
         List<AccountContentDescriptionDTO> temp_accountContent = _temp_accountContent;
-        dialog = new CustomDialog(this.context, "주의", "태웅이의 커스텀", leftListener, temp_accountContent);
+        dialog = new CustomDialog(this.context, "상세내역", "태웅이의 커스텀", leftListener, temp_accountContent);
         dialog.setCancelable(true); //false 라면 onBackPressed() 버튼이 작동하지 않는다. but, ture면 뒤로가기를 통해 다이얼로그가 종료된다.
         dialog.getWindow().setGravity(Gravity.CENTER);
         dialog.show();

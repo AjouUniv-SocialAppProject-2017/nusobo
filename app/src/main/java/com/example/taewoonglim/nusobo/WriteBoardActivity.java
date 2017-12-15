@@ -1,6 +1,7 @@
 package com.example.taewoonglim.nusobo;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresPermission;
@@ -86,7 +87,10 @@ public class WriteBoardActivity extends AppCompatActivity {
         recyclerView.setAdapter(writeBoardRecyclerViewAdapter);
 
 
-        Toast.makeText(WriteBoardActivity.this, " "+ nowChildPostion, Toast.LENGTH_SHORT).show();
+        writeBoard_writeEditText = (EditText)findViewById(R.id.writeBoard_reply_EditText);
+
+
+        //Toast.makeText(WriteBoardActivity.this, " "+ nowChildPostion, Toast.LENGTH_SHORT).show();
 
         //뒤로가기 버튼
         writeBoard_BackBtnImageView = (ImageView)findViewById(R.id.writeBoard_backBtn_imageView);
@@ -96,6 +100,7 @@ public class WriteBoardActivity extends AppCompatActivity {
 
                 Intent i = new Intent(WriteBoardActivity.this, BoardActivity.class);
                 WriteBoardActivity.this.startActivity(i);
+                finish();
 
             }
         });
@@ -108,13 +113,10 @@ public class WriteBoardActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 upload(nowChildPostion);
-                Toast.makeText(WriteBoardActivity.this, "댓글작성완료", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(WriteBoardActivity.this, "댓글작성완료", Toast.LENGTH_SHORT).show();
               //  upload(database.getReference().child("images").child(nowChildPostion).toString());
             }
         });
-
-
-        writeBoard_writeEditText = (EditText)findViewById(R.id.writeBoard_reply_EditText);
 
 
 
@@ -193,6 +195,7 @@ public class WriteBoardActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
+            ((CustomViewHolder)holder).myProfile_ImageView.setBackgroundColor(Color.parseColor("#00000000"));
             Glide.with(holder.itemView.getContext()).load(map_usermodelauth.get(myWirteDTOs.get(position).uid).profileImageUrl)
                     .apply(new RequestOptions().circleCrop()).into(((CustomViewHolder)holder).myProfile_ImageView);
 
@@ -262,7 +265,8 @@ public class WriteBoardActivity extends AppCompatActivity {
                 myWirteDTO.timeStamp = simpleDateFormat.format(date);
                 myWirteDTO.uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-
+                writeBoard_writeEditText.setText("");
+                writeBoard_writeEditText.setHint("작성해주세요");
 
                 database.getReference().child("images").child(nowChildPostion).child("reply").push().setValue(myWirteDTO);
 

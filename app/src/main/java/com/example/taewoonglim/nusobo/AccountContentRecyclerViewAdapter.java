@@ -59,7 +59,7 @@ public class AccountContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
         ((CustomViewHolder)holder).myTimeStamp.setText(content_Data.get(position).timeStamp);
         ((CustomViewHolder)holder).myStore.setText(content_Data.get(position).store);
-        ((CustomViewHolder)holder).myConsume.setText(content_Data.get(position).money);
+        ((CustomViewHolder)holder).myConsume.setText(content_Data.get(position).money +"원");
 
 
 

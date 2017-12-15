@@ -22,16 +22,16 @@
         <ImageView
             android:id="@+id/writeBoard_backBtn_imageView"
             android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            app:srcCompat="@drawable/back" />
+            app:srcCompat="@drawable/leftbtn" />
 
         <ImageView
             android:id="@+id/writeBoard_title_imageView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
+            app:srcCompat="@drawable/money" />
 
     </LinearLayout>
 
@@ -59,14 +59,13 @@
                 android:layout_width="322dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="작성해주세용" />
+                android:hint="작성해주세요" />
 
             <ImageView
                 android:id="@+id/writeBoard_writeBtn_imageView"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
-
                 app:srcCompat="@drawable/approve_circular_button" />
         </LinearLayout>
 

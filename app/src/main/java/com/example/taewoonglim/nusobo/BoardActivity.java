@@ -32,6 +32,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
+
+import uk.co.senab.photoview.PhotoViewAttacher;
+
 //소셜앱프로젝트 Nusobo 프로젝트
 //10조
 //미디어학과 소셜미디어전공 201221084 임태웅
@@ -86,6 +89,7 @@ public class BoardActivity extends AppCompatActivity {
                 finish();
                 Intent intent = new Intent(BoardActivity.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
 
             }
         });
@@ -110,6 +114,7 @@ public class BoardActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent registerIntent = new Intent(BoardActivity.this, PostingImagePreview.class);
                 BoardActivity.this.startActivity(registerIntent);
+                finish();
             }
         });
 
@@ -121,7 +126,7 @@ public class BoardActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(BoardActivity.this, accountActivity.class);
                 BoardActivity.this.startActivity(i);
-                Toast.makeText(BoardActivity.this, "영수증 관리 페이지 이동", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(BoardActivity.this, "영수증 관리 페이지 이동", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -133,8 +138,8 @@ public class BoardActivity extends AppCompatActivity {
 
                 Intent i = new Intent(BoardActivity.this, MyAccountManager.class);
                 BoardActivity.this.startActivity(i);
-                Toast.makeText(BoardActivity.this, "정보 관리 페이지 이동", Toast.LENGTH_SHORT).show();
-
+                //Toast.makeText(BoardActivity.this, "정보 관리 페이지 이동", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 
@@ -171,7 +176,7 @@ public class BoardActivity extends AppCompatActivity {
     class BoardRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         private Context mContext = null;
-
+       // PhotoViewAttacher attacher;
 
         public BoardRecyclerViewAdapter(){
 
@@ -247,6 +252,8 @@ public class BoardActivity extends AppCompatActivity {
 
 
             Glide.with(holder.itemView.getContext()).load(imageDTOs.get(position).imageUrl).into(((CustomViewHolder)holder).imageVIew);
+
+
             ((CustomViewHolder)holder).starButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view){
@@ -282,7 +289,7 @@ public class BoardActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                   Toast.makeText(BoardActivity.this, "writeButton", Toast.LENGTH_SHORT).show();
+                 //  Toast.makeText(BoardActivity.this, "writeButton", Toast.LENGTH_SHORT).show();
                     String childPosition = uidLists.get(position).toString();
                     startActivity(new Intent(mContext, WriteBoardActivity.class).putExtra("childPostion", childPosition) );
 // startActivity(new Intent(getApplicationContext(), HomeActivity.class).putExtra("img", preViewPosition));
@@ -363,7 +370,7 @@ public class BoardActivity extends AppCompatActivity {
 
             ImageView myProfileImageView; //내 이미지
 
-
+            //PhotoViewAttacher mAttachter;
 
             public CustomViewHolder(View view) {
                 super(view);
@@ -377,7 +384,11 @@ public class BoardActivity extends AppCompatActivity {
                 */
 
 
+
                 imageVIew = (ImageView)view.findViewById(R.id.item_notice_Imgae_ImageView); //sns 큰 이미지
+//                mAttachter = new PhotoViewAttacher(imageVIew);
+ //               mAttachter.setScaleType(ImageView.ScaleType.FIT_END);
+
                 title_textView = (TextView)view.findViewById(R.id.item_notice_title_TextView);  //
                 content_textView = (TextView)view.findViewById(R.id.item_notice_content_TextView);
                 starButton = (ImageView)view.findViewById(R.id.item_notice_heart_ImageView);

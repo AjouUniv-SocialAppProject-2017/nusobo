@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:paddingLeft="10dp"
     android:layout_marginBottom="1dp">
 
 
@@ -12,28 +13,27 @@
         android:layout_height="wrap_content"
         android:text="01:35"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_weight="1"/>
+        android:gravity="center"/>
 
 
     <TextView
         android:id="@+id/item_account_content_store"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:text="장소 : "
         android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_weight="1"
-        />
+        android:layout_marginLeft="10dp"
+        android:gravity="right"
+         />
 
     <TextView
         android:id="@+id/item_account_content_money"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:text="가격"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_weight="1"
+        android:gravity="right"
+
         />
 
 </LinearLayout>

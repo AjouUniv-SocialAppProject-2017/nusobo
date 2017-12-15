@@ -49,7 +49,7 @@ public class CustomDialog extends Dialog {
         setContentView(R.layout.custom_dialog);
 
         mTitleView = (TextView) findViewById(R.id.dialog_title);
-        mContentView = (TextView) findViewById(R.id.dialog_text);
+        //mContentView = (TextView) findViewById(R.id.dialog_text);
         mLeftButton = (Button) findViewById(R.id.dialog_btn);
 
 
@@ -63,7 +63,7 @@ public class CustomDialog extends Dialog {
 
         //제목과 내용을 생성자에서 셋팅
         mTitleView.setText(mTitle);
-        mContentView.setText(mContent);
+        //mContentView.setText(mContent);
 
         //클릭이벤트 셋팅
         if (mLeftClickListener != null && mRightClickListener != null) {

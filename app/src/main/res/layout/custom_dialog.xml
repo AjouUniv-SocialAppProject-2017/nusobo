@@ -14,12 +14,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:gravity="center"
-        android:textSize="50dp"
-        android:textColor="#FF0000"
+        android:textSize="40dp"
+        android:textColor="#FFFFFF"
         android:textStyle="bold"
-        android:text="Warnning"/>
+        android:text="상세내역"/>
 
-
+<!--
     <TextView
         android:id="@+id/dialog_text"
         android:layout_weight="4"
@@ -29,12 +29,16 @@
         android:textSize="20dp"
         android:textColor="#FF0000"
         android:text="태웅이의 커스텀"/>
+        -->
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/custom_dialog_RecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_weight="4"
         />
 
     <Button

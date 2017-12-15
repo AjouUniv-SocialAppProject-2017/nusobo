@@ -20,19 +20,29 @@
 
             <ImageView
                 android:id="@+id/itemReply_myProfile_ImageView"
-                android:layout_width="200dp"
+                android:layout_width="100dp"
                 android:layout_height="30dp"
                 android:background="@color/colorPrimary"
                 android:src="@drawable/ic_person_black_24dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"/>
 
-            <TextView
-                android:id="@+id/itempReply_userID_Textview"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
-                android:text="UserId" />
+                android:layout_gravity="bottom">
+
+                <TextView
+                    android:id="@+id/itempReply_userID_Textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="UserId"
+                    android:textAlignment="viewStart"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/itemReply_timeStamp_TextView"
@@ -41,6 +51,7 @@
                 android:layout_marginRight="5dp"
                 android:text="2017.12.02 13:59"
                 android:textColor="@android:color/darker_gray" />
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -48,9 +59,9 @@
             android:id="@+id/itemReply_Description_TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="Description" />
+            android:layout_marginLeft="61dp"
+            android:text="Description"
+            android:textStyle="bold" />
 
     </LinearLayout>
-
 </LinearLayout>

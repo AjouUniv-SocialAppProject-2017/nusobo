@@ -24,14 +24,16 @@
             android:layout_width="30dp"
             android:layout_height="45dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/back" />
+            app:srcCompat="@drawable/leftbtn" />
 
         <ImageView
             android:id="@+id/contentUpload_ImageView"
             android:layout_width="30dp"
             android:layout_height="45dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/redo" />
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            app:srcCompat="@drawable/tick" />
 
     </LinearLayout>
 
@@ -91,7 +93,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="top"
-                    android:hint="Description"
+                    android:hint="내용"
                     android:inputType="textMultiLine"
                     tools:layout_editor_absoluteX="8dp"
                     tools:layout_editor_absoluteY="8dp" />
@@ -101,7 +103,7 @@
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Title" />
+                android:hint="제목" />
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 

@@ -397,6 +397,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         //파이차트 컨탠츠
         HashMap<String, Integer> map_pichart_content = new HashMap<>();
         Iterator<String> map_pichart_content_iterator;
+        PieChart pieChart;
 
 
         RecyclerView __recyclerView;
@@ -634,18 +635,9 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
                 final View rootView = inflater.inflate(R.layout.activity_char_fragment_pi_chart, container, false);
 
-                final PieChart pieChart;
                 pieChart = (PieChart) rootView.findViewById(R.id.piechart);
 
-                pieChart.setUsePercentValues(true);
-                pieChart.getDescription().setEnabled(false);
-                pieChart.setExtraOffsets(5, 10, 5, 5);
 
-                pieChart.setDragDecelerationFrictionCoef(0.95f);
-
-                pieChart.setDrawHoleEnabled(false);
-                pieChart.setHoleColor(Color.WHITE);
-                pieChart.setTransparentCircleRadius(61f);
 
                 final ArrayList<PieEntry> yValues = new ArrayList<PieEntry>();
 
@@ -658,10 +650,24 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                 mDatabase.getReference().child("users").child(myEmail).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                        pieChart.setUsePercentValues(true);
+                        pieChart.getDescription().setEnabled(false);
+                        pieChart.setExtraOffsets(5, 10, 5, 5);
+
+                        pieChart.setDragDecelerationFrictionCoef(0.95f);
+
+                        pieChart.setDrawHoleEnabled(false);
+                        pieChart.setHoleColor(Color.WHITE);
+                        pieChart.setTransparentCircleRadius(61f);
+
                         map_pichart_content.clear();
+                        yValues.clear();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                             AccountContentDescriptionDTO temp_accountContent = snapshot.getValue(AccountContentDescriptionDTO.class);
+
 
                             if (map_pichart_content.containsKey(temp_accountContent.store)) {
 
@@ -675,8 +681,8 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                                 map_pichart_content.put(temp_accountContent.store, firstM);
 
                             }
-                        }
 
+                        }
 
                         Log.i("asdfjlaskdjflkasjdf1", "dfsfds");
                         //map_pichart_content
@@ -700,6 +706,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                         PieDataSet dataSet = new PieDataSet(yValues, "Store");
                         dataSet.setSliceSpace(3f);
                         dataSet.setSelectionShift(5f);
+                        dataSet.setValueTextColor(Color.BLACK);
                         dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
 
                         PieData data = new PieData((dataSet));
@@ -707,6 +714,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                         data.setValueTextColor(Color.YELLOW);
 
                         pieChart.setData(data);
+
                     }
 
 

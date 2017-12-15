@@ -31,9 +31,11 @@ public class AccountContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
         content_Data = _d;
 
 
+        /*
         for (int i = 0; i < content_Data.size(); i++){
             Log.i("asdfasdfasfas", content_Data.get(i).store +" : ");
         }
+        */
       //  Log.i("tejlaskdjflkasjdflkas", content_Data.get(position).date + ":" + map_content_account.get(maccountDTOs.get(position).date));
 
     }

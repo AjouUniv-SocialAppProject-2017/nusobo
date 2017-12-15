@@ -24,4 +24,15 @@ public class AccountContentDescriptionDTO {
         this.money = m;
     }
 
+
+    public AccountContentDescriptionDTO(String s, String m, String d, String t){
+
+        this.store = s;
+        this.money = m;
+        this.date = d;
+        this.timeStamp = t;
+
+    }
+
+
 }

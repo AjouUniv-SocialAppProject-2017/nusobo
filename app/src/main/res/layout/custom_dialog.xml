@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dp"
+    android:layout_height="300dp"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:weightSum="10"
+    android:background="@color/colorPrimaryDark"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_weight="4"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:textSize="50dp"
+        android:textColor="#FF0000"
+        android:textStyle="bold"
+        android:text="Warnning"/>
+
+
+    <TextView
+        android:id="@+id/dialog_text"
+        android:layout_weight="4"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:textColor="#FF0000"
+        android:text="태웅이의 커스텀"/>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/custom_dialog_RecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <Button
+        android:layout_weight="2"
+        android:id="@+id/dialog_btn"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="확인"/>
+
+</LinearLayout>

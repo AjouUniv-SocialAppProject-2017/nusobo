@@ -52,7 +52,8 @@
             android:name=".accountActivity"
             android:label="@string/title_activity_account"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MyAccountManager"></activity>
+        <activity android:name=".MyAccountManager" />
+        <activity android:name=".CharFragmentPiChart"></activity>
     </application>
 
 </manifest>

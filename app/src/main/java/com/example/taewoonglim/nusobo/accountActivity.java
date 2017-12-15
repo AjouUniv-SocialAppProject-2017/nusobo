@@ -67,6 +67,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+//소셜앱프로젝트 Nusobo 프로젝트
+//10조
+//미디어학과 소셜미디어전공 201221084 임태웅
+//미디어학과 소셜미디어전공 201221110 박우진
+//Github주소 : https://github.com/AjouUniv-SocialAppProject-2017/nusobo
+//firebase주소 : https://socialapp-nuboso.firebaseio.com/
 
 public class accountActivity extends AppCompatActivity implements incomeDialog.incomeDialogListener,expenseDialog.expenseDialogListener {
 
@@ -116,7 +122,10 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         int year= cal.get(Calendar.YEAR);
         int monty=cal.get(Calendar.MONTH);
         int dat=cal.get(Calendar.DAY_OF_MONTH);
-
+        //fab버튼 지출 수입 작성 플러스 버튼 리스너입니다.
+        //fab버튼 애니메이션에 대한 설정도 함께 되어있습니다.
+        //fab 플러스 버튼을 누를시 돌아가면 추가적으로 다른 수입지출을 선택할 수 있는
+        // 버튼이 보이게 됩니다.
         fab_plus.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -214,14 +223,17 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
         return super.onOptionsItemSelected(item);
     }
+    //income dialog 불러오는 function 입니다.
     public void openDialog(){
         incomeDialog incomeDialog= new incomeDialog();
         incomeDialog.show(getSupportFragmentManager(),"income dialog");
     }
+    //expense dialog 불러오는 function 입니다.
     public void openExpenseDialog(){
         expenseDialog expenseDialog=new expenseDialog();
         expenseDialog.show(getSupportFragmentManager(),"expense dialog");
     }
+    //달력 dialog를 불러오는 function 입니다.
     public void calendarDialog(){
         calendarDialog calendDialog=new calendarDialog();
         calendDialog.show(getSupportFragmentManager()," dialog");
@@ -816,7 +828,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             // Show 3 total pages.
             return 3;
         }
-
+        //가계부 tab 이름 설정 부분입니다.
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {

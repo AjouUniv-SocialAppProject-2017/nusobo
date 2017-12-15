@@ -16,7 +16,12 @@ import java.util.StringTokenizer;
 /**
  * Created by woojin on 2017-11-10.
  */
-
+//소셜앱프로젝트 Nusobo 프로젝트
+//10조
+//미디어학과 소셜미디어전공 201221084 임태웅
+//미디어학과 소셜미디어전공 201221110 박우진
+//Github주소 : https://github.com/AjouUniv-SocialAppProject-2017/nusobo
+//firebase주소 : https://socialapp-nuboso.firebaseio.com/
 public class sms extends BroadcastReceiver {
 
     private boolean flag;
@@ -36,7 +41,7 @@ public class sms extends BroadcastReceiver {
         String sender;
         Date curDate;
         flag = false;
-
+        //sms 메시지가 수신되면 sms 메세지를 받아와 줍니다.
         if (bundle != null) {
             Object[] smsExtra = (Object[]) bundle.get("pdus");
             msgs = new SmsMessage[smsExtra.length];
@@ -47,6 +52,7 @@ public class sms extends BroadcastReceiver {
                 sender = sms.getOriginatingAddress().toString();
                 curDate =new Date(sms.getTimestampMillis());
                 Toast.makeText(context, "From123 :" + sender + "\n" + "body:" + body, Toast.LENGTH_LONG).show();
+                //휴대폰 번호를 확인하여 주는 부분입니다. 이외의 번호는 받지 않습니다.
                 if(sender.equals("01076255866")){
                     flag = true;
                 }else if(sender.equals("01099760781")){
@@ -55,6 +61,7 @@ public class sms extends BroadcastReceiver {
                 //String year2=Integer.toString(curDate.getYear());
                 //Toast.makeText(context, "year    " + year2, Toast.LENGTH_SHORT).show();
             }
+            //결제문자가 파싱되어 올 경우 포맷에 맞게 데이터를 분해하여 줍니다.
             if(flag) {
 
                 StringTokenizer tokenizer = new StringTokenizer(body, "\n");

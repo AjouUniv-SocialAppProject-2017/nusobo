@@ -22,14 +22,14 @@
         <ImageView
             android:id="@+id/contentBack_ImgeView"
             android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_height="45dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/back" />
 
         <ImageView
             android:id="@+id/contentUpload_ImageView"
             android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_height="45dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/redo" />
 

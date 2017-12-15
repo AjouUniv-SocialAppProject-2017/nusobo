@@ -23,7 +23,13 @@ import java.util.TimeZone;
 /**
  * Created by woojin on 2017-12-03.
  */
-
+//소셜앱프로젝트 Nusobo 프로젝트
+//10조
+//미디어학과 소셜미디어전공 201221084 임태웅
+//미디어학과 소셜미디어전공 201221110 박우진
+//Github주소 : https://github.com/AjouUniv-SocialAppProject-2017/nusobo
+//firebase주소 : https://socialapp-nuboso.firebaseio.com/
+//expensedialog 의 작성부분입니다.
 public class expenseDialog extends AppCompatDialogFragment {
     private EditText expenseTextYear;
     private EditText expenseTextMonth;
@@ -54,6 +60,7 @@ public class expenseDialog extends AppCompatDialogFragment {
             public void onClick(DialogInterface dialog, int which) {
 
             }
+            //ok버튼을 누르면 데이터가 넘어가게 됩니다.
         }).setPositiveButton("ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

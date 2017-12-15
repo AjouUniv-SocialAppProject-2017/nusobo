@@ -118,6 +118,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     }
+    //Permission을 요청하게 해주는 코드 부분입니다.
     private void requestSmsPermission() {
         String permission = android.Manifest.permission.READ_SMS;
         String permission2 =android.Manifest.permission.INTERNET;
@@ -134,7 +135,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             ActivityCompat.requestPermissions(this, permission_list, 1);
         }
     }
-
+    //permission이 정상적으로 수락될시에 toast 메세지를 출력하여 줍니다.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -154,7 +155,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
 
-
+//로그인 실패시 toast메세지를 출력하여 줍니다.
     private void loginUser(String email, String password)
     {
         mAuth.signInWithEmailAndPassword(email, password)
@@ -166,7 +167,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         if (!task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "로그인 실패 : " + task.getException().getMessage() , Toast.LENGTH_SHORT).show();
                         }
-
                         // ...
                     }
                 });

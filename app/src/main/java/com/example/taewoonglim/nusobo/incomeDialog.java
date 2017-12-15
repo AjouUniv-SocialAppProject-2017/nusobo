@@ -13,7 +13,14 @@ import android.widget.EditText;
 /**
  * Created by woojin on 2017-12-03.
  */
+//소셜앱프로젝트 Nusobo 프로젝트
+//10조
+//미디어학과 소셜미디어전공 201221084 임태웅
+//미디어학과 소셜미디어전공 201221110 박우진
+//Github주소 : https://github.com/AjouUniv-SocialAppProject-2017/nusobo
+//firebase주소 : https://socialapp-nuboso.firebaseio.com/
 
+//income dialog 데이터를 받는 부분입니다.
 public class incomeDialog extends AppCompatDialogFragment {
     private EditText editTextYear;
     private EditText editTextMonth;
@@ -31,6 +38,7 @@ public class incomeDialog extends AppCompatDialogFragment {
             public void onClick(DialogInterface dialog, int which) {
 
             }
+            //ok 버튼에 대한 설정입니다. ok를 할경우 데이터를 넘깁니다.
         }).setPositiveButton("ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

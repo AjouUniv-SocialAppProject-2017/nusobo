@@ -11,7 +11,7 @@
         android:id="@+id/linearLayout"
         android:background="@color/colorPrimary"
         android:layout_width="0dp"
-        android:layout_height="30dp"
+        android:layout_height="45dp"
 
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/posting_preView_ImageView"

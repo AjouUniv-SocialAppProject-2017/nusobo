@@ -80,6 +80,7 @@ public class sms extends BroadcastReceiver {
                 String store = tokenizer.nextToken();
                 StringTokenizer tokenizer2 = new StringTokenizer(store, " ");
                 //아래꺼가 돈어디서 썻는지
+
                 String store2 = tokenizer2.nextToken();
 
 

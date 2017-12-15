@@ -25,6 +25,7 @@
             android:id="@+id/account_left_button"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
+            android:background="#00000000"
             app:srcCompat="@android:drawable/ic_media_rew" />
 
         <TextView
@@ -33,6 +34,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/rectangle_layout"
+            android:layout_marginLeft="20dp"
             android:text="2017년 10월"
             android:textAlignment="center"
             android:textSize="24sp"
@@ -43,6 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_weight="1"
+            android:background="#00000000"
             app:srcCompat="@android:drawable/ic_media_ff" />
 
         <ToggleButton
@@ -50,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_weight="1"
+            android:background="#00000000"
             android:text="ToggleButton" />
     </LinearLayout>
 

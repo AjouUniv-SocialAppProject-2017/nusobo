@@ -11,7 +11,7 @@
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="0dp"
-        android:layout_height="30dp"
+        android:layout_height="45dp"
         android:background="@color/colorPrimary"
         android:orientation="horizontal"
         app:layout_constraintHorizontal_bias="0.0"

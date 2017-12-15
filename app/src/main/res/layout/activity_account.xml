@@ -29,9 +29,9 @@
             <ImageView
                 android:id="@+id/account_backBtn_imageView"
                 android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_height="45dp"
                 android:layout_weight="1"
-
+                android:layout_gravity="center"
                 app:srcCompat="@drawable/back" />
 
             <Button
@@ -40,15 +40,20 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/colorPrimary"
-                android:textColor="#fff"
-                android:text="LogOut" />
+                android:textColor="#ffffff"
+                android:text="Nusobo"
+                android:textStyle="bold"
+                android:textSize="30dp"
+                android:layout_gravity="center"
+                android:gravity="center"/>
 
             <ImageView
                 android:id="@+id/account_title_imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="45dp"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/money" />
 
         </LinearLayout>
 

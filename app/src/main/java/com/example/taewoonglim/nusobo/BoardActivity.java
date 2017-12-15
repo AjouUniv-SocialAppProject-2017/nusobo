@@ -2,6 +2,7 @@ package com.example.taewoonglim.nusobo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -258,6 +259,8 @@ public class BoardActivity extends AppCompatActivity {
 
             if(usermodelauth.containsKey(imageDTOs.get(position).uid)){
                 String tempUrl = usermodelauth.get(imageDTOs.get(position).uid).profileImageUrl;
+
+                ((CustomViewHolder)holder).myProfileImageView.setBackgroundColor(Color.parseColor("#00000000"));
                 Glide.with(holder.itemView.getContext()).load(tempUrl)
                 .apply(new RequestOptions().circleCrop()).into(((CustomViewHolder)holder).myProfileImageView);
 

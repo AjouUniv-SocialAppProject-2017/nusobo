@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.taewoonglim.nusobo.MyAccountManager"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
 
     <LinearLayout
-        android:id="@+id/my_account_manager_toplinearLayout"
+        android:id="@+id/topMenu_LinearLayout"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="-4dp"
         android:background="@color/colorPrimary"
         android:orientation="horizontal"
         app:layout_constraintHorizontal_bias="0.0"
@@ -22,13 +24,13 @@
         <ImageView
             android:id="@+id/my_account_manager_contentBack_ImgeView"
             android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_height="45dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/back" />
 
         <LinearLayout
             android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_height="match_parent"
             android:background="@color/colorPrimary"
             android:orientation="vertical"
             android:layout_weight="1">
@@ -39,7 +41,7 @@
                 android:layout_gravity="center"
                 android:text="프로필"
                 android:textColor="#ffffff"
-                android:textSize="20dp"
+                android:textSize="30dp"
                 android:textStyle="bold"
                 android:gravity="center"/>
 
@@ -49,7 +51,7 @@
         <ImageView
             android:id="@+id/my_account_manager_contentUpload_ImageView"
             android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             app:srcCompat="@drawable/redo" />
 

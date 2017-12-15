@@ -3,6 +3,7 @@ package com.example.taewoonglim.nusobo;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -79,6 +80,7 @@ public class MyAccountManager extends AppCompatActivity {
 
                     if(myUid.equals(mAuth.getCurrentUser().getUid())){
 
+                        newMyImage.setBackgroundColor(Color.parseColor("#00000000"));
                         Glide.with(getApplicationContext()).load(tempUser.profileImageUrl).apply(new RequestOptions().circleCrop()).into(newMyImage);
                         myNewNick.setHint(tempUser.userName);
                         break;
@@ -218,12 +220,13 @@ public class MyAccountManager extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+//   Glide.with(getApplicationContext()).load(tempUser.profileImageUrl).apply(new RequestOptions().circleCrop()).into(newMyImage);
 
         if(requestCode == PICK_FROM_ALBUM && resultCode == RESULT_OK){
 
-            newMyImage.setImageURI(data.getData()); // 가운데 뷰를 바꿈
+         //   newMyImage.setImageURI(data.getData()); // 가운데 뷰를 바꿈
             imageUri = data.getData();// 이미지 경로 원본
+            Glide.with(getApplicationContext()).load(imageUri).apply(new RequestOptions().circleCrop()).into(newMyImage);
 
         }
     }

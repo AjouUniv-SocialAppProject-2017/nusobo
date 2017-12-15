@@ -14,6 +14,12 @@ public class DescriptionDTO {
     public String store;
     public String money;
 
+
+    public DescriptionDTO(){
+
+    //디폴트
+    }
+
     public DescriptionDTO(String s, String m){
         store = s;
         money = m;

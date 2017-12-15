@@ -20,8 +20,8 @@ public class NewUser {
 
     public NewUser(String _s, String _em){
 
-        store = _s;
-        each_Money = _em;
+        this.store = _s;
+        this.each_Money = _em;
 
     }
 }

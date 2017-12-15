@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +34,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -59,6 +61,7 @@ public class WriteBoardActivity extends AppCompatActivity {
     private EditText writeBoard_writeEditText;
 
     private String nowChildPostion;
+    private HashMap<String, UserModelAuth> map_usermodelauth = new HashMap<>();
 
 
     //타임스탬프에 적용하기 위해
@@ -114,6 +117,28 @@ public class WriteBoardActivity extends AppCompatActivity {
         writeBoard_writeEditText = (EditText)findViewById(R.id.writeBoard_reply_EditText);
 
 
+
+
+        FirebaseDatabase.getInstance().getReference().child("authusers").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                map_usermodelauth.clear();
+
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    String uidKey = snapshot.getKey();
+                    UserModelAuth temp_usermodelauth = snapshot.getValue(UserModelAuth.class);
+
+                    map_usermodelauth.put(uidKey, temp_usermodelauth);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 
@@ -123,6 +148,7 @@ public class WriteBoardActivity extends AppCompatActivity {
 
         private List<MyWirteDTO> myWirteDTOs = new ArrayList<>();
         //private List<String> uidLists = new ArrayList<>();
+
         private String nowPos;
 
         public WriteBoardRecyclerViewAdapter(){
@@ -130,6 +156,7 @@ public class WriteBoardActivity extends AppCompatActivity {
         }
 
         public WriteBoardRecyclerViewAdapter(String _nowPos) {
+
 
             nowPos = _nowPos;
             FirebaseDatabase.getInstance().getReference().child("images").child(nowPos).child("reply").addValueEventListener(new ValueEventListener() {
@@ -166,9 +193,13 @@ public class WriteBoardActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
-            ((CustomViewHolder)holder).userIdTextView.setText(myWirteDTOs.get(position).userId);
+            Glide.with(holder.itemView.getContext()).load(map_usermodelauth.get(myWirteDTOs.get(position).uid).profileImageUrl)
+                    .apply(new RequestOptions().circleCrop()).into(((CustomViewHolder)holder).myProfile_ImageView);
+
+            ((CustomViewHolder)holder).userIdTextView.setText(map_usermodelauth.get(myWirteDTOs.get(position).uid).userName);
             ((CustomViewHolder)holder).dscriptionTextView.setText(myWirteDTOs.get(position).description);
             ((CustomViewHolder)holder).timestampTextView.setText(myWirteDTOs.get(position).timeStamp);
+
         }
 
 
@@ -180,6 +211,7 @@ public class WriteBoardActivity extends AppCompatActivity {
 
         private class CustomViewHolder extends RecyclerView.ViewHolder {
 
+            public ImageView myProfile_ImageView;
             public TextView userIdTextView;
             public TextView dscriptionTextView;
             public TextView timestampTextView;
@@ -187,6 +219,8 @@ public class WriteBoardActivity extends AppCompatActivity {
 
             public CustomViewHolder(View view) {
                 super(view);
+
+                myProfile_ImageView = (ImageView)view.findViewById(R.id.itemReply_myProfile_ImageView);
                 userIdTextView = (TextView)view.findViewById(R.id.itempReply_userID_Textview);
                 dscriptionTextView = (TextView)view.findViewById(R.id.itemReply_Description_TextView);
                 timestampTextView = (TextView)view.findViewById(R.id.itemReply_timeStamp_TextView);
@@ -221,10 +255,12 @@ public class WriteBoardActivity extends AppCompatActivity {
 
                 //게시글이 있어야지 (실패해야지) 댓글을 쓸 수 있다.
                 MyWirteDTO myWirteDTO = new MyWirteDTO();
-                myWirteDTO.userId = auth.getCurrentUser().getEmail();
+             //   myWirteDTO.userNick = auth.getCurrentUser().getEmail();
+        //        myWirteDTO.userNick = map_usermodelauth.get(FirebaseAuth.getInstance().getCurrentUser().getUid()).userName;
+          //      myWirteDTO.myprofile_imageUrl = map_usermodelauth.get(FirebaseAuth.getInstance().getCurrentUser().getUid()).profileImageUrl;
                 myWirteDTO.description = writeBoard_writeEditText.getText().toString();
                 myWirteDTO.timeStamp = simpleDateFormat.format(date);
-
+                myWirteDTO.uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
 

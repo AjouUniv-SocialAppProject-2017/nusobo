@@ -53,6 +53,14 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:srcCompat="@drawable/description" />
+
+        <ImageView
+            android:id="@+id/board_account_imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_person_black_24dp"/>
+
     </LinearLayout>
 
     <LinearLayout

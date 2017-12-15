@@ -26,6 +26,7 @@ import android.text.style.RelativeSizeSpan;
 import android.text.style.ReplacementSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,10 +42,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -66,13 +73,19 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+
 //소셜앱프로젝트 Nusobo 프로젝트
 //10조
 //미디어학과 소셜미디어전공 201221084 임태웅
 //미디어학과 소셜미디어전공 201221110 박우진
 //Github주소 : https://github.com/AjouUniv-SocialAppProject-2017/nusobo
 //firebase주소 : https://socialapp-nuboso.firebaseio.com/
+
+import java.util.Map;
+import java.util.Set;
+
 
 public class accountActivity extends AppCompatActivity implements incomeDialog.incomeDialogListener,expenseDialog.expenseDialogListener {
 
@@ -83,7 +96,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
     }
 
     @Override
-    public void applyTexts(String year,String month,String day,String money, String content) {
+    public void applyTexts(String year, String month, String day, String money, String content) {
         //textViewuserName.setText(userName);
     }
 
@@ -95,9 +108,9 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    FloatingActionButton fab_plus,fab_income,fab_expense;
-    Animation FabOpen,FabClose,FabRClockingwise,FabRAnticlockingwise;
-    boolean isOpen=false;
+    FloatingActionButton fab_plus, fab_income, fab_expense;
+    Animation FabOpen, FabClose, FabRClockingwise, FabRAnticlockingwise;
+    boolean isOpen = false;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ImageView account_backBtn_imageView;
 
@@ -110,6 +123,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
+
         fab_plus=(FloatingActionButton)findViewById(R.id.fab_plus);
         fab_income=(FloatingActionButton)findViewById(R.id.fab_income);
         fab_expense=(FloatingActionButton)findViewById(R.id.fab_expense);
@@ -118,49 +132,50 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         FabRClockingwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
         FabRAnticlockingwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise);
 
-        Calendar cal= Calendar.getInstance();
-        int year= cal.get(Calendar.YEAR);
-        int monty=cal.get(Calendar.MONTH);
-        int dat=cal.get(Calendar.DAY_OF_MONTH);
-        //fab버튼 지출 수입 작성 플러스 버튼 리스너입니다.
+
         //fab버튼 애니메이션에 대한 설정도 함께 되어있습니다.
         //fab 플러스 버튼을 누를시 돌아가면 추가적으로 다른 수입지출을 선택할 수 있는
         // 버튼이 보이게 됩니다.
-        fab_plus.setOnClickListener(new View.OnClickListener(){
+
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int monty = cal.get(Calendar.MONTH);
+        int dat = cal.get(Calendar.DAY_OF_MONTH);
+
+        fab_plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isOpen){
+                if (isOpen) {
                     fab_expense.startAnimation(FabClose);
                     fab_income.startAnimation(FabClose);
                     fab_plus.startAnimation(FabRAnticlockingwise);
                     fab_expense.setClickable(false);
                     fab_income.setClickable(false);
-                    isOpen=false;
-                }
-                else{
+                    isOpen = false;
+                } else {
                     fab_expense.startAnimation(FabOpen);
                     fab_income.startAnimation(FabOpen);
                     fab_plus.startAnimation(FabRClockingwise);
                     fab_expense.setClickable(true);
                     fab_income.setClickable(true);
-                    isOpen=true;
+                    isOpen = true;
                 }
             }
         });
-        fab_expense.setOnClickListener(new View.OnClickListener(){
+        fab_expense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openExpenseDialog();
             }
         });
-        fab_income.setOnClickListener(new View.OnClickListener(){
+        fab_income.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openDialog();
             }
         });
 
-       // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
 
@@ -223,6 +238,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
         return super.onOptionsItemSelected(item);
     }
+
     //income dialog 불러오는 function 입니다.
     public void openDialog(){
         incomeDialog incomeDialog= new incomeDialog();
@@ -234,15 +250,15 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         expenseDialog.show(getSupportFragmentManager(),"expense dialog");
     }
     //달력 dialog를 불러오는 function 입니다.
-    public void calendarDialog(){
-        calendarDialog calendDialog=new calendarDialog();
-        calendDialog.show(getSupportFragmentManager()," dialog");
+    public void calendarDialog() {
+        calendarDialog calendDialog = new calendarDialog();
+        calendDialog.show(getSupportFragmentManager(), " dialog");
     }
-
 
     /**
      * A placeholder fragment containing a simple view.
-     */public class OneDayDecorator implements DayViewDecorator {
+     */
+    public class OneDayDecorator implements DayViewDecorator {
 
         private CalendarDay date;
 
@@ -270,29 +286,29 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             this.date = CalendarDay.from(date);
         }
     }
-    public class RoundedBackgroundSpan extends ReplacementSpan{
+
+    public class RoundedBackgroundSpan extends ReplacementSpan {
 
         @Override
-        public  void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint)
-        {
+        public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
             RectF rect = new RectF(x, top, x + measureText(paint, text, start, end), bottom);
             paint.setColor(Color.BLUE);
             canvas.drawRoundRect(rect, 10f, 10f, paint);
             paint.setColor(Color.WHITE);
             canvas.drawText(text, start, end, x, y, paint);
         }
+
         @Override
-        public  int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm)
-        {
+        public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
             return Math.round(measureText(paint, text, start, end));
         }
 
-        private float measureText(Paint paint, CharSequence text, int start, int end)
-        {
+        private float measureText(Paint paint, CharSequence text, int start, int end) {
             return paint.measureText(text, start, end);
         }
 
     }
+
     public static class EventDecorator implements DayViewDecorator {
 
         private final int color;
@@ -310,26 +326,24 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
         @Override
         public void decorate(DayViewFacade view) {
-             //   view.addSpan(new RoundedBackgroundSpan);
-          //  SpannableString styledString = new SpannableString("Hi");
-          //  styledString.setSpan(new StyleSpan(Typeface.BOLD), 0, 2, 0);
-          //  styledString.setSpan(styledString,0,2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-          //  view.addSpan(styledString);
-          view.addSpan(new DotSpan(5, color));
-          //  Spannable s=;
+            //   view.addSpan(new RoundedBackgroundSpan);
+            //  SpannableString styledString = new SpannableString("Hi");
+            //  styledString.setSpan(new StyleSpan(Typeface.BOLD), 0, 2, 0);
+            //  styledString.setSpan(styledString,0,2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            //  view.addSpan(styledString);
+            view.addSpan(new DotSpan(5, color));
+            //  Spannable s=;
             //textView.setMovementMethod(Link);
-           // view.addSpan(new BulletSpan());
-       //     TextSpan tx=new TextSapn();
+            // view.addSpan(new BulletSpan());
+            //     TextSpan tx=new TextSapn();
 
-    //        word.setSpan(new ForegroundColorSpan(color),5,5,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-      //      view.addSpan(word);
+            //        word.setSpan(new ForegroundColorSpan(color),5,5,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            //      view.addSpan(word);
         }
     }
 
 
-
-
-    public static class PlaceholderFragment extends Fragment{
+    public static class PlaceholderFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -344,7 +358,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
         private List<AccountDTO> accountDTOs = new ArrayList<>();
         private HashMap<String, Integer> map_account = new HashMap<String, Integer>();
-   //     private List<AccountDTO> bar_accountDTOs
+        //     private List<AccountDTO> bar_accountDTOs
 
 
         //현재시간
@@ -354,10 +368,10 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         private String formatDate = simpleDateFormat.format(date);
 
         //년 월 일로 쪼개기
-        private String [] dateArr = formatDate.split("/");
+        private String[] dateArr = formatDate.split("/");
 
         private int _year = Integer.parseInt(dateArr[0]);
-        private int _month  = Integer.parseInt(dateArr[1]);
+        private int _month = Integer.parseInt(dateArr[1]);
         private int _day = Integer.parseInt(dateArr[2]);
 
         Calendar ___cal = Calendar.getInstance();
@@ -373,7 +387,6 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         private FirebaseAuth mAuth;
 
         private List<User> userList = new ArrayList<>();
-
 
 
         private GridView mGridView;
@@ -396,11 +409,15 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         private HashMap<String, Integer> cal_map_account = new HashMap<String, Integer>();
 
 
+        //파이차트 컨탠츠
+        HashMap<String, Integer> map_pichart_content = new HashMap<>();
+        Iterator<String> map_pichart_content_iterator;
 
 
         RecyclerView __recyclerView;
         AccountContentRecyclerViewAdapter contentRecyclerViewAdapter;
         List<AccountContentDescriptionDTO> a = new ArrayList<AccountContentDescriptionDTO>();
+
 
         //태웅 끝
 
@@ -421,24 +438,24 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             return fragment;
         }
 
-        BarChart chart ;
+        BarChart chart;
         ArrayList<BarEntry> BARENTRY = new ArrayList<>();
-        ArrayList<String> BarEntryLabels ;
-        BarDataSet Bardataset ;
-        BarData BARDATA ;
+        ArrayList<String> BarEntryLabels;
+        BarDataSet Bardataset;
+        BarData BARDATA;
 
 
-        public void AddValuesToBARENTRY(){
+        public void AddValuesToBARENTRY() {
 
 
-           //final List<AccountDTO>[] aaatemp_accountDTOs = new List<AccountDTO>;
+            //final List<AccountDTO>[] aaatemp_accountDTOs = new List<AccountDTO>;
 
-            Log.i("asdljf;lkasdjf2", accountDTOs.size()+"");
+            Log.i("asdljf;lkasdjf2", accountDTOs.size() + "");
 
 
         }
 
-        public void AddValuesToBarEntryLabels(){
+        public void AddValuesToBarEntryLabels() {
 
             /*
             BarEntryLabels.add("January");
@@ -451,27 +468,25 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         }
 
 
-        public void setCalendarDate(int month, final View view){
+        public void setCalendarDate(int month, final View view) {
             // 요일은 +1해야 되기때문에 달력에 요일을 세팅할때에는 -1 해준다.
-            mCal.set(Calendar.MONTH, month-1);
+            mCal.set(Calendar.MONTH, month - 1);
             cal_accountDTOs.clear();
             arrData.clear();
 
             //오늘 요일을 받아온다.
-                    mCalToday = Calendar.getInstance();
-                    mCalToday.set(mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), 1);
-                    int startday = mCalToday.get(Calendar.DAY_OF_WEEK);
-                    if(startday != 1)
-                    {
-                        AccountDTO temp_AccountDTO = new AccountDTO();
-                        temp_AccountDTO.date = "";
-                        temp_AccountDTO.money = "";
-                        for(int i=0; i<startday-1; i++)
-                        {
-                            arrData.add("");
-                            cal_accountDTOs.add(temp_AccountDTO);
-                        }
-                    }
+            mCalToday = Calendar.getInstance();
+            mCalToday.set(mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), 1);
+            int startday = mCalToday.get(Calendar.DAY_OF_WEEK);
+            if (startday != 1) {
+                AccountDTO temp_AccountDTO = new AccountDTO();
+                temp_AccountDTO.date = "";
+                temp_AccountDTO.money = "";
+                for (int i = 0; i < startday - 1; i++) {
+                    arrData.add("");
+                    cal_accountDTOs.add(temp_AccountDTO);
+                }
+            }
 
             String myEmail = mAuth.getCurrentUser().getEmail();
             //firebase "@" "," <- 특정문자 못읽음 ㅡㅡ
@@ -482,17 +497,17 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     cal_map_account.clear();
-                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                         AccountContentDescriptionDTO tempAccountContent = snapshot.getValue(AccountContentDescriptionDTO.class);
 
 
-                        if(cal_map_account.containsKey(tempAccountContent.date)){
+                        if (cal_map_account.containsKey(tempAccountContent.date)) {
                             //기존에 있으면 값을 빼서 더한다.
                             int temp = cal_map_account.get(tempAccountContent.date);
                             cal_map_account.put(tempAccountContent.date, temp + Integer.valueOf(tempAccountContent.money));
 
-                        }else{
+                        } else {
                             //값이 없으면 대입.
                             cal_map_account.put(tempAccountContent.date, Integer.valueOf(tempAccountContent.money));
 
@@ -500,21 +515,21 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
                     }
 
-                    for(int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++){
+                    for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
                         AccountDTO temp_AccountDTO = new AccountDTO();
 
                         //일 수는 2자리로 표현
-                        String temp_day = String.format("%02d", i+1);
+                        String temp_day = String.format("%02d", i + 1);
                         //날 2자리로 표현
                         String temp_month = String.format("%02d", thisMonth);
                         temp_AccountDTO.date = String.valueOf(thisYear) + "." + temp_month + "." + temp_day;
 
                         String myKeyDate = thisYear + "_" + temp_month + "_" + temp_day;
-                        if(cal_map_account.containsKey(myKeyDate)){
+                        if (cal_map_account.containsKey(myKeyDate)) {
 
                             temp_AccountDTO.money = cal_map_account.get(myKeyDate) + "원";
 
-                        }else{
+                        } else {
 
                             temp_AccountDTO.money = "0원";
                         }
@@ -523,11 +538,11 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                     }
 
                     for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
-                        arrData.add(i+1);
+                        arrData.add(i + 1);
                     }
 
                     adapter = new DateAdapter(getActivity(), arrData, cal_accountDTOs);
-                    mGridView = (GridView)view.findViewById(R.id.calGrid);
+                    mGridView = (GridView) view.findViewById(R.id.calGrid);
                     mGridView.setAdapter(adapter);
                 }
 
@@ -539,7 +554,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, final ViewGroup container,
+        public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                                  Bundle savedInstanceState) {
 
             MaterialCalendarView mcv;
@@ -547,8 +562,8 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             mDatabase = FirebaseDatabase.getInstance();
             mAuth = FirebaseAuth.getInstance();
 
-            if(getArguments().getInt(ARG_SECTION_NUMBER)==2) {
-               // View rootView = inflater.inflate(R.layout.fragment_income, container, false);
+            if (getArguments().getInt(ARG_SECTION_NUMBER) == 2) {
+                // View rootView = inflater.inflate(R.layout.fragment_income, container, false);
 
                 final View rootView = inflater.inflate(R.layout.fragment_custom_calendarview, container, false);
                 //태웅 custom calendar
@@ -556,8 +571,8 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
                 ///Calendar 객체 생성
                 mCal = Calendar.getInstance();
-               // thisYear = mCal.get(Calendar.YEAR);
-               // thisMonth = mCal.get(Calendar.MONTH) + 1;
+                // thisYear = mCal.get(Calendar.YEAR);
+                // thisMonth = mCal.get(Calendar.MONTH) + 1;
 
 
                 String myEmail = mAuth.getCurrentUser().getEmail();
@@ -584,23 +599,22 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                 });
 
 
-                preBtn = (Button)rootView.findViewById(R.id.preBtn);
-                nextBtn = (Button)rootView.findViewById(R.id.nextBtn);
-                mainText = (TextView)rootView.findViewById(R.id.date_title);
+                preBtn = (Button) rootView.findViewById(R.id.preBtn);
+                nextBtn = (Button) rootView.findViewById(R.id.nextBtn);
+                mainText = (TextView) rootView.findViewById(R.id.date_title);
 
                 preBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(thisMonth > 1){
+                        if (thisMonth > 1) {
                             thisMonth--;
-                            mainText.setText(""+thisMonth);
+                            mainText.setText("" + thisMonth);
                             setCalendarDate(thisMonth, rootView);
 
-                        }
-                        else{
+                        } else {
                             thisYear--;
                             thisMonth = 12;
-                            mainText.setText(""+thisMonth);
+                            mainText.setText("" + thisMonth);
                             setCalendarDate(thisMonth, rootView);
                         }
                     }
@@ -609,21 +623,21 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                 nextBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(thisMonth < 12) {
+                        if (thisMonth < 12) {
                             thisMonth++;
-                            mainText.setText(""+thisMonth);
+                            mainText.setText("" + thisMonth);
                             setCalendarDate(thisMonth, rootView);
                         } else {
                             thisYear++;
                             thisMonth = 1;
-                            mainText.setText(""+thisMonth);
+                            mainText.setText("" + thisMonth);
                             setCalendarDate(thisMonth, rootView);
                         }
 
                     }
                 });
 
-                day_GirdView =(GridView)rootView.findViewById(R.id.title_gridview);
+                day_GirdView = (GridView) rootView.findViewById(R.id.title_gridview);
                 day_adapter = new DateDayOfWeekAdapter(getActivity());
                 day_GirdView.setAdapter(day_adapter);
 
@@ -631,13 +645,101 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                 //태웅 custom caledar 끝
 
                 return rootView;
-            }
-            else if(getArguments().getInt(ARG_SECTION_NUMBER)==3) {
+            } else if (getArguments().getInt(ARG_SECTION_NUMBER) == 3) {
+
+                final View rootView = inflater.inflate(R.layout.activity_char_fragment_pi_chart, container, false);
+
+                final PieChart pieChart;
+                pieChart = (PieChart) rootView.findViewById(R.id.piechart);
+
+                pieChart.setUsePercentValues(true);
+                pieChart.getDescription().setEnabled(false);
+                pieChart.setExtraOffsets(5, 10, 5, 5);
+
+                pieChart.setDragDecelerationFrictionCoef(0.95f);
+
+                pieChart.setDrawHoleEnabled(false);
+                pieChart.setHoleColor(Color.WHITE);
+                pieChart.setTransparentCircleRadius(61f);
+
+                final ArrayList<PieEntry> yValues = new ArrayList<PieEntry>();
+
+                String myEmail = mAuth.getCurrentUser().getEmail();
+                //firebase "@" "," <- 특정문자 못읽음 ㅡㅡ
+                myEmail = myEmail.replace("@", "");
+                myEmail = myEmail.replace(".", "");
+
+                //database 읽어오기, 옵저버 패턴 : 관찰 대상이 변하는 순간 이벤트를 처리함
+                mDatabase.getReference().child("users").child(myEmail).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        map_pichart_content.clear();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                            AccountContentDescriptionDTO temp_accountContent = snapshot.getValue(AccountContentDescriptionDTO.class);
+
+                            if (map_pichart_content.containsKey(temp_accountContent.store)) {
+
+                                int remainM = map_pichart_content.get(temp_accountContent.store);
+                                remainM += Integer.parseInt(temp_accountContent.money);
+                                map_pichart_content.put(temp_accountContent.store, remainM);
+
+                            } else {
+
+                                int firstM = Integer.parseInt(temp_accountContent.money);
+                                map_pichart_content.put(temp_accountContent.store, firstM);
+
+                            }
+                        }
+
+
+                        Log.i("asdfjlaskdjflkasjdf1", "dfsfds");
+                        //map_pichart_content
+                        map_pichart_content_iterator = map_pichart_content.keySet().iterator();
+
+                        while (map_pichart_content_iterator.hasNext()) {
+                            String key = (String) map_pichart_content_iterator.next();
+                            Log.i("asdfjlaskdjflkasjdf", key + " : " + map_pichart_content.get(key));
+
+                            yValues.add(new PieEntry(map_pichart_content.get(key), key));
+                        }
+
+                        Description description = new Description();
+                        description.setText("파이 차트(단위 : 원)"); //라벨
+                        description.setPosition(rootView.getWidth() / 2, 100);
+                        description.setTextSize(15);
+                        pieChart.setDescription(description);
+
+                        pieChart.animateY(1000, Easing.EasingOption.EaseInOutCubic); //애니메이션
+
+                        PieDataSet dataSet = new PieDataSet(yValues, "Store");
+                        dataSet.setSliceSpace(3f);
+                        dataSet.setSelectionShift(5f);
+                        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+
+                        PieData data = new PieData((dataSet));
+                        data.setValueTextSize(10f);
+                        data.setValueTextColor(Color.YELLOW);
+
+                        pieChart.setData(data);
+                    }
+
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+                return rootView;
+
+            } else if (getArguments().getInt(ARG_SECTION_NUMBER) == 4) {
                 View rootView = inflater.inflate(R.layout.fragment_chart, container, false);
 
-
                 chart = (BarChart) rootView.findViewById(R.id.fragment_chart_barChart);
-                ___cal.set(_year, _month-1, _day);
+
+                ___cal.set(_year, _month - 1, _day);
                 String myEmail = mAuth.getCurrentUser().getEmail();
                 //firebase "@" "," <- 특정문자 못읽음 ㅡㅡ
                 myEmail = myEmail.replace("@", "");
@@ -651,15 +753,15 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                         //    userList.clear();// 수정될 때 데이터가 날라오기 때문에 clear()를 안해주면 쌓인다.
                         BARENTRY.clear();
                         map_account.clear();
-                        for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                             AccountContentDescriptionDTO tempAccountContent = snapshot.getValue(AccountContentDescriptionDTO.class);
-                            if(map_account.containsKey(tempAccountContent.date)){
+                            if (map_account.containsKey(tempAccountContent.date)) {
                                 //기존에 있으면 값을 빼서 더한다.
                                 int temp = map_account.get(tempAccountContent.date);
                                 map_account.put(tempAccountContent.date, temp + Integer.valueOf(tempAccountContent.money));
 
-                            }else{
+                            } else {
                                 //값이 없으면 대입.
                                 map_account.put(tempAccountContent.date, Integer.valueOf(tempAccountContent.money));
 
@@ -669,12 +771,12 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
                         accountDTOs.clear();
 
-                        for(int i = 0; i < ___cal.getActualMaximum(Calendar.DAY_OF_MONTH); i++){
+                        for (int i = 0; i < ___cal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
 
                             AccountDTO temp_AccountDTO = new AccountDTO();
 
                             //일 수는 2자리로 표현
-                            String temp_day = String.format("%02d", i+1);
+                            String temp_day = String.format("%02d", i + 1);
                             //날 2자리로 표현
                             String temp_month = String.format("%02d", _month);
 
@@ -682,11 +784,11 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
 
                             String myKeyDate = _year + "_" + temp_month + "_" + temp_day;
-                            if(map_account.containsKey(myKeyDate)){
+                            if (map_account.containsKey(myKeyDate)) {
 
-                                temp_AccountDTO.money = map_account.get(myKeyDate) +"";
+                                temp_AccountDTO.money = map_account.get(myKeyDate) + "";
 
-                            }else{
+                            } else {
 
                                 temp_AccountDTO.money = "0";
                             }
@@ -694,12 +796,12 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                         }
 
                         //차트에 데이터 넣기
-                        for(int i = 0; i < accountDTOs.size(); i++){
+                        for (int i = 0; i < accountDTOs.size(); i++) {
 
                             //String temp_date[] = accountDTOs.get(i).date.split(".");
                             //int __day = Integer.parseInt(temp_date[2]);
                             int __money = Integer.parseInt(accountDTOs.get(i).money);
-                            BARENTRY.add(new BarEntry(i+1, __money));
+                            BARENTRY.add(new BarEntry(i + 1, __money));
 
                         }
 
@@ -715,6 +817,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                         //차트에 데이터 넣기 끝
 
                     }
+
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
@@ -723,41 +826,37 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
 
 
                 return rootView;
-            }
-            else {
+            } else {
 
                 //태웅 여기서 하면됨 수입 fragment_account
                 //여기서부터 태웅 건들지말 것 !!
 
                 final View rootView = inflater.inflate(R.layout.fragment_account, container, false);
-                 Calendar cal = Calendar.getInstance();
-                 cal.set(_year, _month-1, _day);
+                Calendar cal = Calendar.getInstance();
+                cal.set(_year, _month - 1, _day);
 
-                recyclerView = (RecyclerView)rootView.findViewById(R.id.account_recycleView);
-
-
-
+                recyclerView = (RecyclerView) rootView.findViewById(R.id.account_recycleView);
 
                 setExpenseMoney(rootView);
-                accountFragmentMainDate_TextView = (TextView)rootView.findViewById(R.id.account_date_textview);
+                accountFragmentMainDate_TextView = (TextView) rootView.findViewById(R.id.account_date_textview);
                 accountFragmentMainDate_TextView.setText(_year + "." + _month);
 
-                accountFragmentRight_ImageButton = (ImageButton)rootView.findViewById(R.id.account_right_button);
-                accountFragmentLeft_ImageButton = (ImageButton)rootView.findViewById(R.id.account_left_button);
+                accountFragmentRight_ImageButton = (ImageButton) rootView.findViewById(R.id.account_right_button);
+                accountFragmentLeft_ImageButton = (ImageButton) rootView.findViewById(R.id.account_left_button);
 
                 accountFragmentRight_ImageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        if(_month == 12){
+                        if (_month == 12) {
                             _month = 1;
                             _year++;
-                        }else{
+                        } else {
                             _month++;
                         }
 
                         //갱신
-                        accountFragmentMainDate_TextView.setText(_year + "." + String.format("%02d",_month));
+                        accountFragmentMainDate_TextView.setText(_year + "." + String.format("%02d", _month));
                         setExpenseMoney(rootView);
                         //accountRecyclerViewAdapter.notifyDataSetChanged(); //갱신이 안됨..ㅠㅠ
 
@@ -768,17 +867,17 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                     @Override
                     public void onClick(View v) {
 
-                        if(_month == 1){
+                        if (_month == 1) {
                             _month = 12;
                             _year--;
-                        }else{
+                        } else {
                             _month--;
                         }
 
                         //갱신
-                        accountFragmentMainDate_TextView.setText(_year + "." + String.format("%02d",_month));
-                       setExpenseMoney(rootView);
-                       // accountRecyclerViewAdapter.notifyDataSetChanged(); //갱신안됨...ㅠㅠ
+                        accountFragmentMainDate_TextView.setText(_year + "." + String.format("%02d", _month));
+                        setExpenseMoney(rootView);
+                        // accountRecyclerViewAdapter.notifyDataSetChanged(); //갱신안됨...ㅠㅠ
 
                     }
                 });
@@ -787,10 +886,10 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             }
         }
 
-        public void setExpenseMoney(final View view){
+        public void setExpenseMoney(final View view) {
 
             Calendar mmCal = Calendar.getInstance();
-            mmCal.set(_year, _month-1, _day);
+            mmCal.set(_year, _month - 1, _day);
             int _maxDayOfEnd = mmCal.getActualMaximum(Calendar.DAY_OF_MONTH);
 
             accountRecyclerViewAdapter = new AccountRecyclerViewAdapter(getActivity(), _maxDayOfEnd, _year, _month, _day);
@@ -798,51 +897,102 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             recyclerView.setAdapter(accountRecyclerViewAdapter);
         }
 
+
+        public void setPiChartData() {
+
+            String myEmail = mAuth.getCurrentUser().getEmail();
+            //firebase "@" "," <- 특정문자 못읽음 ㅡㅡ
+            myEmail = myEmail.replace("@", "");
+            myEmail = myEmail.replace(".", "");
+
+            //database 읽어오기, 옵저버 패턴 : 관찰 대상이 변하는 순간 이벤트를 처리함
+            mDatabase.getReference().child("users").child(myEmail).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    map_pichart_content.clear();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                        AccountContentDescriptionDTO temp_accountContent = snapshot.getValue(AccountContentDescriptionDTO.class);
+
+
+                        if (map_pichart_content.containsKey(temp_accountContent.store)) {
+
+
+                            int remainM = map_pichart_content.get(temp_accountContent.store);
+                            remainM += Integer.parseInt(temp_accountContent.money);
+                            map_pichart_content.put(temp_accountContent.store, remainM);
+
+                        } else {
+
+                            int firstM = Integer.parseInt(temp_accountContent.money);
+                            map_pichart_content.put(temp_accountContent.store, firstM);
+
+                        }
+
+
+                    }
+
+
+                    Log.i("asdfjlaskdjflkasjdf2", "dfsfds");
+                }
+
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+        }
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
-        }
-
-        @Override
-        public int getItemPosition(Object item)
-        {
-            return POSITION_NONE;
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
         //가계부 tab 이름 설정 부분입니다.
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "지출";
-                case 1:
-                    return "수입";
-                case 2:
-                    return "차트";
-            }
-            return null;
-        }
+            /**
+             * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+             * one of the sections/tabs/pages.
+             */
+            public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-    }
+                public SectionsPagerAdapter(FragmentManager fm) {
+                    super(fm);
+
+                }
+
+                @Override
+                public Fragment getItem(int position) {
+                    // getItem is called to instantiate the fragment for the given page.
+                    // Return a PlaceholderFragment (defined as a static inner class below).
+                    return PlaceholderFragment.newInstance(position + 1);
+                }
+
+                @Override
+                public int getItemPosition(Object item) {
+                    return POSITION_NONE;
+                }
+
+                @Override
+                public int getCount() {
+                    // Show 4 total pages.
+                    return 4;
+                }
+
+                @Override
+                public CharSequence getPageTitle(int position) {
+                    switch (position) {
+                        case 0:
+                            return "지출";
+                        case 1:
+                            return "캘린더";
+                        case 2:
+                            return "차트1";
+                        case 3:
+                            return "차트2";
+                    }
+                    return null;
+                }
+
+            }
 
 
     /*
@@ -855,5 +1005,5 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
             PlaceholderFragment.accountRecyclerViewAdapter.notifyDataSetChanged();
         }
     }
-*/
-}
+*/}
+

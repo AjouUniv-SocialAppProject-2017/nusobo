@@ -6,6 +6,7 @@
     android:layout_height="wrap_content">
 
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,6 +17,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/itemReply_myProfile_ImageView"
+                android:layout_width="200dp"
+                android:layout_height="30dp"
+                android:background="@color/colorPrimary"
+                android:src="@drawable/ic_person_black_24dp"
+                android:layout_weight="1"/>
 
             <TextView
                 android:id="@+id/itempReply_userID_Textview"

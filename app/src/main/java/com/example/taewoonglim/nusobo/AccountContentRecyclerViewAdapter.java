@@ -2,6 +2,7 @@ package com.example.taewoonglim.nusobo;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,14 @@ public class AccountContentRecyclerViewAdapter extends RecyclerView.Adapter<Recy
 
         mContext = _context;
         content_Data = _d;
+
+
+        /*
+        for (int i = 0; i < content_Data.size(); i++){
+            Log.i("asdfasdfasfas", content_Data.get(i).store +" : ");
+        }
+        */
+      //  Log.i("tejlaskdjflkasjdflkas", content_Data.get(position).date + ":" + map_content_account.get(maccountDTOs.get(position).date));
 
     }
 

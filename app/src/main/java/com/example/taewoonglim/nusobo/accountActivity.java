@@ -711,7 +711,7 @@ public class accountActivity extends AppCompatActivity implements incomeDialog.i
                         }
 
                         Description description = new Description();
-                        description.setText("(단위 : 원)"); //라벨
+                        description.setText("(단위 : %)"); //라벨
                         description.setPosition(rootView.getWidth() - 40, 100);
                         description.setTextSize(15);
                         pieChart.setDescription(description);

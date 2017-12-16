@@ -53,7 +53,7 @@ public class sms extends BroadcastReceiver {
                 body = sms.getMessageBody().toString();
                 sender = sms.getOriginatingAddress().toString();
                 curDate =new Date(sms.getTimestampMillis());
-                Toast.makeText(context, "From123 :" + sender + "\n" + "body:" + body, Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "From123 :" + sender + "\n" + "body:" + body, Toast.LENGTH_LONG).show();
                 //휴대폰 번호를 확인하여 주는 부분입니다. 이외의 번호는 받지 않습니다.
                 if(sender.equals("01076255866")){
                     flag = true;
@@ -82,7 +82,7 @@ public class sms extends BroadcastReceiver {
                 //
                 amount = amount.replace("원", "");
 
-                Toast.makeText(context, "amount" + amount, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "amount" + amount, Toast.LENGTH_SHORT).show();
 
                 String store = tokenizer.nextToken();
                 StringTokenizer tokenizer2 = new StringTokenizer(store, " ");
@@ -100,10 +100,13 @@ public class sms extends BroadcastReceiver {
                 4,600원
                 투썸플레이스 이 사용
                  */
+                /*
                 Toast.makeText(context, "store" + store2, Toast.LENGTH_SHORT).show();
                 Toast.makeText(context, "month" + month, Toast.LENGTH_SHORT).show();
                 Toast.makeText(context, "day" + day, Toast.LENGTH_SHORT).show();
                 Toast.makeText(context, "전화번호 ㅇㅋ", Toast.LENGTH_SHORT).show();
+                 */
+                Toast.makeText(context, "문자메시지 파싱 완료", Toast.LENGTH_SHORT).show();
 
                 uploadFireBase("2017", month, day, amount, store2);
 

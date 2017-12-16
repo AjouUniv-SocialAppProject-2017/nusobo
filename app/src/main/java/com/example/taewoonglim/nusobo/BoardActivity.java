@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -177,7 +178,7 @@ public class BoardActivity extends AppCompatActivity {
 
         private Context mContext = null;
        // PhotoViewAttacher attacher;
-
+       private CustomDialogBoardImageView _customDialogBoardImageView;
         public BoardRecyclerViewAdapter(){
 
           //디폴트 생성자
@@ -231,6 +232,26 @@ public class BoardActivity extends AppCompatActivity {
 
         }
 
+
+
+        public void CustomDialogImageView(String _imageView_url) {
+            //  dialog = new CustomDialog(this.context, "주의", "태웅이의 커스텀", leftListener);
+
+            _customDialogBoardImageView = new CustomDialogBoardImageView(mContext, _imageView_url, leftListener);
+            _customDialogBoardImageView.setCancelable(true); //false 라면 onBackPressed() 버튼이 작동하지 않는다. but, ture면 뒤로가기를 통해 다이얼로그가 종료된다.
+            _customDialogBoardImageView.getWindow().setGravity(Gravity.CENTER);
+            _customDialogBoardImageView.show();
+        }
+
+        private View.OnClickListener leftListener = new View.OnClickListener() {
+            public void onClick(View v) {
+                //Toast.makeText(mContext, "버튼을 클릭하였습니다.", Toast.LENGTH_SHORT).show();
+                _customDialogBoardImageView.dismiss(); //다이얼로그 종료료
+            }
+
+        };
+
+
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -252,6 +273,14 @@ public class BoardActivity extends AppCompatActivity {
 
 
             Glide.with(holder.itemView.getContext()).load(imageDTOs.get(position).imageUrl).into(((CustomViewHolder)holder).imageVIew);
+
+
+            ((CustomViewHolder)holder).imageVIew.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CustomDialogImageView(imageDTOs.get(position).imageUrl);
+                }
+            });
 
 
             ((CustomViewHolder)holder).starButton.setOnClickListener(new View.OnClickListener(){

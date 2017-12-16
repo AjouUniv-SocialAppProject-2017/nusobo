@@ -120,7 +120,7 @@ public class DateAdapter extends BaseAdapter{
 
     private View.OnClickListener leftListener = new View.OnClickListener() {
         public void onClick(View v) {
-            Toast.makeText(context, "버튼을 클릭하였습니다.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "버튼을 클릭하였습니다.", Toast.LENGTH_SHORT).show();
             dialog.dismiss(); //다이얼로그 종료료
         }
 
